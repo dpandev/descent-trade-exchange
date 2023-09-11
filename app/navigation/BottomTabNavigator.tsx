@@ -18,13 +18,14 @@ export default function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: Colors[colorScheme].tabIconSelected,
         tabBarStyle: {
           backgroundColor: Colors[colorScheme].primary,
           height: 80,
         },
         tabBarShowLabel: false,
-        headerStyle: { backgroundColor: Colors[colorScheme].primary, },
+        tabBarInactiveTintColor: Colors[colorScheme].tabIconDefault,
+        headerStyle: { backgroundColor: Colors[colorScheme].primary },
         headerTitleAlign: 'center',
         headerShown: false,
       }}>

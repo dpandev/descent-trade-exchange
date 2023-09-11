@@ -7,7 +7,7 @@ interface TheProps {
   children: string | ReactNode;
   textStyles?: {};
   buttonStyles?: {};
-  icon?: any;
+  icon?: React.ComponentProps<typeof FontAwesome>['name'];
   iconSize?: number;
   iconColor?: string;
   inverted?: boolean;

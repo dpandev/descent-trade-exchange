@@ -152,7 +152,7 @@ export function FollowButton(props: ThemeableButtonProps) {
   const { inverted, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const txtStyle = { 
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
-    ...(textStyles ? textStyles : {}) 
+    ...textStyles
   }
   const btnStyle = {
     alignItems: 'center',
