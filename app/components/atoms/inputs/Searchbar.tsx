@@ -1,9 +1,9 @@
-import { ElementView, Text } from '../Themed'
+import { ElementView, Text } from '../../Themed'
 import React from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import Colors from '../../constants/Colors'
-import useColorScheme from '../../hooks/useColorScheme';
+import Colors from '../../../constants/Colors'
+import useColorScheme from '../../../hooks/useColorScheme';
 
 export interface SearchbarProps {
   placeholder?: string;

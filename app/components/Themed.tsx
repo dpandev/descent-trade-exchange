@@ -5,8 +5,8 @@ import {
   Button as DefaultButton,
   PressableStateCallbackType,
 } from 'react-native';
-import CustomButton from './buttons/CustomButton';
-import LabelledInput from './inputs/LabelledTextInput';
+import CustomButton from './atoms/buttons/CustomButton';
+import LabelledInput from './atoms/inputs/LabelledTextInput';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -171,7 +171,7 @@ export function FollowButton(props: ThemeableButtonProps) {
  * @param props 
  * @returns a themed full width button
  */
-export function ModifiedListItemButton(props: ThemeableButtonProps) {
+export function ListItemButton(props: ThemeableButtonProps) {
   const { textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const textStyle = {
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),

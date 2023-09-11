@@ -1,9 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { RootTabScreenProps } from '../../types';
 import React from 'react';
-import { FollowButton, Text, View, } from '../../components/Themed';
+import { FollowButton, RoundedButton, Text, View } from '../../components/Themed';
+import Colors from '../../constants/Colors';
+import useColorScheme from '../../hooks/useColorScheme';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+
+  const colorScheme = useColorScheme();
 
   return (
     <View style={styles.root}>
@@ -14,6 +18,12 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       <FollowButton>
         Follow
       </FollowButton>
+      <RoundedButton
+        buttonStyles={styles.btn}
+        textStyles={{ color: Colors[colorScheme].secondary }}
+      >
+        Continue with Apple
+      </RoundedButton>
     </View>
   );
 }
@@ -23,5 +33,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  btn: {
+    width: 'auto'
   },
 });
