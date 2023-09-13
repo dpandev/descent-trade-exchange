@@ -1,32 +1,56 @@
-import { ElementView, Text } from '../../Themed'
+import { ElementView } from '../../Themed'
 import React from 'react'
-import { StyleSheet, TextInput } from 'react-native'
+import { 
+  ColorValue, 
+  KeyboardTypeOptions, 
+  StyleSheet, TextInput, 
+  TextInputProps, 
+  TextStyle, 
+  ViewStyle 
+} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '../../../constants/Colors'
 import useColorScheme from '../../../hooks/useColorScheme';
 
 export interface SearchbarProps {
-  placeholder?: string;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
-  textContentType?: any;
+  textContentType?: TextInputProps["textContentType"];
   maxLength?: number;
   autoCorrect?: boolean;
-  placeholderTextColor?: string;
+  placeholder?: string;
+  placeholderTextColor?: ColorValue;
   secureTextEntry?: boolean;
-  selectionColor?: string;
-  inputStyles?: object;
-  keyboardType?: any;
-  keyboardAppearance?: any;
-  label?: string;
-  labelStyles?: object;
-  componentStyles?: object;
+  selectionColor?: ColorValue;
+  inputStyles?: TextStyle;
+  keyboardType?: KeyboardTypeOptions;
+  keyboardAppearance?: TextInputProps["keyboardAppearance"];
+  componentStyles?: ViewStyle;
+  onSubmit?: any;
 }
 
-export default function Searchbar({ value, setValue, textContentType, maxLength, autoCorrect, placeholderTextColor, secureTextEntry, selectionColor, inputStyles, keyboardAppearance, keyboardType, label, labelStyles, componentStyles, placeholder, ...otherProps }: SearchbarProps) {
+export default function Searchbar({ 
+  value, 
+  setValue, 
+  textContentType = 'name', 
+  maxLength = 30, 
+  autoCorrect = false, 
+  placeholder, 
+  placeholderTextColor = '#772ceb', 
+  secureTextEntry = false, 
+  selectionColor = '#772ceb', 
+  inputStyles = {}, 
+  keyboardAppearance = 'default', 
+  keyboardType = 'default',  
+  componentStyles = {}, 
+  onSubmit = () => console.log('set me up'),
+  ...otherProps 
+}: SearchbarProps) {
+
   const colorScheme = useColorScheme();
+
   return (
-    <ElementView style={styles.container}>
+    <ElementView style={[styles.container, componentStyles]}>
       <Ionicons
         name="search"
         size={25}
@@ -36,17 +60,18 @@ export default function Searchbar({ value, setValue, textContentType, maxLength,
       <TextInput 
         value={value}
         onChangeText={setValue}
-        maxLength={maxLength ? maxLength : 30}
-        textContentType={textContentType ? textContentType : 'none'}
+        maxLength={maxLength}
+        textContentType={textContentType}
         style={[styles.input, inputStyles]}
         placeholder={placeholder}
-        placeholderTextColor={placeholderTextColor ? placeholderTextColor : '#90A3B9'}
-        secureTextEntry={secureTextEntry ? secureTextEntry : false}
-        selectionColor={selectionColor ? selectionColor : '#90A3B9'}
-        autoCorrect={autoCorrect ? autoCorrect : false}
+        placeholderTextColor={placeholderTextColor}
+        secureTextEntry={secureTextEntry}
+        selectionColor={selectionColor}
+        autoCorrect={autoCorrect}
         autoCapitalize={'none'}
-        keyboardType={keyboardType ? keyboardType : 'default'}
-        keyboardAppearance={keyboardAppearance ? keyboardAppearance : 'default'}
+        keyboardType={keyboardType}
+        keyboardAppearance={keyboardAppearance}
+        onSubmitEditing={onSubmit}
       />
     </ElementView>
   )
@@ -56,6 +81,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignContent: 'center',
     width: '100%',
     marginVertical: 15,
     borderWidth: 1,
@@ -64,7 +90,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   input: {
-    marginLeft: 25,
+    marginLeft: 15,
     fontSize: 18,
+    width: '100%',
+    height: 30,
+    color: 'white',
   },
 })

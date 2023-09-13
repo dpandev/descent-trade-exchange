@@ -20,7 +20,6 @@ export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'
       </FollowButton>
       <RoundedButton
         buttonStyles={styles.btn}
-        textStyles={{ color: Colors[colorScheme].secondary }}
       >
         Continue with Apple
       </RoundedButton>

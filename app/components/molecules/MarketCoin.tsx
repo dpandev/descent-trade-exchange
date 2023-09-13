@@ -6,12 +6,12 @@ import { PercentageChange, TruncatedDecimal } from "../FormattedTextElements"
 
 export interface MarketCoinProps {
   marketCoin: {
+    id: string,
     image: string,
     name: string,
     symbol: string,
-    valueChange24H: number,
     currentPrice: number,
-    id: string,
+    valueChange24H: number,
   }
 }
 
@@ -20,12 +20,12 @@ export default function MarketCoin (props: MarketCoinProps) {
 
   const {
     marketCoin: {
+      id,
       image,
       name,
       symbol,
-      valueChange24H,
       currentPrice,
-      id
+      valueChange24H,
     },
   } = props
 

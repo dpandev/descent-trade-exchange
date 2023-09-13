@@ -7,7 +7,7 @@ export interface UserRankingItemProps {
   user: {
     profilePic: string,
     username: string,
-    assets: number,
+    networth: number,
     following: boolean,
   },
   place: number,
@@ -18,7 +18,7 @@ export default function UserRankingItem (props: UserRankingItemProps) {
     user: {
       profilePic,
       username,
-      assets,
+      networth,
       following,
     },
     place
@@ -44,11 +44,11 @@ export default function UserRankingItem (props: UserRankingItemProps) {
         <Image style={styles.image} source={{ uri: profilePic}} />
         <ElementView>
           <Text style={styles.username} numberOfLines={1}>{username}</Text>
-          <Networth value={assets} style={styles.networth} />
+          <Networth value={networth} style={styles.networth} />
         </ElementView>
       </ElementView>
       <ElementView style={styles.right}>
-        <FollowButton inverted={activeFollow}
+        <FollowButton inverted={!activeFollow} activeState={activeFollow}
           onPress={() => setActiveFollow(prevState => !prevState)}
         >
           {activeFollow ? "Following" : "Follow"}

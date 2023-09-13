@@ -10,7 +10,6 @@ interface TheProps {
   icon?: React.ComponentProps<typeof FontAwesome>['name'];
   iconSize?: number;
   iconColor?: string;
-  inverted?: boolean;
 }
 
 export interface TheState {

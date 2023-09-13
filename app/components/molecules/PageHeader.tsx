@@ -1,36 +1,28 @@
 import { ElementView, Text } from '../Themed';
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
-import Searchbar from '../atoms/inputs/Searchbar';
-import ThreeCustomTabs from '../organisms/ThreeCustomTabs';
+import Searchbar, { SearchbarProps } from '../atoms/inputs/Searchbar';
 
 export interface PageHeaderProps {
   title: string;
-  searchbarOptions?: any;
-  buttonsOptions?: any;
+  searchbarOptions?: SearchbarProps;
 }
 
-export default function PageHeader({ title, searchbarOptions, buttonsOptions }: PageHeaderProps) {
-
-  const [search, setSearch] = useState('');
-
+export default function PageHeader({ title, searchbarOptions }: PageHeaderProps) {
   return (
     <ElementView style={styles.header}>
       {searchbarOptions &&
         <ElementView style={styles.search}>
-            <Searchbar 
-              placeholder={searchbarOptions.placeholder} 
-              value={search}
-              setValue={setSearch}
-            />
-          </ElementView>
+          <Searchbar 
+            value={searchbarOptions.value} 
+            setValue={searchbarOptions.setValue} 
+            onSubmit={searchbarOptions.onSubmit}
+          />
+        </ElementView>
       }
       <Text style={styles.title}>{title}</Text>
-      {buttonsOptions &&
-        <ThreeCustomTabs buttons={buttonsOptions.buttons} setRenderComp={buttonsOptions.setRenderComp} />
-      }
     </ElementView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -48,4 +40,4 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
   },
-});
+})

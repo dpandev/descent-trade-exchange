@@ -12,7 +12,8 @@ export interface PortfolioCoinProps {
       name: string,
       symbol: string,
       currentPrice: number,
-    }
+      priceHistory: string,
+    },
     amount: number,
   }
 }
@@ -26,7 +27,8 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
         image,
         name,
         symbol,
-        currentPrice
+        currentPrice,
+        priceHistory,
       }
     },
   } = props;

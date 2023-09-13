@@ -4,6 +4,7 @@ import {
   ScrollView as DefaultScrollView, 
   Button as DefaultButton,
   PressableStateCallbackType,
+  KeyboardAvoidingView as DefaultKeyboardAvoidingView,
 } from 'react-native';
 import CustomButton from './atoms/buttons/CustomButton';
 import LabelledInput from './atoms/inputs/LabelledTextInput';
@@ -28,6 +29,8 @@ export function useThemeColor(
 type ThemeProps = {
   lightColor?: string;
   darkColor?: string;
+  inverted?: boolean;
+  activeState?: boolean;
 };
 
 export type TextProps = ThemeProps & DefaultText['props'];
@@ -36,6 +39,7 @@ export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
 export type ButtonProps = ThemeProps & DefaultButton['props'];
 export type ThemeableButtonProps = ThemeProps & CustomButton['props'];
 export type LabelledInputFieldProps = ThemeProps & LabelledInput['props'];
+export type KeyboardAvoidingViewProps = ThemeProps & DefaultKeyboardAvoidingView['props'];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -45,31 +49,70 @@ export function Text(props: TextProps) {
 }
 
 export function View(props: ViewProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const { inverted, style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'background');
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
 export function ElementView(props: ViewProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'transparent');
+  const { inverted, style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'transparent');
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
 export function ScrollView(props: ScrollViewProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const { inverted, style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'background');
 
   return <DefaultScrollView contentContainerStyle={[{ backgroundColor }, style]} {...otherProps} />;
 }
 
+export function KeyboardAvoidingView(props: KeyboardAvoidingViewProps) {
+  const { inverted, style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'background');
+
+  return <DefaultKeyboardAvoidingView style={[{ backgroundColor }, style]} {...otherProps} />
+}
+
 export function SquareButton(props: ButtonProps) {
-  const { color, lightColor, darkColor, ...otherProps } = props;
-  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'secondary');
+  const { inverted, color, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary');
 
   return <DefaultButton color={ backgroundColor } {...otherProps} />;
+}
+
+/**
+ * Button that keeps color scheme while in active state.
+ * @param props 
+ * @returns 
+ */
+export function ActivatedButton(props: ThemeableButtonProps) {
+  const { inverted, activeState, icon, iconColor, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
+  const txtStyle = { 
+    color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
+    ...textStyles
+  }
+  const btnStyle = {
+    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    ...buttonStyles
+  }
+  const btnStylePressed = {
+    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
+    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
+    ...buttonStyles
+  }
+  return (
+    <CustomButton 
+      textStyles={txtStyle} 
+      buttonStyles={activeState ? btnStylePressed : btnStyle}
+      iconColor={txtStyle.color} 
+      icon={icon} 
+      {...otherProps} 
+    />
+  );
 }
 
 /**
@@ -79,7 +122,7 @@ export function SquareButton(props: ButtonProps) {
  * @returns A themed button
  */
 export function ThemedButton(props: ThemeableButtonProps) {
-  const { inverted, icon, iconColor, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
+  const { inverted=false, icon, iconColor, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const txtStyle = { 
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
     ...textStyles
@@ -98,8 +141,10 @@ export function ThemedButton(props: ThemeableButtonProps) {
     <CustomButton 
       textStyles={txtStyle} 
       buttonStyles={
+        //changes style if button is being pressed
         ({pressed}: {pressed: PressableStateCallbackType}) => {
-          return [pressed ? btnStylePressed : btnStyle]}} 
+          return [pressed ? btnStylePressed : btnStyle]}
+      }
       iconColor={txtStyle.color} 
       icon={icon} 
       {...otherProps} 
@@ -144,12 +189,12 @@ export function RoundedButton(props: ThemeableButtonProps) {
 }
 
 /**
- * Themed button with styling specific for a small button.
+ * Themed button with styling specific for a small follow button.
  * @param props 
  * @returns a themed small squared button
  */
 export function FollowButton(props: ThemeableButtonProps) {
-  const { inverted, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
+  const { inverted, activeState, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const txtStyle = { 
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
     ...textStyles
@@ -161,9 +206,20 @@ export function FollowButton(props: ThemeableButtonProps) {
     borderWidth: 2,
     width: 80,
     height: 35,
+  }
+  const colored = {
+    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    ...btnStyle,
     ...buttonStyles
   }
-  return <ThemedButton buttonStyles={btnStyle} textStyles={txtStyle} inverted={inverted} {...otherProps} />;
+  const transparent = {
+    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'transparent'),
+    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'transparent'),
+    ...btnStyle,
+    ...buttonStyles
+  }
+  return <ActivatedButton buttonStyles={activeState ? transparent : colored} textStyles={txtStyle} inverted={inverted} {...otherProps} />;
 }
 
 /**
