@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 38,
     fontWeight: 'bold',
-    marginVertical: 5,
   },
   search: {
     width: '100%',

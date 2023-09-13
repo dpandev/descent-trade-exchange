@@ -21,7 +21,8 @@ export default function BottomTabNavigator() {
         tabBarActiveTintColor: Colors[colorScheme].tabIconSelected,
         tabBarStyle: {
           backgroundColor: Colors[colorScheme].primary,
-          height: 80,
+          height: 105,
+          borderTopWidth: 0,
         },
         tabBarShowLabel: false,
         tabBarInactiveTintColor: Colors[colorScheme].tabIconDefault,

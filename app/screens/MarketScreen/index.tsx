@@ -105,12 +105,13 @@ export default function MarketListScreen() {
 
 const styles = StyleSheet.create({
   root: {
-    width: '90%',
+    width: '100%',
     maxWidth: 400,
+    alignItems: 'center',
   },
   header: {
-    width: '100%',
-    marginTop: 30,
+    width: '90%',
+    marginTop: 5,
     paddingHorizontal: 10,
   },
   buttonsContainer: {
