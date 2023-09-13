@@ -3,6 +3,7 @@ import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import LinkingConfig from './LinkingConfig'
 import { ColorSchemeName } from 'react-native';
 import BottomTabNavigator from './BottomTabNavigator'
+import AuthenticatedUserStack from './AuthenticatedUserStack';
 
 export default function index({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -10,7 +11,8 @@ export default function index({ colorScheme }: { colorScheme: ColorSchemeName })
       linking={LinkingConfig}
       theme={DefaultTheme}
     >
-      <BottomTabNavigator />
+      {/* <BottomTabNavigator /> */}
+      <AuthenticatedUserStack />
     </NavigationContainer>
   )
 }

@@ -57,7 +57,7 @@ export default function BottomTabNavigator() {
         name="TabFour"
         component={TabFourScreen}
         options={{
-          title: 'Tab Three',
+          title: 'Tab Four',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
         }}
       />
