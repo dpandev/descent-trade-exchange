@@ -125,7 +125,7 @@ const CoinExchangeScreen = () => {
     //   Alert.alert('Error', 'There was an error exchanging coins');
     //   console.error(e);
     // }
-    navigation.navigate('TabTwo')
+    navigation.navigate('TabTwo');
     setIsLoading(false);
   }
 

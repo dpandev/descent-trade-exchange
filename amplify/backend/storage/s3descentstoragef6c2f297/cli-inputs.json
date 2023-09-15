@@ -1,0 +1,11 @@
+{
+  "resourceName": "s3descentstoragef6c2f297",
+  "bucketName": "descent-storage-f6c2f297",
+  "policyUUID": "164fe3fd",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "READ",
+    "CREATE_AND_UPDATE"
+  ]
+}
