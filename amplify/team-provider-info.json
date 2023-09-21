@@ -9,10 +9,25 @@
       "UnauthRoleName": "amplify-descent-dev-130309-unauthRole",
       "StackName": "amplify-descent-dev-130309",
       "StackId": "arn:aws:cloudformation:us-east-2:297776297371:stack/amplify-descent-dev-130309/1639a500-50c5-11ee-8d05-0693b1c1bcd1",
-      "AmplifyAppId": "d3t74ukoawygij"
+      "AmplifyAppId": "d3t74ukoawygij",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-descent-dev-130309-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
+        "descent": {
+          "googleClientId": "256451623525-3pdf15onu39lir51mvm0rri0sn3ohsbp.apps.googleusercontent.com"
+        }
+      },
+      "function": {
+        "descentPostConfirmation": {
+          "deploymentBucketName": "amplify-descent-dev-130309-deployment",
+          "s3Key": "amplify-builds/descentPostConfirmation-497a534d4d4839786754-build.zip"
+        }
+      },
+      "storage": {
+        "s3descentstoragef6c2f297": {}
+      },
+      "api": {
         "descent": {}
       }
     }
