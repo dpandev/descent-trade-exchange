@@ -174,7 +174,7 @@ export function RoundedButton(props: ThemeableButtonProps) {
     marginVertical: 25,
     marginHorizontal: 10,
     borderRadius: 50,
-    width: '35%',
+    // width: '35%',
     borderWidth: 1,
     ...buttonStyles
   }

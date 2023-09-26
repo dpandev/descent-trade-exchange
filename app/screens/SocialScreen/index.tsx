@@ -6,10 +6,11 @@ import LeaderboardScreen from '../LeaderboardScreen';
 import FollowingScreen from '../FollowingScreen';
 
 import { userInfo } from '../../../assets/dummyData/userInfo';
+import { useAuthContext } from '../../utils/AuthContext';
 
 export default function SocialScreen() {
 
-  const user = userInfo[0];
+  const user = useAuthContext();
 
   const tabs = [
     { id: 0, name: 'Profile', component: <ProfileScreen user={user} /> },

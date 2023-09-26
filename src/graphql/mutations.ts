@@ -9,91 +9,29 @@ export const createUser = /* GraphQL */ `
   ) {
     createUser(input: $input, condition: $condition) {
       id
+      displayName
       email
-      username
       networth
       image
       trades {
-        items {
-          id
-          amount
-          price
-          createdAt
-          updatedAt
-          userTradesId
-          tradeCoinId
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      watchlist {
-        items {
-          id
-          cgId
-          name
-          symbol
-          image
-          currentPrice
-          valueChange1H
-          valueChange24H
-          valueChange7D
-          priceHistory
-          createdAt
-          updatedAt
-          userWatchlistId
-          __typename
-        }
-        nextToken
+        id
+        coinId
+        amount
+        price
+        date
         __typename
       }
       portfolio {
-        items {
-          id
-          amount
-          createdAt
-          updatedAt
-          userPortfolioId
-          owner
-          __typename
-        }
-        nextToken
+        id
+        amount
+        coinID
         __typename
       }
-      follows {
-        items {
-          id
-          email
-          username
-          networth
-          image
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      following {
-        items {
-          id
-          email
-          username
-          networth
-          image
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      followers
+      following
       createdAt
       updatedAt
-      owner
+      watchlist
       __typename
     }
   }
@@ -105,91 +43,29 @@ export const updateUser = /* GraphQL */ `
   ) {
     updateUser(input: $input, condition: $condition) {
       id
+      displayName
       email
-      username
       networth
       image
       trades {
-        items {
-          id
-          amount
-          price
-          createdAt
-          updatedAt
-          userTradesId
-          tradeCoinId
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      watchlist {
-        items {
-          id
-          cgId
-          name
-          symbol
-          image
-          currentPrice
-          valueChange1H
-          valueChange24H
-          valueChange7D
-          priceHistory
-          createdAt
-          updatedAt
-          userWatchlistId
-          __typename
-        }
-        nextToken
+        id
+        coinId
+        amount
+        price
+        date
         __typename
       }
       portfolio {
-        items {
-          id
-          amount
-          createdAt
-          updatedAt
-          userPortfolioId
-          owner
-          __typename
-        }
-        nextToken
+        id
+        amount
+        coinID
         __typename
       }
-      follows {
-        items {
-          id
-          email
-          username
-          networth
-          image
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      following {
-        items {
-          id
-          email
-          username
-          networth
-          image
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      followers
+      following
       createdAt
       updatedAt
-      owner
+      watchlist
       __typename
     }
   }
@@ -201,280 +77,29 @@ export const deleteUser = /* GraphQL */ `
   ) {
     deleteUser(input: $input, condition: $condition) {
       id
+      displayName
       email
-      username
       networth
       image
       trades {
-        items {
-          id
-          amount
-          price
-          createdAt
-          updatedAt
-          userTradesId
-          tradeCoinId
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      watchlist {
-        items {
-          id
-          cgId
-          name
-          symbol
-          image
-          currentPrice
-          valueChange1H
-          valueChange24H
-          valueChange7D
-          priceHistory
-          createdAt
-          updatedAt
-          userWatchlistId
-          __typename
-        }
-        nextToken
+        id
+        coinId
+        amount
+        price
+        date
         __typename
       }
       portfolio {
-        items {
-          id
-          amount
-          createdAt
-          updatedAt
-          userPortfolioId
-          owner
-          __typename
-        }
-        nextToken
+        id
+        amount
+        coinID
         __typename
       }
-      follows {
-        items {
-          id
-          email
-          username
-          networth
-          image
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
-      following {
-        items {
-          id
-          email
-          username
-          networth
-          image
-          createdAt
-          updatedAt
-          owner
-          __typename
-        }
-        nextToken
-        __typename
-      }
+      followers
+      following
       createdAt
       updatedAt
-      owner
-      __typename
-    }
-  }
-`;
-export const createPortfolioCoin = /* GraphQL */ `
-  mutation CreatePortfolioCoin(
-    $input: CreatePortfolioCoinInput!
-    $condition: ModelPortfolioCoinConditionInput
-  ) {
-    createPortfolioCoin(input: $input, condition: $condition) {
-      id
-      coinId {
-        id
-        cgId
-        name
-        symbol
-        image
-        currentPrice
-        valueChange1H
-        valueChange24H
-        valueChange7D
-        priceHistory
-        createdAt
-        updatedAt
-        userWatchlistId
-        __typename
-      }
-      amount
-      user {
-        id
-        email
-        username
-        networth
-        image
-        trades {
-          nextToken
-          __typename
-        }
-        watchlist {
-          nextToken
-          __typename
-        }
-        portfolio {
-          nextToken
-          __typename
-        }
-        follows {
-          nextToken
-          __typename
-        }
-        following {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      userPortfolioId
-      owner
-      __typename
-    }
-  }
-`;
-export const updatePortfolioCoin = /* GraphQL */ `
-  mutation UpdatePortfolioCoin(
-    $input: UpdatePortfolioCoinInput!
-    $condition: ModelPortfolioCoinConditionInput
-  ) {
-    updatePortfolioCoin(input: $input, condition: $condition) {
-      id
-      coinId {
-        id
-        cgId
-        name
-        symbol
-        image
-        currentPrice
-        valueChange1H
-        valueChange24H
-        valueChange7D
-        priceHistory
-        createdAt
-        updatedAt
-        userWatchlistId
-        __typename
-      }
-      amount
-      user {
-        id
-        email
-        username
-        networth
-        image
-        trades {
-          nextToken
-          __typename
-        }
-        watchlist {
-          nextToken
-          __typename
-        }
-        portfolio {
-          nextToken
-          __typename
-        }
-        follows {
-          nextToken
-          __typename
-        }
-        following {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      userPortfolioId
-      owner
-      __typename
-    }
-  }
-`;
-export const deletePortfolioCoin = /* GraphQL */ `
-  mutation DeletePortfolioCoin(
-    $input: DeletePortfolioCoinInput!
-    $condition: ModelPortfolioCoinConditionInput
-  ) {
-    deletePortfolioCoin(input: $input, condition: $condition) {
-      id
-      coinId {
-        id
-        cgId
-        name
-        symbol
-        image
-        currentPrice
-        valueChange1H
-        valueChange24H
-        valueChange7D
-        priceHistory
-        createdAt
-        updatedAt
-        userWatchlistId
-        __typename
-      }
-      amount
-      user {
-        id
-        email
-        username
-        networth
-        image
-        trades {
-          nextToken
-          __typename
-        }
-        watchlist {
-          nextToken
-          __typename
-        }
-        portfolio {
-          nextToken
-          __typename
-        }
-        follows {
-          nextToken
-          __typename
-        }
-        following {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      createdAt
-      updatedAt
-      userPortfolioId
-      owner
+      watchlist
       __typename
     }
   }
@@ -497,7 +122,6 @@ export const createCoin = /* GraphQL */ `
       priceHistory
       createdAt
       updatedAt
-      userWatchlistId
       __typename
     }
   }
@@ -520,7 +144,6 @@ export const updateCoin = /* GraphQL */ `
       priceHistory
       createdAt
       updatedAt
-      userWatchlistId
       __typename
     }
   }
@@ -543,202 +166,6 @@ export const deleteCoin = /* GraphQL */ `
       priceHistory
       createdAt
       updatedAt
-      userWatchlistId
-      __typename
-    }
-  }
-`;
-export const createTrade = /* GraphQL */ `
-  mutation CreateTrade(
-    $input: CreateTradeInput!
-    $condition: ModelTradeConditionInput
-  ) {
-    createTrade(input: $input, condition: $condition) {
-      id
-      user {
-        id
-        email
-        username
-        networth
-        image
-        trades {
-          nextToken
-          __typename
-        }
-        watchlist {
-          nextToken
-          __typename
-        }
-        portfolio {
-          nextToken
-          __typename
-        }
-        follows {
-          nextToken
-          __typename
-        }
-        following {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      coin {
-        id
-        cgId
-        name
-        symbol
-        image
-        currentPrice
-        valueChange1H
-        valueChange24H
-        valueChange7D
-        priceHistory
-        createdAt
-        updatedAt
-        userWatchlistId
-        __typename
-      }
-      amount
-      price
-      createdAt
-      updatedAt
-      userTradesId
-      tradeCoinId
-      owner
-      __typename
-    }
-  }
-`;
-export const updateTrade = /* GraphQL */ `
-  mutation UpdateTrade(
-    $input: UpdateTradeInput!
-    $condition: ModelTradeConditionInput
-  ) {
-    updateTrade(input: $input, condition: $condition) {
-      id
-      user {
-        id
-        email
-        username
-        networth
-        image
-        trades {
-          nextToken
-          __typename
-        }
-        watchlist {
-          nextToken
-          __typename
-        }
-        portfolio {
-          nextToken
-          __typename
-        }
-        follows {
-          nextToken
-          __typename
-        }
-        following {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      coin {
-        id
-        cgId
-        name
-        symbol
-        image
-        currentPrice
-        valueChange1H
-        valueChange24H
-        valueChange7D
-        priceHistory
-        createdAt
-        updatedAt
-        userWatchlistId
-        __typename
-      }
-      amount
-      price
-      createdAt
-      updatedAt
-      userTradesId
-      tradeCoinId
-      owner
-      __typename
-    }
-  }
-`;
-export const deleteTrade = /* GraphQL */ `
-  mutation DeleteTrade(
-    $input: DeleteTradeInput!
-    $condition: ModelTradeConditionInput
-  ) {
-    deleteTrade(input: $input, condition: $condition) {
-      id
-      user {
-        id
-        email
-        username
-        networth
-        image
-        trades {
-          nextToken
-          __typename
-        }
-        watchlist {
-          nextToken
-          __typename
-        }
-        portfolio {
-          nextToken
-          __typename
-        }
-        follows {
-          nextToken
-          __typename
-        }
-        following {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        owner
-        __typename
-      }
-      coin {
-        id
-        cgId
-        name
-        symbol
-        image
-        currentPrice
-        valueChange1H
-        valueChange24H
-        valueChange7D
-        priceHistory
-        createdAt
-        updatedAt
-        userWatchlistId
-        __typename
-      }
-      amount
-      price
-      createdAt
-      updatedAt
-      userTradesId
-      tradeCoinId
-      owner
       __typename
     }
   }

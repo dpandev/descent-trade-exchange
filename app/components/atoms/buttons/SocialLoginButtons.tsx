@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Auth } from 'aws-amplify';
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
-import { ThemedButton } from '../../Themed';
+import { RoundedButton } from '../../Themed';
 
 export default function SocialLoginButtons() {
 
@@ -19,17 +19,17 @@ export default function SocialLoginButtons() {
 
   return (
     <>
-      <ThemedButton onPress={onSignInApple}>
+      <RoundedButton onPress={onSignInApple}>
         Continue with Apple
-      </ThemedButton>
+      </RoundedButton>
 
-      <ThemedButton onPress={onSignInGoogle}>
+      <RoundedButton onPress={onSignInGoogle}>
         Continue with Google
-      </ThemedButton>
+      </RoundedButton>
 
-      {/* <ThemedButton onPress={onSignInFacebook}>
+      {/* <RoundedButton onPress={onSignInFacebook}>
         Continue with Facebook
-      </ThemedButton> */}
+      </RoundedButton> */}
     </>
   )
 }

@@ -3,47 +3,50 @@ import { View, ElementView } from '../../components/Themed';
 import PortfolioCoin from '../../components/molecules/PortfolioCoin';
 import PageHeader from '../../components/molecules/PageHeader';
 import { PreciseMoney } from '../../components/FormattedTextElements';
-import { useContext, useState, useEffect } from 'react';
-// import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
-// import { API, graphqlOperation } from 'aws-amplify'
-// import { getUserPortfolio } from './queries'
+import { useState, useEffect } from 'react';
+import { API, graphqlOperation } from 'aws-amplify'
 
-import { userInfo as dummyUser } from '../../../assets/dummyData/userInfo'
+import { AuthUserType, useAuthContext } from '../../utils/AuthContext';
+import { getUser } from '../../../src/graphql/queries';
+
+type PortfolioCoin = {
+  id: string;
+  coinId: string;
+  amount: number;
+}
 
 export default function TabTwoScreen() {
 
-  // const [portfolioCoins, setPortfolioCoins] = useState([])
-  // const [userInfo, setUserInfo] = useState([])
-  const [userInfo, setUserInfo] = useState(dummyUser[0])
-  const [portfolioCoins, setPortfolioCoins] = useState([...userInfo.portfolioCoins])
-  const [isLoading, setIsLoading] = useState(false)
-  // const {theUser} = useContext(AuthenticatedUserContext)
+  const [userInfo, setUserInfo] = useState<AuthUserType>();
+  const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoin[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const theUser = useAuthContext();
 
   const fetchAssets = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      // const response = await API.graphql(
-      //   graphqlOperation(
-      //     getUserPortfolio,
-      //     { id: theUser.id },
-      //   )
-      // )
-      // setPortfolioCoins(response.data.getUser.portfolioCoins.items)
-      // setUserInfo(response.data.getUser)
+      const response = await API.graphql({
+        ...graphqlOperation(
+          getUser,
+          { id: theUser.id },
+        ),
+        authMode: "API_KEY"
+      });
 
-      setUserInfo(dummyUser[0])
-      setPortfolioCoins([...userInfo.portfolioCoins])
+      console.log('roro', response.data.getUser.portfolio.items)
+      setPortfolioCoins(response.data.getUser.portfolio.items);
+      setUserInfo(response.data.getUser);
 
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchAssets()
-  }, [])
+    fetchAssets();
+  }, []);
 
   return (
     <View style={styles.root}>
@@ -62,7 +65,7 @@ export default function TabTwoScreen() {
         ListHeaderComponentStyle={{alignItems: 'center'}}
       />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -85,4 +88,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#6338F1',
   },
-})
+});

@@ -8,12 +8,13 @@ import { View } from '../../components/Themed'
 
 import { userInfo } from '../../../assets/dummyData/userInfo'
 import PageHeader from '../../components/molecules/PageHeader'
+import { useAuthContext } from '../../utils/AuthContext'
 
 export default function TabFourScreen() {
   // const { theUser } = useContext(AuthenticatedUserContext)
   // const [user, setUser] = useState(theUser)
 
-  const [user, setUser] = useState(userInfo[0])
+  const user = useAuthContext();
 
   const [activePage, setActivePage] = useState('')
 

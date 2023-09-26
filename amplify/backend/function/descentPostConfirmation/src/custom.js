@@ -45,14 +45,6 @@ exports.handler = async (event, context) => {
     'updatedAt': { S: date.toISOString() },
   }
 
-  if (event.request.userAttributes.picture) {
-    Item.image = { S: event.request.userAttributes.picture };
-  }
-
-  if (event.request.userAttributes.name) {
-    Item.name = { S: event.request.userAttributes.name };
-  }
-
   const params = {
     Item,
     TableName: process.env.USERTABLE,

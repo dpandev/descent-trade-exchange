@@ -21,7 +21,7 @@
       "function": {
         "descentPostConfirmation": {
           "deploymentBucketName": "amplify-descent-dev-130309-deployment",
-          "s3Key": "amplify-builds/descentPostConfirmation-497a534d4d4839786754-build.zip"
+          "s3Key": "amplify-builds/descentPostConfirmation-384246683065614a7031-build.zip"
         }
       },
       "storage": {

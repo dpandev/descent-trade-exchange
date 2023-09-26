@@ -1,23 +1,24 @@
-import { StyleSheet, Image } from 'react-native'
-import React, { useState } from 'react'
-import { View, Text, RoundedButton } from '../../components/Themed'
-import { AbbreviateNum, Networth, ShortDate } from '../../components/FormattedTextElements'
-import { useNavigation } from '@react-navigation/native'
+import { StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, RoundedButton } from '../../components/Themed';
+import { AbbreviateNum, Networth, ShortDate } from '../../components/FormattedTextElements';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ProfileScreen({user}: any) {
-  const navigation = useNavigation()
-  const [settingsActive, setSettingsActive] = useState(false)
-  // console.log('profileUser', user)
+  const navigation = useNavigation();
+  console.log('profileUser', user.id);
+  console.log('trades:', user);
 
   const onSettingsPressed = () => {
-    navigation.navigate('Settings')
+    navigation.navigate('Settings');
   }
 
   return (
     <View style={styles.root}>
       <View style={styles.profileContainer}>
         <Image 
-          source={{ uri: user?.image }} 
+          src={user?.image} 
+          source={user?.image} 
           width={50}
           height={50}
           style={styles.profileImage}
@@ -30,16 +31,15 @@ export default function ProfileScreen({user}: any) {
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            <AbbreviateNum value={user?.totalTrades} style={styles.profileTextData}/>
+            <AbbreviateNum value={user?.trades?.length || 0} style={styles.profileTextData}/>
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            <AbbreviateNum value={user?.followers?.length || 0} style={styles.profileTextData}/>
+            <AbbreviateNum value={user?.following?.length || 0} style={styles.profileTextData}/>
             {/* <Text style={styles.profileTextData}>{user?.followers?.length.toLocaleString('en-US')}</Text> */}
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
-          {/* <ShortDate value={user?.createdAt} /> */}
-          <ShortDate value={Date()} />
+          <ShortDate value={user?.createdAt} />
         </View>
       </View>
       <RoundedButton
@@ -51,7 +51,7 @@ export default function ProfileScreen({user}: any) {
         Settings
       </RoundedButton>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -60,6 +60,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: 25,
+    width: '100%',
+    flexWrap: 'wrap',
   },
   profileContainer: {
     flexDirection: 'row',
@@ -68,6 +70,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 10,
+    backgroundColor: '#1A1C2A',
   },
   profileInfo: {
     marginLeft: 20,
@@ -88,4 +91,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 45,
     width: 'auto',
   },
-})
+});

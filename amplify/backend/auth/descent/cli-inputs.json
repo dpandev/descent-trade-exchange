@@ -45,10 +45,8 @@
     "userPoolGroups": false,
     "userPoolGroupList": [],
     "adminQueries": false,
-    "thirdPartyAuth": true,
-    "authProviders": [
-      "accounts.google.com"
-    ],
+    "thirdPartyAuth": false,
+    "authProviders": [],
     "hostedUI": true,
     "hostedUIDomainName": "r2xx6ab9fdzk",
     "authProvidersUserPool": [
@@ -86,7 +84,7 @@
         "custom"
       ]
     },
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https:/exp://10.0.0.246/8081/\"],\"LogoutURLs\":[\"https:/exp://10.0.0.246/8081/\"]}",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://10.0.0.246:8081/\"],\"LogoutURLs\":[\"exp://10.0.0.246:8081/\"]}",
     "parentStack": {
       "Ref": "AWS::StackId"
     },

@@ -1,10 +1,10 @@
 {
   "expo": {
     "name": "descent-trade-exchange",
-    "slug": "descent-trader-app",
+    "slug": "descent-trade-exchange",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "myapp",
+    "scheme": "descent",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
