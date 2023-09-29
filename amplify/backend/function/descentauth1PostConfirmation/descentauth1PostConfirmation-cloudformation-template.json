@@ -67,12 +67,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "descentPostConfirmation",
+            "descentauth1PostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "descentPostConfirmation",
+                  "descentauth1PostConfirmation",
                   "-",
                   {
                     "Ref": "env"
@@ -122,12 +122,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "descentPostConfirmation",
+            "descentauth1PostConfirmation",
             {
               "Fn::Join": [
                 "",
                 [
-                  "descentPostConfirmation",
+                  "descentauth1PostConfirmation",
                   "-",
                   {
                     "Ref": "env"

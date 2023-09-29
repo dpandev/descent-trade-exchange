@@ -21,7 +21,7 @@ export const getUser = /* GraphQL */ `
       portfolio {
         id
         amount
-        coinID
+        coinId
         __typename
       }
       followers
@@ -29,25 +29,18 @@ export const getUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
 `;
 export const listUsers = /* GraphQL */ `
   query ListUsers(
-    $id: ID
     $filter: ModelUserFilterInput
     $limit: Int
     $nextToken: String
-    $sortDirection: ModelSortDirection
   ) {
-    listUsers(
-      id: $id
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
+    listUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
         displayName
@@ -65,7 +58,7 @@ export const listUsers = /* GraphQL */ `
         portfolio {
           id
           amount
-          coinID
+          coinId
           __typename
         }
         followers
@@ -73,6 +66,7 @@ export const listUsers = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       nextToken

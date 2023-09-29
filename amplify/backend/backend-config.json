@@ -1,34 +1,32 @@
 {
   "api": {
-    "descent": {
+    "descentgql": {
       "dependsOn": [
         {
           "attributes": [
             "UserPoolId"
           ],
           "category": "auth",
-          "resourceName": "descent"
+          "resourceName": "descentauth1"
         }
       ],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AWS_IAM"
-            },
-            {
-              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-              "userPoolConfig": {
-                "userPoolId": "authdescent"
-              }
+              "apiKeyConfig": {
+                "apiKeyExpirationDate": "2024-09-28T15:36:12.786Z",
+                "apiKeyExpirationDays": 365,
+                "description": ""
+              },
+              "authenticationType": "API_KEY"
             }
           ],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authdescentauth1"
+            }
           }
         }
       },
@@ -37,7 +35,7 @@
     }
   },
   "auth": {
-    "descent": {
+    "descentauth1": {
       "customAuth": false,
       "dependsOn": [
         {
@@ -46,7 +44,7 @@
             "Name"
           ],
           "category": "function",
-          "resourceName": "descentPostConfirmation",
+          "resourceName": "descentauth1PostConfirmation",
           "triggerProvider": "Cognito"
         }
       ],
@@ -56,12 +54,7 @@
           "SMS"
         ],
         "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [
-            "REQUIRES_LOWERCASE",
-            "REQUIRES_NUMBERS",
-            "REQUIRES_SYMBOLS",
-            "REQUIRES_UPPERCASE"
-          ],
+          "passwordPolicyCharacters": [],
           "passwordPolicyMinLength": 8
         },
         "signupAttributes": [
@@ -82,43 +75,36 @@
     }
   },
   "function": {
-    "descentPostConfirmation": {
+    "descentauth1PostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
   "parameters": {
-    "AMPLIFY_auth_descent_googleClientId": {
+    "AMPLIFY_auth_descentauth1_googleClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "descent"
+          "resourceName": "descentauth1"
         }
       ]
     },
-    "AMPLIFY_function_descentPostConfirmation_deploymentBucketName": {
+    "AMPLIFY_function_descentauth1PostConfirmation_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "descentPostConfirmation"
+          "resourceName": "descentauth1PostConfirmation"
         }
       ]
     },
-    "AMPLIFY_function_descentPostConfirmation_s3Key": {
+    "AMPLIFY_function_descentauth1PostConfirmation_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "descentPostConfirmation"
+          "resourceName": "descentauth1PostConfirmation"
         }
       ]
-    }
-  },
-  "storage": {
-    "s3descentstoragef6c2f297": {
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "S3"
     }
   }
 }

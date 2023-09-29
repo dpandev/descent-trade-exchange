@@ -1,12 +1,11 @@
 {
-  "AppSyncApiName": "descent",
+  "AppSyncApiName": "descentgql",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authdescent",
+      "authdescentauth1",
       "Outputs.UserPoolId"
     ]
-  },
-  "AuthModeLastUpdated": "2023-09-25T14:28:08.270Z"
+  }
 }

@@ -1,13 +1,13 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "descent": {
+    "descentgql": {
       "GraphQLAPIEndpointOutput": "string",
       "GraphQLAPIIdOutput": "string",
       "GraphQLAPIKeyOutput": "string"
     }
   },
   "auth": {
-    "descent": {
+    "descentauth1": {
       "AppClientID": "string",
       "AppClientIDWeb": "string",
       "GoogleWebClient": "string",
@@ -21,17 +21,11 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
-    "descentPostConfirmation": {
+    "descentauth1PostConfirmation": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
       "Name": "string",
-      "Region": "string"
-    }
-  },
-  "storage": {
-    "s3descentstoragef6c2f297": {
-      "BucketName": "string",
       "Region": "string"
     }
   }

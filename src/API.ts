@@ -28,7 +28,7 @@ export type TradeInput = {
 export type PortfolioCoinInput = {
   id: string,
   amount: number,
-  coinID: string,
+  coinId: string,
 };
 
 export type ModelUserConditionInput = {
@@ -112,6 +112,7 @@ export type User = {
   createdAt: string,
   updatedAt: string,
   watchlist?: Array< string | null > | null,
+  owner?: string | null,
 };
 
 export type Trade = {
@@ -127,7 +128,7 @@ export type PortfolioCoin = {
   __typename: "PortfolioCoin",
   id: string,
   amount: number,
-  coinID: string,
+  coinId: string,
 };
 
 export type UpdateUserInput = {
@@ -241,12 +242,6 @@ export type ModelIDInput = {
   attributeType?: ModelAttributeTypes | null,
   size?: ModelSizeInput | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelUserConnection = {
   __typename: "ModelUserConnection",
@@ -373,13 +368,14 @@ export type CreateUserMutation = {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
-      coinID: string,
+      coinId: string,
     } | null > | null,
     followers?: Array< string | null > | null,
     following?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
     watchlist?: Array< string | null > | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -408,13 +404,14 @@ export type UpdateUserMutation = {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
-      coinID: string,
+      coinId: string,
     } | null > | null,
     followers?: Array< string | null > | null,
     following?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
     watchlist?: Array< string | null > | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -443,13 +440,14 @@ export type DeleteUserMutation = {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
-      coinID: string,
+      coinId: string,
     } | null > | null,
     followers?: Array< string | null > | null,
     following?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
     watchlist?: Array< string | null > | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -546,22 +544,21 @@ export type GetUserQuery = {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
-      coinID: string,
+      coinId: string,
     } | null > | null,
     followers?: Array< string | null > | null,
     following?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
     watchlist?: Array< string | null > | null,
+    owner?: string | null,
   } | null,
 };
 
 export type ListUsersQueryVariables = {
-  id?: string | null,
   filter?: ModelUserFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
 };
 
 export type ListUsersQuery = {
@@ -586,13 +583,14 @@ export type ListUsersQuery = {
         __typename: "PortfolioCoin",
         id: string,
         amount: number,
-        coinID: string,
+        coinId: string,
       } | null > | null,
       followers?: Array< string | null > | null,
       following?: Array< string | null > | null,
       createdAt: string,
       updatedAt: string,
       watchlist?: Array< string | null > | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -650,6 +648,7 @@ export type ListCoinsQuery = {
 
 export type OnCreateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateUserSubscription = {
@@ -672,18 +671,20 @@ export type OnCreateUserSubscription = {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
-      coinID: string,
+      coinId: string,
     } | null > | null,
     followers?: Array< string | null > | null,
     following?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
     watchlist?: Array< string | null > | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateUserSubscription = {
@@ -706,18 +707,20 @@ export type OnUpdateUserSubscription = {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
-      coinID: string,
+      coinId: string,
     } | null > | null,
     followers?: Array< string | null > | null,
     following?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
     watchlist?: Array< string | null > | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteUserSubscription = {
@@ -740,13 +743,14 @@ export type OnDeleteUserSubscription = {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
-      coinID: string,
+      coinId: string,
     } | null > | null,
     followers?: Array< string | null > | null,
     following?: Array< string | null > | null,
     createdAt: string,
     updatedAt: string,
     watchlist?: Array< string | null > | null,
+    owner?: string | null,
   } | null,
 };
 

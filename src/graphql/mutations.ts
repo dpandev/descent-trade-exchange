@@ -24,7 +24,7 @@ export const createUser = /* GraphQL */ `
       portfolio {
         id
         amount
-        coinID
+        coinId
         __typename
       }
       followers
@@ -32,6 +32,7 @@ export const createUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -58,7 +59,7 @@ export const updateUser = /* GraphQL */ `
       portfolio {
         id
         amount
-        coinID
+        coinId
         __typename
       }
       followers
@@ -66,6 +67,7 @@ export const updateUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -92,7 +94,7 @@ export const deleteUser = /* GraphQL */ `
       portfolio {
         id
         amount
-        coinID
+        coinId
         __typename
       }
       followers
@@ -100,6 +102,7 @@ export const deleteUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }

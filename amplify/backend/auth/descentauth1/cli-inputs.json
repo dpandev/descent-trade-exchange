@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "testAuthIdentityPool",
+    "identityPoolName": "descentauthidentitypool1",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "descen6cf5ae22",
-    "userPoolName": "descent",
+    "resourceNameTruncated": "descen14ffbbd8",
+    "userPoolName": "descent_userpool_g1",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -14,16 +14,11 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code for Descent Trade {####}",
-    "emailVerificationMessage": "Thank you for signing up with Descent Trading. Here is your sign up verification code: {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [
-      "Requires Lowercase",
-      "Requires Numbers",
-      "Requires Symbols",
-      "Requires Uppercase"
-    ],
+    "passwordPolicyCharacters": [],
     "requiredAttributes": [
       "email"
     ],
@@ -32,27 +27,32 @@
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [],
     "userpoolClientReadAttributes": [],
-    "userpoolClientLambdaRole": "descen6cf5ae22_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "descen14ffbbd8_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "6cf5ae22",
-    "resourceName": "descent",
+    "sharedId": "14ffbbd8",
+    "resourceName": "descentauth1",
     "authSelections": "identityPoolAndUserPool",
-    "serviceName": "Cognito",
+    "useDefault": "manual",
+    "thirdPartyAuth": false,
+    "authProviders": [],
     "usernameAttributes": [
       "email"
     ],
-    "useDefault": "manual",
     "userPoolGroups": false,
-    "userPoolGroupList": [],
     "adminQueries": false,
-    "thirdPartyAuth": false,
-    "authProviders": [],
+    "triggers": {
+      "PostConfirmation": [
+        "custom"
+      ]
+    },
     "hostedUI": true,
-    "hostedUIDomainName": "r2xx6ab9fdzk",
+    "hostedUIDomainName": "descent14ffbbd8-14ffbbd8",
     "authProvidersUserPool": [
       "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
+    "userPoolGroupList": [],
+    "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "useEnabledMfas": true,
     "authRoleArn": {
@@ -71,7 +71,7 @@
     "dependsOn": [
       {
         "category": "function",
-        "resourceName": "descentPostConfirmation",
+        "resourceName": "descentauth1PostConfirmation",
         "triggerProvider": "Cognito",
         "attributes": [
           "Arn",
@@ -79,16 +79,11 @@
         ]
       }
     ],
-    "triggers": {
-      "PostConfirmation": [
-        "custom"
-      ]
-    },
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://10.0.0.246:8081/\"],\"LogoutURLs\":[\"exp://10.0.0.246:8081/\"]}",
+    "permissions": [],
+    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"descentauth1PostConfirmation\"\n  }\n]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://10.0.0.246:8081\"],\"LogoutURLs\":[\"exp://10.0.0.246:8081\"]}",
     "parentStack": {
       "Ref": "AWS::StackId"
-    },
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"PostConfirmation\",\n    \"lambdaFunctionName\": \"descentPostConfirmation\"\n  }\n]",
-    "permissions": []
+    }
   }
 }
