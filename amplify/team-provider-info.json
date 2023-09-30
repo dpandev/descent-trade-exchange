@@ -21,7 +21,7 @@
       "function": {
         "descentauth1PostConfirmation": {
           "deploymentBucketName": "amplify-amplify02141e02e8b84-staging-151844-deployment",
-          "s3Key": "amplify-builds/descentauth1PostConfirmation-744d354b73373836766e-build.zip"
+          "s3Key": "amplify-builds/descentauth1PostConfirmation-414738644b326a6f7571-build.zip"
         }
       },
       "api": {

@@ -2,9 +2,7 @@
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 
-const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
-
-const dbClient = new DynamoDBClient({});
+const { default: fetch, Request } = require("node-fetch");
 
 exports.handler = async (event, context) => {
   // insert code to be executed by your lambda trigger
@@ -14,53 +12,112 @@ exports.handler = async (event, context) => {
     return;
   }
 
-  // Save the new user to DynamoDB
   const date = new Date();
 
-  const tradeItem = {
-    id: { S: `${event.request.userAttributes.sub}-${date.getTime()}` },
-    coinId: { S: process.env.USD_COIN_ID },
-    amount: { N: '250000.0' },
-    price: { N: '1.0' },
-    date: { S: date.toISOString() },
-  }
-  const portfolioCoinItem = {
-    id: { S: `${event.request.userAttributes.sub}-usd` },
-    coinID: { S: process.env.USD_COIN_ID },
-    amount: { N: '250000.0' },
-    owner: { S: event.request.userAttributes.sub }
-  }
-  console.log('tradeItem:', tradeItem)
-  console.log('portCoin:', portfolioCoinItem)
+  const GRAPHQL_ENDPOINT = process.env.API_DESCENT_GRAPHQLENDPOINTOUTPUT;
+  const GRAPHQL_API_KEY = process.env.API_DECENT_GRAPHQLKEYOUTPUT
+  
+  const query = /* GraphQL */ `
+    mutation CreateUser(
+      $input: CreateUserInput!
+      $condition: ModelUserConditionInput
+    ) {
+      createUser(input: $input, condition: $condition) {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          id
+          coinId
+          amount
+          price
+          date
+          __typename
+        }
+        portfolio {
+          id
+          amount
+          coinId
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+    }
+  `;
 
-  let userItem = {
-    id: { S: event.request.userAttributes.sub },
-    image: { S: process.env.DEFAULT_PROFILE_IMG },
-    email: { S: event.request.userAttributes.email },
-    displayName: { S: event.request.userAttributes.sub.substring(0,6) },
-    networth: { N: "250000.0" },
-    // watchlist: { SS: [] },
-    // following: { SS: [] },
-    // followers: { SS: [] },
-    createdAt: { S: date.toISOString() },
-    updatedAt: { S: date.toISOString() },
-    // portfolio: { PortfolioCoin: [portfolioCoinItem] },
-    // trades: { Trade: [tradeItem] }
+  let variables = {
+    input: {
+      id: event.request.userAttributes.sub,
+      createdAt: date.toISOString(),
+      updatedAt: date.toISOString(),
+      displayName: event.request.userAttributes.sub.substring(0,6),
+      email: event.request.userAttributes.email,
+      image: process.env.DEFAULT_PROFILE_IMG,
+      networth: 250000,
+      portfolio: {
+        id: `${event.request.userAttributes.sub}-usd`,
+        coinId: process.env.USD_COIN_ID, 
+        amount: 250000, 
+      },
+      trades: {
+        id: `${event.request.userAttributes.sub}-trade1`,
+        amount: 250000,
+        coinId: process.env.USD_COIN_ID,
+        date: date.toISOString(),
+        price: 1,
+      },
+      watchlist: "0",
+      followers: "",
+      following: "",
+    }
   }
 
   if (event.request.userAttributes.picture) {
-    userItem.image = { S: event.request.userAttributes.picture };
+    variables.input.image = event.request.userAttributes.picture;
   }
 
-  const userParams = {
-    TableName: process.env.USER_TABLE,
-    Item: userItem,
+  /** @type {import('node-fetch').RequestInit} */
+  const options = {
+    method: 'POST',
+    headers: {
+      'x-api-key': GRAPHQL_API_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ query, variables })
+  };
+
+  const request = new Request(GRAPHQL_ENDPOINT, options);
+
+  let statusCode = 200;
+  let body;
+  let response;
+
+  try {
+    response = await fetch(request);
+    body = await response.json();
+    if (body.errors) statusCode = 400;
+    console.log()
+  } catch (error) {
+    statusCode = 400;
+    body = {
+      errors: [
+        {
+          status: response.status,
+          message: error.message,
+          stack: error.stack
+        }
+      ]
+    };
   }
-  console.log("userParams", userParams)
-  const command = new PutItemCommand(userParams);
-  console.log('command',command)
-  await dbClient.send(command);
-  console.log("Success1")
+
+  console.log(statusCode, JSON.stringify(body));
 
   context.done(null, event);
 };
