@@ -1,16 +1,17 @@
-import { View, Text, RoundedButton } from '../../components/Themed'
-import { StyleSheet } from 'react-native'
-import React, { useContext, useState } from 'react'
-// import { Auth } from 'aws-amplify'
-// import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
+import { View, RoundedButton } from '../../components/Themed';
+import { StyleSheet } from 'react-native';
+import React from 'react';
+import { Auth } from 'aws-amplify'
 
 export default function SettingsScreen() {
-  // const { setTheUser } = useContext(AuthenticatedUserContext)
-  const [activeButton, setActiveButton] = useState(false)
 
   const onSignOut = async () => {
-    // await Auth.signOut().then(setTheUser(null))
+    await Auth.signOut();
     console.log('signout')
+  }
+
+  const changeTheme = () => {
+    console.log('changing theme')
   }
 
   return (
@@ -22,8 +23,15 @@ export default function SettingsScreen() {
       >
         Sign Out
       </RoundedButton>
+      <RoundedButton
+        onPress={changeTheme}
+        textStyles={styles.lightColor}
+        buttonStyles={styles.signOutBtn}
+      >
+        Change Theme
+      </RoundedButton>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -37,4 +45,4 @@ const styles = StyleSheet.create({
   },
   lightColor: {},
   signOutBtn: {},
-})
+});

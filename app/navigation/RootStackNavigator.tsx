@@ -13,6 +13,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import { useAuthContext } from "../utils/AuthContext";
 
 import AuthStackNavigator from "./AuthStackNavigator";
+import PlayerDetailsScreen from "../screens/PlayerDetailsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -21,23 +22,25 @@ export default function RootStackNavigator() {
 
   const colorScheme = useColorScheme();
 
+  console.log('userRootStackNav:', user)
+
   return (
     <>
     { user?.id ? (
       <Stack.Navigator>
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-        <Stack.Screen 
-          name="Settings" 
-          component={SettingsScreen} 
-          options={{ 
-            headerStyle: { backgroundColor: Colors[colorScheme].secondary },
-            headerTintColor: 'white', 
-            headerTitleStyle: { fontWeight: 'bold'},   
-            presentation: 'modal', 
-          }}
-        />
-        <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
+          <Stack.Screen 
+            name="Settings" 
+            component={SettingsScreen} 
+            options={{ 
+              headerStyle: { backgroundColor: Colors[colorScheme].secondary },
+              headerTintColor: 'white', 
+              headerTitleStyle: { fontWeight: 'bold'},   
+              presentation: 'modal', 
+            }}
+          />
+          <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
           <Stack.Screen name="Modal" component={ModalScreen} />
           <Stack.Screen 
             name="CoinDetails" 
@@ -57,6 +60,16 @@ export default function RootStackNavigator() {
               headerStyle: { backgroundColor: Colors[colorScheme].secondary }, 
               headerTintColor: 'white', 
               headerTitleStyle: { fontWeight: 'bold'}, 
+            }} 
+          />
+          <Stack.Screen 
+            name="PlayerDetails" 
+            component={PlayerDetailsScreen} 
+            options={{ 
+              title: 'Player Details', 
+              headerStyle: { backgroundColor: Colors[colorScheme].secondary },
+              headerTintColor: 'white', 
+              headerTitleStyle: { fontWeight: 'bold'},  
             }} 
           />
         </Stack.Group>

@@ -25,13 +25,20 @@ import { userInfo } from '../../../assets/dummyData/userInfo';
 
 const USD_COIN_ID = 'usd';//TODO remove
 
+export type PortfolioCoin = {
+  // id: string;
+  amount: number;
+  // coinId: string;
+  coin: {}; //temp for dummy data
+}
+
 const CoinExchangeScreen = () => {
 
-  const [coinAmount, setCoinAmount] = useState('')
-  const [coinUSDValue, setCoinUSDValue] = useState('')
+  const [coinAmount, setCoinAmount] = useState<string>('')
+  const [coinUSDValue, setCoinUSDValue] = useState<string>('')
   // const [usdPortfolioCoin, setUsdPortfolioCoin] = useState(null);
-  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState(userInfo[0].portfolioCoins[0]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState<PortfolioCoin>(userInfo[0].portfolioCoins[0]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // const { theUser } = useContext(AuthenticatedUserContext)
   // const userId = theUser.id

@@ -6,15 +6,15 @@ import { RoundedButton } from '../../Themed';
 export default function SocialLoginButtons() {
 
   const onSignInApple = async () => {
-    await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Apple })
+    await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Apple });
   }
 
   const onSignInGoogle = async () => {
-    await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google })
+    await Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Google });
   }
 
   const onSignInFacebook = () => {
-    Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Facebook })
+    Auth.federatedSignIn({ provider: CognitoHostedUIIdentityProvider.Facebook });
   }
 
   return (
@@ -31,7 +31,7 @@ export default function SocialLoginButtons() {
         Continue with Facebook
       </RoundedButton> */}
     </>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
   },
-})
+});

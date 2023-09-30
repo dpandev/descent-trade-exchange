@@ -5,7 +5,7 @@ import { Octicons } from "@expo/vector-icons";
 import styles from "./styles";
 import { PercentageChange, PreciseMoney } from "../../components/FormattedTextElements";
 import CoinPriceGraph from "../../components/organisms/PriceGraph";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 // import { API, graphqlOperation } from 'aws-amplify';
 // import { getCoin, listPortfolioCoins } from '../../src/graphql/queries';
 // import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
@@ -20,12 +20,12 @@ const dummyCoins = coins;
 
 const CoinDetailsScreen = () => {
   // const { theUser } = useContext(AuthenticatedUserContext)
-  const [starActive, setStarActive] = useState(false)//todo replace with data
+  const [starActive, setStarActive] = useState<boolean>(false);
   // const [coin, setCoin] = useState(null)
   // const [portfolioCoin, setPortfolioCoin] = useState(null)
 
   const navigation = useNavigation();
-  const route = useRoute();
+  const route: RouteProp<ParamListBase> = useRoute();
 
   const [coin, setCoin] = useState({
     id: 'bitcoin',
@@ -37,7 +37,7 @@ const CoinDetailsScreen = () => {
     valueChange7D: -1.12,
     currentPrice: 59420,
     priceHistory: priceHistory
-  })
+  });
 
   const [portfolioCoin, setPortfolioCoin] = useState({
     coin: {
@@ -49,7 +49,7 @@ const CoinDetailsScreen = () => {
       priceHistory: priceHistory,
     },
     amount: 1.7,
-  })
+  });
 
   const fetchCoinData = async () => {
     if (!route.params?.id) {
@@ -82,7 +82,7 @@ const CoinDetailsScreen = () => {
       // if (response.data.listPortfolioCoins.items.length > 0) {
       //   setPortfolioCoin(response.data.listPortfolioCoins.items[0])
       // }
-      const routeId = route.params.id
+      const routeId = route.params?.id;
       const dummyCoinIndex = Object.values(userInfo[0].portfolioCoins).filter(x => x.coin.id === routeId)
       setPortfolioCoin(dummyCoinIndex[0])
       setCoin(dummyCoinIndex[0].coin)
@@ -96,7 +96,7 @@ const CoinDetailsScreen = () => {
     fetchCoinData()
     fetchPortfolioCoinData()
     console.log('running a marathon');
-  }, [])
+  }, []);
 
   const onBuy = () => {
     navigation.navigate('CoinExchange', { isBuy: true, coin, portfolioCoin });
@@ -107,11 +107,11 @@ const CoinDetailsScreen = () => {
   }
 
   const onStarPressed = () => {
-    setStarActive(prevState => !prevState)
+    setStarActive(prevState => !prevState);
   }
 
   if (!coin) {
-    return <ActivityIndicator />
+    return <ActivityIndicator />;
   }
 
   return (
@@ -125,9 +125,7 @@ const CoinDetailsScreen = () => {
           </ElementView>
         </ElementView>
         <ElementView style={{alignItems: 'flex-end'}}>
-          <Pressable
-            onPress={onStarPressed}
-          >
+          <Pressable onPress={onStarPressed}>
             <Octicons name={starActive ? 'star-fill' : 'star'} size={30} color={'#6338F1'} />
           </Pressable>
         </ElementView>

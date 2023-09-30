@@ -1,187 +1,111 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Image, Pressable, ActivityIndicator } from 'react-native';
+import { Image, Pressable, ActivityIndicator, StyleSheet, View } from 'react-native';
 import { ElementView, Text, RoundedButton } from '../../components/Themed'
-import { Octicons } from "@expo/vector-icons";
-// import styles from "./styles";
-import { PercentageChange, PreciseMoney } from "../../components/FormattedTextElements";
-import CoinPriceGraph from "../../components/organisms/PriceGraph";
-import { useNavigation, useRoute } from "@react-navigation/native";
-// import { API, graphqlOperation } from 'aws-amplify';
-// import { getCoin, listPortfolioCoins } from '../../src/graphql/queries';
-// import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
+import { AbbreviateNum, Networth, PercentageChange, PreciseMoney, ShortDate } from "../../components/FormattedTextElements";
+import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { API, graphqlOperation } from 'aws-amplify';
+import { getUser } from '../../../src/graphql/queries';
 
-import priceHistory from '../../../assets/dummyData/priceHistory';
+type PlayerDetails = {
+  displayName: string;
+  image: string;
+  networth: number;
+  createdAt: string;
+  trades: any;
+  followers: [];
+  following: [];
+}
 
 const PlayerDetailsScreen = () => {
-  // const { theUser } = useContext(AuthenticatedUserContext)
-  const [starActive, setStarActive] = useState(false)//todo replace with data
-  // const [coin, setCoin] = useState(null)
-  // const [portfolioCoin, setPortfolioCoin] = useState(null)
+  const route: RouteProp<ParamListBase> = useRoute();
 
-  const navigation = useNavigation();
-  const route = useRoute();
-
-  const [coin, setCoin] = useState({
-    id: '1',
-    image: 'https://bitcoin.org/img/icons/opengraph.png',
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    valueChange24H: -1.12,
-    valueChange1H: 2.12,
-    valueChange7D: -1.12,
-    currentPrice: 59420,
-    amount: 2,
-    priceHistoryString: priceHistory
-  })
-
-  const [portfolioCoin, setPortfolioCoin] = useState({
-    id: '1',
-    name: 'Bitcoin',
-    image: 'https://bitcoin.org/img/icons/opengraph.png',
-    symbol: 'BTC',
-    amount: 1.23,
-    valueUSD: 59420,
-  })
-
-  // const fetchCoinData = async () => {
-  //   if (!route.params?.id) {
-  //     return;
-  //   }
-  //   try {
-  //     const response = await API.graphql(graphqlOperation(getCoin, { id: route.params.id }))
-  //     setCoin(response.data.getCoin)
-  //   } catch(error) {
-  //     console.log('error2', error);
-  //   }
-  // }
-
-  // const fetchPortfolioCoinData = async () => {
-  //   if (!route.params?.id) {
-  //     return;
-  //   }
-  //   try {
-  //     const response = await API.graphql(
-  //       graphqlOperation(//seems fixed, now need to refresh component/update state, fix position display
-  //         listPortfolioCoins, 
-  //         { filter: {
-  //           and: {
-  //             coinId: { eq: route.params?.id},
-  //             userId: { eq: theUser.id }
-  //           }
-  //         }}
-  //       )
-  //     )
-  //     if (response.data.listPortfolioCoins.items.length > 0) {
-  //       setPortfolioCoin(response.data.listPortfolioCoins.items[0])
-  //     }
-  //   } catch(error) {
-  //     console.log('error3', error);
-  //   }
-  // }
+  const [player, setPlayer] = useState<PlayerDetails>();
   
-
-  // useEffect(() => {
-  //   fetchCoinData()
-  //   fetchPortfolioCoinData()
-  //   console.log('running a marathon');
-  // }, [])
-
-  const onBuy = () => {
-    // navigation.navigate('CoinExchange', { isBuy: true, coin, portfolioCoin });
+  const fetchPlayerData = async () => {
+    if (!route.params?.id) {
+      return;
+    }
+    try {
+      const response = await API.graphql(graphqlOperation(getUser, { id: route.params.id }));
+      setPlayer(response.data.getUser);
+    } catch(error) {
+      console.log('error2', error);
+    }
   }
 
-  const onSell = () => {
-    // navigation.navigate('CoinExchange', { isBuy: false, coin, portfolioCoin });
-  }
+  useEffect(() => {
+    fetchPlayerData();
+    console.log('running a player marathon');
+  }, []);
 
-  const onStarPressed = () => {
-    setStarActive(prevState => !prevState)
-  }
-
-  if (!coin) {
-    return <ActivityIndicator />
+  if (!player) {
+    return (<ActivityIndicator />);
   }
 
   return (
-    <ElementView style={styles.root}>
-      <ElementView style={styles.topContainer}>
-        <ElementView style={styles.left}>
-          <Image style={styles.image} source={{ uri: coin.image}} />
-          <ElementView>
-            <Text style={styles.name}>{coin.name}</Text>
-            <Text style={styles.symbol}>{coin.symbol}</Text>
-          </ElementView>
-        </ElementView>
-        <ElementView style={{alignItems: 'flex-end'}}>
-          <Pressable
-            onPress={onStarPressed}
-          >
-            <Octicons name={starActive ? 'star-fill' : 'star'} size={30} color={'#6338F1'} />
-          </Pressable>
-        </ElementView>
-      </ElementView>
-
-      <ElementView style={styles.row}>
-        <ElementView style={styles.valueContainer}>
-          <Text style={styles.label}>Current price</Text>
-          <PreciseMoney value={coin.currentPrice} style={styles.value} />
-        </ElementView>
-
-        <ElementView style={{flexDirection: 'row'}}>
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>1 hour</Text>
-            <PercentageChange value={coin.valueChange1H} />
-          </ElementView>
-
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>1 day</Text>
-            <PercentageChange value={coin.valueChange24H} />
-          </ElementView>
-
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>7 days</Text>
-            <PercentageChange value={coin.valueChange7D} />
-          </ElementView>
-        </ElementView>
-      </ElementView>
-
-      {coin?.priceHistoryString 
-        && <CoinPriceGraph dataString={coin.priceHistoryString} />}
-
-      <ElementView style={[styles.row, {justifyContent: 'space-evenly'}]}>
-        <Text style={styles.positionLabel}>Position</Text>
-        <ElementView>
-          <Text>
-            {portfolioCoin?.amount?.toLocaleString('en-US') || 0} {coin.symbol}
-            {/* {' '} */}
-            {/* (<PreciseMoney value={coin.currentPrice * (portfolioCoin?.amount || 0)} />) */}
+    <View style={styles.root}>
+      <View style={styles.profileContainer}>
+        <Image 
+          src={player?.image} 
+          source={{ uri: player?.image }} 
+          width={50}
+          height={50}
+          style={styles.profileImage}
+        />
+        <View style={styles.profileInfo}>
+          <Text style={styles.profileName}>{player?.displayName}</Text>
+          <Text style={styles.profileText}>
+            Net Worth: {''}
+            <Networth value={player?.networth} />
           </Text>
-          <ElementView style={styles.rowText}>
-            <PreciseMoney value={coin.currentPrice * (portfolioCoin?.amount || 0)} />
-            <Text> USD</Text>
-          </ElementView>
-        </ElementView>
-      </ElementView>
-
-      <ElementView style={[styles.row, { marginTop: 'auto' }]}>
-        <RoundedButton
-          onPress={onBuy}
-          textStyles={styles.buttonText}
-          buttonStyles={styles.button}
-        >
-          Buy
-        </RoundedButton>
-        <RoundedButton
-          onPress={onSell}
-          textStyles={styles.buttonText}
-          buttonStyles={styles.button}
-        >
-          Sell
-        </RoundedButton> 
-      </ElementView>
-
-    </ElementView>
+          <Text style={styles.profileText}>
+            Total Trades: {''}
+            {/* <AbbreviateNum value={player?.trades?.length || 0} style={styles.profileTextData}/> */}
+          </Text>
+          <Text style={styles.profileText}>
+            Followers: {''}
+            {/* <AbbreviateNum value={player?.followers?.length || 0} style={styles.profileTextData}/> */}
+            {/* <Text style={styles.profileTextData}>{player?.followers?.length.toLocaleString('en-US')}</Text> */}
+          </Text>
+          <Text style={styles.profileText}>Member Since:</Text>
+          <ShortDate value={player?.createdAt} />
+        </View>
+      </View>
+    </View>
   );
 };
 
 export default PlayerDetailsScreen;
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: 25,
+    width: '100%',
+  },
+  profileContainer: {
+    flexDirection: 'row',
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    backgroundColor: '#1A1C2A',
+  },
+  profileInfo: {
+    marginLeft: 20,
+  },
+  profileName: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 6,
+  },
+  profileText: {
+    marginVertical: 2,
+  },
+  profileTextData: {
+    color: '#3EF03E',
+  },
+});

@@ -18,12 +18,12 @@ export default function SocialScreen() {
     { id: 2, name: 'Following', component: <FollowingScreen user={user} /> },
   ]
 
-  const [active, setActive] = useState(tabs[0])
+  const [active, setActive] = useState(tabs[0]);
 
   // type onPress: (event: GestureResponderEvent) => void;
 
   const onButtonPress = (tabId: number) => {
-    setActive(tabs[tabId])
+    setActive(tabs[tabId]);
   }
 
   return (
@@ -45,7 +45,9 @@ export default function SocialScreen() {
           </ElementView>
         </ElementView>
       </ElementView>
-      {active.component}
+      <ElementView style={styles.component}>
+        {active.component}
+      </ElementView>
     </>
   );
 }
@@ -54,6 +56,10 @@ const styles = StyleSheet.create({
   root: {
     width: '90%',
     maxWidth: 400,
+  },
+  component: {
+    flex: 1,
+    width: '100%',
   },
   header: {
     width: '100%',

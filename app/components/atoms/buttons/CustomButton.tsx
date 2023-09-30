@@ -18,7 +18,7 @@ export interface TheState {
 
 class CustomButton extends Component<TheProps, TheState>{
   constructor(props: TheProps) {
-    super(props)
+    super(props);
 
     this.state = {
       activeToggle: false,
@@ -53,7 +53,7 @@ class CustomButton extends Component<TheProps, TheState>{
           />
         }
       </Pressable>
-    )
+    );
   }
 }
 

@@ -1,8 +1,8 @@
-import React from 'react'
-import { Image, StyleSheet } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { ElementView, Text, ListItemButton } from '../Themed'
-import { PercentageChange, TruncatedDecimal } from "../FormattedTextElements"
+import React from 'react';
+import { Image, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { ElementView, Text, ListItemButton } from '../Themed';
+import { PercentageChange, TruncatedDecimal } from '../FormattedTextElements';
 
 export interface MarketCoinProps {
   marketCoin: {
@@ -16,7 +16,7 @@ export interface MarketCoinProps {
 }
 
 export default function MarketCoin (props: MarketCoinProps) {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const {
     marketCoin: {
@@ -30,7 +30,7 @@ export default function MarketCoin (props: MarketCoinProps) {
   } = props
 
   const onPressed = () => {
-    navigation.navigate('CoinDetails', { id })
+    navigation.navigate('CoinDetails', { id });
   }
 
   return (
@@ -50,7 +50,7 @@ export default function MarketCoin (props: MarketCoinProps) {
         <PercentageChange value={valueChange24H} />
       </ElementView>
     </ListItemButton>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -83,4 +83,4 @@ const styles = StyleSheet.create({
   symbol: {
     color: '#959595',
   },
-})
+});

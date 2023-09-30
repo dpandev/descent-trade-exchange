@@ -7,7 +7,7 @@ import {
   KeyboardAvoidingView as DefaultKeyboardAvoidingView,
 } from 'react-native';
 import CustomButton from './atoms/buttons/CustomButton';
-import LabelledInput from './atoms/inputs/LabelledTextInput';
+import LabelledTextInput from './atoms/inputs/LabelledTextInput';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -19,9 +19,13 @@ export function useThemeColor(
   const theme = useColorScheme();
   const colorFromProps = props[theme];
 
+  // console.log('theme', theme)
+  // console.log('colorFromProps', colorFromProps)
+
   if (colorFromProps) {
     return colorFromProps;
   } else {
+    // console.log('else: ', Colors[theme][colorName])
     return Colors[theme][colorName];
   }
 }
@@ -38,7 +42,7 @@ export type ViewProps = ThemeProps & DefaultView['props'];
 export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
 export type ButtonProps = ThemeProps & DefaultButton['props'];
 export type ThemeableButtonProps = ThemeProps & CustomButton['props'];
-export type LabelledInputFieldProps = ThemeProps & LabelledInput['props'];
+export type LabelledInputFieldProps = ThemeProps & LabelledTextInput['props'];
 export type KeyboardAvoidingViewProps = ThemeProps & DefaultKeyboardAvoidingView['props'];
 
 export function Text(props: TextProps) {
@@ -92,17 +96,17 @@ export function ActivatedButton(props: ThemeableButtonProps) {
   const { inverted, activeState, icon, iconColor, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const txtStyle = { 
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
-    ...textStyles
+    ...textStyles,
   }
   const btnStyle = {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
-    ...buttonStyles
+    ...buttonStyles,
   }
   const btnStylePressed = {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
-    ...buttonStyles
+    ...buttonStyles,
   }
   return (
     <CustomButton 
@@ -124,18 +128,18 @@ export function ActivatedButton(props: ThemeableButtonProps) {
 export function ThemedButton(props: ThemeableButtonProps) {
   const { inverted=false, icon, iconColor, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const txtStyle = { 
-    color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
-    ...textStyles
+    color: useThemeColor({ light: lightColor, dark: darkColor }, 'buttonText'),
+    ...textStyles,
   }
   const btnStyle = {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
-    ...buttonStyles
+    ...buttonStyles,
   }
   const btnStylePressed = {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
-    ...buttonStyles
+    ...buttonStyles,
   }
   return (
     <CustomButton 
@@ -163,7 +167,7 @@ export function RoundedButton(props: ThemeableButtonProps) {
     fontWeight: 'bold',
     letterSpacing: 0.45,
     marginRight: icon ? 15 : 0,
-    ...textStyles
+    ...textStyles,
   }
   const defaultBtnStyles = {
     flexDirection: 'row',
@@ -174,9 +178,8 @@ export function RoundedButton(props: ThemeableButtonProps) {
     marginVertical: 25,
     marginHorizontal: 10,
     borderRadius: 50,
-    // width: '35%',
     borderWidth: 1,
-    ...buttonStyles
+    ...buttonStyles,
   }
   return (
     <ThemedButton 
@@ -197,7 +200,7 @@ export function FollowButton(props: ThemeableButtonProps) {
   const { inverted, activeState, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const txtStyle = { 
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
-    ...textStyles
+    ...textStyles,
   }
   const btnStyle = {
     alignItems: 'center',
@@ -211,13 +214,13 @@ export function FollowButton(props: ThemeableButtonProps) {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
     ...btnStyle,
-    ...buttonStyles
+    ...buttonStyles,
   }
   const transparent = {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'transparent'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'transparent'),
     ...btnStyle,
-    ...buttonStyles
+    ...buttonStyles,
   }
   return <ActivatedButton buttonStyles={activeState ? transparent : colored} textStyles={txtStyle} inverted={inverted} {...otherProps} />;
 }
@@ -231,7 +234,7 @@ export function ListItemButton(props: ThemeableButtonProps) {
   const { textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const textStyle = {
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
-    ...textStyles
+    ...textStyles,
   }
   const btnStyle = {
     alignItems: 'center',
@@ -242,7 +245,7 @@ export function ListItemButton(props: ThemeableButtonProps) {
     borderRadius: 8,
     width: '100%',
     borderWidth: 1,
-    ...buttonStyles
+    ...buttonStyles,
   }
   return (
     <ThemedButton 
@@ -253,7 +256,35 @@ export function ListItemButton(props: ThemeableButtonProps) {
   );
 }
 
+/**
+ * Custom themed button that is just text with transparent background.
+ * @param props 
+ * @returns a text button
+ */
+export function TextButton(props: ThemeableButtonProps) {
+  const { textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
+
+  const textColor = useThemeColor({ light: lightColor, dark: darkColor }, 'secondary');
+
+  return (
+    <ThemedButton
+      textStyles={{ color: textColor, ...textStyles }}
+      buttonStyles={{ backgroundColor: 'transparent', ...buttonStyles }}
+      {...otherProps}
+    />
+  )
+}
+
 export function LabelledInputField(props: LabelledInputFieldProps) {
   const { inputStyles, lightColor, darkColor, ...otherProps } = props;
-  return <LabelledInput {...otherProps} />;
+
+  return (
+    <LabelledTextInput 
+      selectionColor={ useThemeColor({ light: lightColor, dark: darkColor }, 'primary') }
+      labelStyles={{ color: useThemeColor({ light: lightColor, dark: darkColor }, 'secondary') }}
+      placeholderTextColor={ useThemeColor({ light: lightColor, dark: darkColor }, 'tabIconDefault') }
+      componentStyles={{ borderColor: useThemeColor({ light: lightColor, dark: darkColor }, 'primary') }}
+      {...otherProps} 
+    />
+  );
 }

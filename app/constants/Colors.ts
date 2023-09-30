@@ -1,11 +1,12 @@
 export default {
   light: {
-    text: '#EAEFF2',
-    background: '#E9EAE0',
-    primary: '#E7625F',
-    secondary: '#CD2A1C',
+    text: '#FFCC70',
+    buttonText: '#FFFADD',
+    background: '#FFFADD',
+    primary: '#8ECDDD',
+    secondary: '#22668D',
     tint: '#952323',
-    tabIconDefault: '#F7BEC0',
+    tabIconDefault: '#FFFADD',
     tabIconSelected: '#EAEFF2',
     transparent: 'rgba(0, 0, 0, 0)',
     green: '#2ceb77',
@@ -13,6 +14,7 @@ export default {
   },
   dark: {
     text: '#fff',
+    buttonText: '#fff',
     background: '#030303',
     primary: '#1A1C2A',
     secondary: '#772ceb',

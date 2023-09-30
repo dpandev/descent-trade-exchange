@@ -1,15 +1,18 @@
-import { ElementView } from '../../Themed'
-import React from 'react'
+import { ElementView } from '../../Themed';
+import React from 'react';
 import { 
   ColorValue, 
   KeyboardTypeOptions, 
+  NativeSyntheticEvent, 
+  StyleProp, 
   StyleSheet, TextInput, 
   TextInputProps, 
+  TextInputSubmitEditingEventData, 
   TextStyle, 
   ViewStyle 
-} from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
-import Colors from '../../../constants/Colors'
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '../../../constants/Colors';
 import useColorScheme from '../../../hooks/useColorScheme';
 
 export interface SearchbarProps {
@@ -22,11 +25,11 @@ export interface SearchbarProps {
   placeholderTextColor?: ColorValue;
   secureTextEntry?: boolean;
   selectionColor?: ColorValue;
-  inputStyles?: TextStyle;
+  inputStyles?: StyleProp<TextStyle>;
   keyboardType?: KeyboardTypeOptions;
   keyboardAppearance?: TextInputProps["keyboardAppearance"];
-  componentStyles?: ViewStyle;
-  onSubmit?: any;
+  componentStyles?: StyleProp<ViewStyle>;
+  onSubmit?: ((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void) | undefined;
 }
 
 export default function Searchbar({ 

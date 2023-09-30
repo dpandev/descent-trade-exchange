@@ -1,7 +1,6 @@
 import { API, Hub, graphqlOperation } from 'aws-amplify';
 import React, { useState, createContext, ReactNode, FC, useContext, useEffect } from 'react'
 import { getUser } from '../../src/graphql/queries';
-import { ActivityIndicator } from 'react-native';
 
 export type AuthUserType = {
   id: string | undefined;
@@ -44,7 +43,6 @@ const AuthContext = createContext<AuthUserContext>(initialState);
 
 export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUserType>(initialState);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchUserData = async (loginUser: string) => {//fetch user from db using id fron cognito
     try {
@@ -58,35 +56,34 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
       });
       console.log('res:', response)
       setUser(response.data.getUser);
-      setIsLoading(false);
       return;
     } catch(error) {
       console.log(error);
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
       console.log('data:', data)
       console.log('event', event)
-      setIsLoading(true);
       if (event === 'signIn') {
         console.log('hub:', data.signInUserSession.accessToken.payload.sub)
         fetchUserData(data.signInUserSession.accessToken.payload.sub)
         // fetchUserData('115b5520-60b1-701e-b9cb-266330258eb4')
       }
+      if (event === 'signOut') {
+        setUser(initialState);
+      }
     });
     
     console.log('user.id:', user)
     // fetchUserData('115b5520-60b1-701e-b9cb-266330258eb4')
-    setIsLoading(false);
     return unsubscribe;
   }, []);
 
   return (
     <AuthContext.Provider value={user}>
-      {isLoading ? <ActivityIndicator size={'large'} color={'#772ceb'} style={{alignSelf: 'center'}} /> : children}
+      {children}
     </AuthContext.Provider>
   );
 }

@@ -15,6 +15,7 @@ export type RootStackParamList = {
   SigninScreen: undefined;
   CoinDetails: any;
   CoinExchange: any;
+  PlayerDetails: any;
   Settings: undefined;
   Store: undefined;
   Modal: undefined;

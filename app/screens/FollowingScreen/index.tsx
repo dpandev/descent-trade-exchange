@@ -1,29 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { View } from '../../components/Themed'
+import { View } from '../../components/Themed';
 import UserRankingItem from "../../components/molecules/UserRankingItem";
 import Searchbar from '../../components/atoms/inputs/Searchbar';
+import { API, graphqlOperation } from 'aws-amplify';
+import { listUsers } from '../../../src/graphql/queries';
 
-// import { userInfo } from '../../../assets/dummyData/userInfo';
+type FollowedUserType = {
+  id: string;
+  displayName: string;
+  networth: number;
+  email: string;
+  image: string;
+  followers: [];
+  trades: any;
+  createdAt: string;
+}
 
 const FollowingScreen = ({user}: any) => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [search, setSearch] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
+  const [followingList, setFollowingList] = useState<FollowedUserType[]>([]);
 
-  const followingData = user.following
-
-  const temp = () => {
-    setIsLoading(false)
-  }
-
-  const fetchUsers = () => {
-    // setIsLoading(true)
-    // setTimeout(temp, 100)
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    for (let i = 0; i < user.following.length; i++) {
+      try {
+        console.log('loginUser:', user.following[i])
+        const response = await API.graphql({
+          ...graphqlOperation(
+            listUsers,
+            { filter: {
+              followers: {
+                contains: user.id
+              }
+            }}
+          ),
+        });
+        console.log('res1:', response.data.listUsers.items)
+        setFollowingList(response.data.listUsers.items);
+      } catch(error) {
+        console.log(error);
+      }
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   return (
     <View style={styles.root}>
@@ -34,7 +59,7 @@ const FollowingScreen = ({user}: any) => {
       />
       <FlatList
         style={{width: '100%'}}
-        data={followingData.filter((item: any) => item.following)}
+        data={followingList}
         onRefresh={fetchUsers}
         refreshing={isLoading}
         renderItem={({item, index}) => <UserRankingItem user={item} place={index + 1} />}

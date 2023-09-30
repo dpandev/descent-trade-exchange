@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
-import { View, Text, ElementView, RoundedButton } from '../../components/Themed';
+import { View, Text, ElementView, ThemedButton } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -24,7 +24,7 @@ export default function WelcomeScreen() {
             <Text style={styles.title}>Lose virtual instead </Text>
             <FontAwesome5 name={'laugh-wink'} color={'#6338F1'} size={25} />
           </ElementView>
-          <RoundedButton
+          <ThemedButton
             onPress={onGetStarted}
             textStyles={styles.buttonText}
             buttonStyles={styles.button}
@@ -32,7 +32,7 @@ export default function WelcomeScreen() {
             iconSize={25}
           >
             Get Started
-          </RoundedButton>
+          </ThemedButton>
         </ElementView>
       </ImageBackground>
     </View>
@@ -69,12 +69,16 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 100,
-    width: '100%',
-    maxWidth: 200,
-    justifyContent: 'space-between',
+    marginBottom: 50,
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 50,
+    alignItems: 'center',
     flexDirection: 'row',
   },
   buttonText: {
-    // flex: 1,
+    marginTop: 2,
+    marginRight: 15,
+    fontWeight: 'bold',
   },
 });

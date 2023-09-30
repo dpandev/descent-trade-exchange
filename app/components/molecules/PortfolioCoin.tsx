@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import { ElementView, Text, ListItemButton } from '../../components/Themed'
+import { ElementView, Text, ListItemButton } from '../../components/Themed';
 import { TruncatedDecimal, PreciseMoney } from '../FormattedTextElements';
 
 export interface PortfolioCoinProps {

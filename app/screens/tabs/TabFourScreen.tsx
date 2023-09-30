@@ -1,41 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { ActivityIndicator, StyleSheet} from 'react-native'
-import SocialScreen from '../SocialScreen'
-import { View } from '../../components/Themed'
-// import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider'
-// import { API, graphqlOperation } from 'aws-amplify'
-// import { getUser } from '../../src/graphql/queries'
-
-import { userInfo } from '../../../assets/dummyData/userInfo'
-import PageHeader from '../../components/molecules/PageHeader'
-import { useAuthContext } from '../../utils/AuthContext'
+import React from 'react';
+import { ActivityIndicator, StyleSheet} from 'react-native';
+import SocialScreen from '../SocialScreen';
+import { View } from '../../components/Themed';
+import PageHeader from '../../components/molecules/PageHeader';
+import { useAuthContext } from '../../utils/AuthContext';
 
 export default function TabFourScreen() {
-  // const { theUser } = useContext(AuthenticatedUserContext)
-  // const [user, setUser] = useState(theUser)
-
   const user = useAuthContext();
 
-  const [activePage, setActivePage] = useState('')
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const response = await API.graphql(
-  //         graphqlOperation(getUser, {id: theUser.id})
-  //       )
-  //       setUser(response.data.getUser)
-  //     } catch (e) {
-  //       console.log(e)
-  //     }
-  //   }
-  //   fetchUser()
-  //   return () => {
-  //     setUser(null)
-  //   }
-  // }, [])
-
-  if (!user) {
+  if (!user.id) {
     return <ActivityIndicator />
   }
 
@@ -44,7 +17,7 @@ export default function TabFourScreen() {
       <PageHeader title={'Social'} />
       <SocialScreen />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -54,4 +27,4 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     paddingHorizontal: 10,
   },
-})
+});

@@ -22,7 +22,7 @@ export default function PageHeader({ title, searchbarOptions }: PageHeaderProps)
       }
       <Text style={styles.title}>{title}</Text>
     </ElementView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
   },
-})
+});

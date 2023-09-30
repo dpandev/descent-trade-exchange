@@ -1,37 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { Networth } from '../FormattedTextElements';
-import { ElementView, Text, ListItemButton, FollowButton } from '../Themed'
+import { ElementView, Text, ListItemButton, FollowButton } from '../Themed';
+import { useNavigation } from "@react-navigation/native";
 
 export interface UserRankingItemProps {
   user: {
-    profilePic: string,
-    username: string,
+    id: string,
+    image: string,
+    displayName: string,
     networth: number,
     following: boolean,
   },
   place: number,
 }
 
-export default function UserRankingItem (props: UserRankingItemProps) {
+export default function UserRankingItem(props: UserRankingItemProps) {
   const {
     user: {
-      profilePic,
-      username,
+      id,
+      image,
+      displayName,
       networth,
       following,
     },
     place
   } = props;
 
-  const [activeFollow, setActiveFollow] = useState(following)
+  const [activeFollow, setActiveFollow] = useState<boolean>(following)
+  const navigation = useNavigation();
 
   const onPressed = () => {
-    console.log('pressed list item')
+    navigation.navigate('PlayerDetails', { id });
   }
 
   const followPressed = () => {
-    console.log('follow pressed');
+    setActiveFollow(prevState => !prevState);
   }
 
   return (
@@ -41,15 +45,15 @@ export default function UserRankingItem (props: UserRankingItemProps) {
     >
       <ElementView style={styles.left}>
         <Text style={styles.index}>{place}</Text>
-        <Image style={styles.image} source={{ uri: profilePic}} />
+        <Image style={styles.image} src={image} source={{ uri: image }} />
         <ElementView>
-          <Text style={styles.username} numberOfLines={1}>{username}</Text>
+          <Text style={styles.username} numberOfLines={1}>{displayName}</Text>
           <Networth value={networth} style={styles.networth} />
         </ElementView>
       </ElementView>
       <ElementView style={styles.right}>
         <FollowButton inverted={!activeFollow} activeState={activeFollow}
-          onPress={() => setActiveFollow(prevState => !prevState)}
+          onPress={followPressed}
         >
           {activeFollow ? "Following" : "Follow"}
         </FollowButton>

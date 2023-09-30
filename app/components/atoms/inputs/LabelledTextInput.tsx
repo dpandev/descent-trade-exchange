@@ -1,5 +1,5 @@
-import { StyleSheet, TextInput, View, Text, KeyboardTypeOptions, StyleProp, TextStyle, ColorValue } from 'react-native'
-import React, { Component } from 'react'
+import { StyleSheet, TextInput, View, Text, KeyboardTypeOptions, StyleProp, TextStyle, ColorValue } from 'react-native';
+import React, { Component } from 'react';
 
 interface TheProps {
   value: string;
@@ -12,12 +12,12 @@ interface TheProps {
   placeholderTextColor?: string;
   secureTextEntry?: boolean;
   selectionColor?: ColorValue;
-  inputStyles?: {};
+  inputStyles?: StyleProp<TextStyle>;
   keyboardType?: KeyboardTypeOptions;
   keyboardAppearance?: "default" | "light" | "dark";
   label?: string;
-  labelStyles?: {};
-  componentStyles?: {};
+  labelStyles?: StyleProp<TextStyle>;
+  componentStyles?: StyleProp<TextStyle>;
 }
 
 export default class LabelledTextInput extends Component<TheProps>{
@@ -37,7 +37,7 @@ export default class LabelledTextInput extends Component<TheProps>{
           textContentType={this.props.textContentType ? this.props.textContentType : 'none'}
           style={[styles.input, this.props.inputStyles]}
           placeholder={this.props?.placeholder || ''}
-          placeholderTextColor={this.props.placeholderTextColor ? this.props.placeholderTextColor : '#90A3B9'}
+          placeholderTextColor={this.props.placeholderTextColor ? this.props.placeholderTextColor : 'black'}
           secureTextEntry={this.props.secureTextEntry ? this.props.secureTextEntry : false}
           selectionColor={this.props.selectionColor ? this.props.selectionColor : 'white'}
           autoCorrect={this.props.autoCorrect ? this.props.autoCorrect : false}
@@ -46,7 +46,7 @@ export default class LabelledTextInput extends Component<TheProps>{
           keyboardAppearance={this.props.keyboardAppearance ? this.props.keyboardAppearance : 'default'}
         />
       </View>
-    )
+    );
   }
 }
 
@@ -55,8 +55,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '95%',
     maxWidth: 400,
-    borderWidth: 1,
-    borderBottomColor: '#90A3B9',
+    borderBottomWidth: 1,
     marginVertical: 15,
     paddingVertical: 10,
     backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -71,4 +70,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 5,
   },
-})
+});

@@ -18,13 +18,13 @@ export default function ProfileScreen({user}: any) {
       <View style={styles.profileContainer}>
         <Image 
           src={user?.image} 
-          source={user?.image} 
+          source={{ uri: user?.image }} 
           width={50}
           height={50}
           style={styles.profileImage}
         />
         <View style={styles.profileInfo}>
-          <Text style={styles.profileName}>{user?.username}</Text>
+          <Text style={styles.profileName}>{user?.displayName}</Text>
           <Text style={styles.profileText}>
             Net Worth: {''}
             <Networth value={user?.networth} />
@@ -35,7 +35,7 @@ export default function ProfileScreen({user}: any) {
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            <AbbreviateNum value={user?.following?.length || 0} style={styles.profileTextData}/>
+            <AbbreviateNum value={user?.followers?.length || 0} style={styles.profileTextData}/>
             {/* <Text style={styles.profileTextData}>{user?.followers?.length.toLocaleString('en-US')}</Text> */}
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 25,
     width: '100%',
-    flexWrap: 'wrap',
   },
   profileContainer: {
     flexDirection: 'row',
