@@ -11,18 +11,32 @@ export const onCreateUser = /* GraphQL */ `
       networth
       image
       trades {
-        id
-        coinId
-        amount
-        price
-        date
-        image
+        items {
+          id
+          coinId
+          amount
+          price
+          date
+          image
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       portfolio {
-        id
-        amount
-        coinId
+        items {
+          id
+          amount
+          coinId
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       followers
@@ -43,18 +57,32 @@ export const onUpdateUser = /* GraphQL */ `
       networth
       image
       trades {
-        id
-        coinId
-        amount
-        price
-        date
-        image
+        items {
+          id
+          coinId
+          amount
+          price
+          date
+          image
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       portfolio {
-        id
-        amount
-        coinId
+        items {
+          id
+          amount
+          coinId
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       followers
@@ -75,18 +103,32 @@ export const onDeleteUser = /* GraphQL */ `
       networth
       image
       trades {
-        id
-        coinId
-        amount
-        price
-        date
-        image
+        items {
+          id
+          coinId
+          amount
+          price
+          date
+          image
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       portfolio {
-        id
-        amount
-        coinId
+        items {
+          id
+          amount
+          coinId
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       followers
@@ -94,6 +136,114 @@ export const onDeleteUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      __typename
+    }
+  }
+`;
+export const onCreatePortfolioCoin = /* GraphQL */ `
+  subscription OnCreatePortfolioCoin(
+    $filter: ModelSubscriptionPortfolioCoinFilterInput
+  ) {
+    onCreatePortfolioCoin(filter: $filter) {
+      id
+      amount
+      coinId
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePortfolioCoin = /* GraphQL */ `
+  subscription OnUpdatePortfolioCoin(
+    $filter: ModelSubscriptionPortfolioCoinFilterInput
+  ) {
+    onUpdatePortfolioCoin(filter: $filter) {
+      id
+      amount
+      coinId
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePortfolioCoin = /* GraphQL */ `
+  subscription OnDeletePortfolioCoin(
+    $filter: ModelSubscriptionPortfolioCoinFilterInput
+  ) {
+    onDeletePortfolioCoin(filter: $filter) {
+      id
+      amount
+      coinId
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
   }
@@ -149,6 +299,117 @@ export const onDeleteCoin = /* GraphQL */ `
       valueChange24H
       valueChange7D
       priceHistory
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateTrade = /* GraphQL */ `
+  subscription OnCreateTrade($filter: ModelSubscriptionTradeFilterInput) {
+    onCreateTrade(filter: $filter) {
+      id
+      coinId
+      amount
+      price
+      date
+      image
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateTrade = /* GraphQL */ `
+  subscription OnUpdateTrade($filter: ModelSubscriptionTradeFilterInput) {
+    onUpdateTrade(filter: $filter) {
+      id
+      coinId
+      amount
+      price
+      date
+      image
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteTrade = /* GraphQL */ `
+  subscription OnDeleteTrade($filter: ModelSubscriptionTradeFilterInput) {
+    onDeleteTrade(filter: $filter) {
+      id
+      coinId
+      amount
+      price
+      date
+      image
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
       createdAt
       updatedAt
       __typename

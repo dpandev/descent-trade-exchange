@@ -36,18 +36,32 @@ export const createUser = /* GraphQL */ `
       networth
       image
       trades {
-        id
-        coinId
-        amount
-        price
-        date
-        image
+        items {
+          id
+          coinId
+          amount
+          price
+          date
+          image
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       portfolio {
-        id
-        amount
-        coinId
+        items {
+          id
+          amount
+          coinId
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       followers
@@ -71,18 +85,32 @@ export const updateUser = /* GraphQL */ `
       networth
       image
       trades {
-        id
-        coinId
-        amount
-        price
-        date
-        image
+        items {
+          id
+          coinId
+          amount
+          price
+          date
+          image
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       portfolio {
-        id
-        amount
-        coinId
+        items {
+          id
+          amount
+          coinId
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       followers
@@ -106,18 +134,32 @@ export const deleteUser = /* GraphQL */ `
       networth
       image
       trades {
-        id
-        coinId
-        amount
-        price
-        date
-        image
+        items {
+          id
+          coinId
+          amount
+          price
+          date
+          image
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       portfolio {
-        id
-        amount
-        coinId
+        items {
+          id
+          amount
+          coinId
+          userID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       followers
@@ -125,6 +167,117 @@ export const deleteUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      __typename
+    }
+  }
+`;
+export const createPortfolioCoin = /* GraphQL */ `
+  mutation CreatePortfolioCoin(
+    $input: CreatePortfolioCoinInput!
+    $condition: ModelPortfolioCoinConditionInput
+  ) {
+    createPortfolioCoin(input: $input, condition: $condition) {
+      id
+      amount
+      coinId
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePortfolioCoin = /* GraphQL */ `
+  mutation UpdatePortfolioCoin(
+    $input: UpdatePortfolioCoinInput!
+    $condition: ModelPortfolioCoinConditionInput
+  ) {
+    updatePortfolioCoin(input: $input, condition: $condition) {
+      id
+      amount
+      coinId
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePortfolioCoin = /* GraphQL */ `
+  mutation DeletePortfolioCoin(
+    $input: DeletePortfolioCoinInput!
+    $condition: ModelPortfolioCoinConditionInput
+  ) {
+    deletePortfolioCoin(input: $input, condition: $condition) {
+      id
+      amount
+      coinId
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
   }
@@ -167,6 +320,126 @@ export const updateCoin = /* GraphQL */ `
       valueChange24H
       valueChange7D
       priceHistory
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createTrade = /* GraphQL */ `
+  mutation CreateTrade(
+    $input: CreateTradeInput!
+    $condition: ModelTradeConditionInput
+  ) {
+    createTrade(input: $input, condition: $condition) {
+      id
+      coinId
+      amount
+      price
+      date
+      image
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateTrade = /* GraphQL */ `
+  mutation UpdateTrade(
+    $input: UpdateTradeInput!
+    $condition: ModelTradeConditionInput
+  ) {
+    updateTrade(input: $input, condition: $condition) {
+      id
+      coinId
+      amount
+      price
+      date
+      image
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteTrade = /* GraphQL */ `
+  mutation DeleteTrade(
+    $input: DeleteTradeInput!
+    $condition: ModelTradeConditionInput
+  ) {
+    deleteTrade(input: $input, condition: $condition) {
+      id
+      coinId
+      amount
+      price
+      date
+      image
+      userID
+      user {
+        id
+        displayName
+        email
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        followers
+        following
+        createdAt
+        updatedAt
+        watchlist
+        __typename
+      }
       createdAt
       updatedAt
       __typename

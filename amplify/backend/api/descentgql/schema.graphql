@@ -8,8 +8,8 @@ type User @model @auth(rules: [{ allow: public }, { allow: private }]) {
   email: String!
   networth: Float!
   image: String!
-  trades: [Trade!]
-  portfolio: [PortfolioCoin!]
+  trades: [Trade] @hasMany(indexName: "byUser", fields: ["id"])
+  portfolio: [PortfolioCoin] @hasMany(indexName: "byUser", fields: ["id"])
   followers: [String!]
   following: [String!]
   createdAt: String!
@@ -17,10 +17,14 @@ type User @model @auth(rules: [{ allow: public }, { allow: private }]) {
   watchlist: [String!]
 }
 
-type PortfolioCoin {
+type PortfolioCoin
+  @model
+  @auth(rules: [{ allow: public }, { allow: private }]) {
   id: ID!
   amount: Float!
   coinId: String!
+  userID: ID! @index(name: "byUser")
+  user: User @belongsTo
 }
 
 type Coin
@@ -43,11 +47,13 @@ type Coin
   priceHistory: String
 }
 
-type Trade {
+type Trade @model @auth(rules: [{ allow: public }, { allow: private }]) {
   id: ID!
   coinId: String!
   amount: Float!
   price: Float!
   date: String!
   image: String!
+  userID: ID! @index(name: "byUser")
+  user: User @belongsTo
 }
