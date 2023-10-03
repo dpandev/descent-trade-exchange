@@ -65,6 +65,7 @@ exports.handler = async (event, context) => {
     },
     portfolioInput: {
       input: {
+        id: `${event.request.userAttributes.sub}-usd`,
         coinId: process.env.USD_COIN_ID, 
         amount: 250000,
         userID: event.request.userAttributes.sub,
