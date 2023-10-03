@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
-// this is an auto generated file. This will be overwritten
 
-export const getUser = /* GraphQL */ `
+
+export const getUserInfo = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
@@ -16,25 +16,83 @@ export const getUser = /* GraphQL */ `
         amount
         price
         date
-        image
-        __typename
       }
       portfolio {
         id
         amount
         coinId
-        __typename
       }
       followers
       following
       createdAt
-      updatedAt
       watchlist
-      __typename
     }
   }
 `;
-export const listUsers = /* GraphQL */ `
+
+export const getUserProfile = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      displayName
+      networth
+      image
+      trades {
+        id
+        coinId
+        amount
+        price
+        date
+      }
+      followers
+      createdAt
+    }
+  }
+`;
+
+export const getUserPortfolio = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      portfolio {
+        id
+        amount
+        coinId
+      }
+    }
+  }
+`;
+
+export const getUserWatchlist = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      watchlist
+    }
+  }
+`;
+
+export const getUserFollowing = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      following
+    }
+  }
+`;
+
+export const getUserTrades = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      trades {
+        id
+        coinId
+        amount
+        price
+        date
+      }
+    }
+  }
+`;
+
+export const listUsersProfiles = /* GraphQL */ `
   query ListUsers(
     $filter: ModelUserFilterInput
     $limit: Int
@@ -44,7 +102,6 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -53,28 +110,17 @@ export const listUsers = /* GraphQL */ `
           amount
           price
           date
-          image
-          __typename
-        }
-        portfolio {
-          id
-          amount
-          coinId
-          __typename
         }
         followers
         following
         createdAt
-        updatedAt
-        watchlist
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;
-export const getCoin = /* GraphQL */ `
+
+export const getCoinDetails = /* GraphQL */ `
   query GetCoin($id: ID!) {
     getCoin(id: $id) {
       id
@@ -87,13 +133,12 @@ export const getCoin = /* GraphQL */ `
       valueChange24H
       valueChange7D
       priceHistory
-      createdAt
       updatedAt
-      __typename
     }
   }
 `;
-export const listCoins = /* GraphQL */ `
+
+export const listCoinsDetails = /* GraphQL */ `
   query ListCoins(
     $filter: ModelCoinFilterInput
     $limit: Int
@@ -111,12 +156,9 @@ export const listCoins = /* GraphQL */ `
         valueChange24H
         valueChange7D
         priceHistory
-        createdAt
         updatedAt
-        __typename
       }
       nextToken
-      __typename
     }
   }
 `;

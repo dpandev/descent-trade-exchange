@@ -2,48 +2,23 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateUserInput = {
-  id?: string | null,
-  displayName?: string | null,
-  email: string,
-  networth: number,
-  image?: string | null,
-  trades?: Array< TradeInput | null > | null,
-  portfolio?: Array< PortfolioCoinInput | null > | null,
-  followers?: Array< string | null > | null,
-  following?: Array< string | null > | null,
-  createdAt?: string | null,
-  updatedAt?: string | null,
-  watchlist?: Array< string | null > | null,
-};
-
-export type TradeInput = {
+export type DeleteCoinInput = {
   id: string,
-  coinId: string,
-  amount: number,
-  price: number,
-  date: string,
 };
 
-export type PortfolioCoinInput = {
-  id: string,
-  amount: number,
-  coinId: string,
-};
-
-export type ModelUserConditionInput = {
-  displayName?: ModelStringInput | null,
-  email?: ModelStringInput | null,
-  networth?: ModelFloatInput | null,
+export type ModelCoinConditionInput = {
+  cgId?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  symbol?: ModelStringInput | null,
   image?: ModelStringInput | null,
-  followers?: ModelStringInput | null,
-  following?: ModelStringInput | null,
-  createdAt?: ModelStringInput | null,
-  updatedAt?: ModelStringInput | null,
-  watchlist?: ModelStringInput | null,
-  and?: Array< ModelUserConditionInput | null > | null,
-  or?: Array< ModelUserConditionInput | null > | null,
-  not?: ModelUserConditionInput | null,
+  currentPrice?: ModelFloatInput | null,
+  valueChange1H?: ModelFloatInput | null,
+  valueChange24H?: ModelFloatInput | null,
+  valueChange7D?: ModelFloatInput | null,
+  priceHistory?: ModelStringInput | null,
+  and?: Array< ModelCoinConditionInput | null > | null,
+  or?: Array< ModelCoinConditionInput | null > | null,
+  not?: ModelCoinConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -98,21 +73,81 @@ export type ModelFloatInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
+export type Coin = {
+  __typename: "Coin",
+  id: string,
+  cgId: string,
+  name: string,
+  symbol: string,
+  image?: string | null,
+  currentPrice: number,
+  valueChange1H: number,
+  valueChange24H: number,
+  valueChange7D: number,
+  priceHistory?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type CreateUserInput = {
+  id?: string | null,
+  displayName: string,
+  email: string,
+  networth: number,
+  image: string,
+  trades?: Array< TradeInput > | null,
+  portfolio?: Array< PortfolioCoinInput > | null,
+  followers?: Array< string > | null,
+  following?: Array< string > | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+  watchlist?: Array< string > | null,
+};
+
+export type TradeInput = {
+  id: string,
+  coinId: string,
+  amount: number,
+  price: number,
+  date: string,
+  image: string,
+};
+
+export type PortfolioCoinInput = {
+  id: string,
+  amount: number,
+  coinId: string,
+};
+
+export type ModelUserConditionInput = {
+  displayName?: ModelStringInput | null,
+  email?: ModelStringInput | null,
+  networth?: ModelFloatInput | null,
+  image?: ModelStringInput | null,
+  followers?: ModelStringInput | null,
+  following?: ModelStringInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  watchlist?: ModelStringInput | null,
+  and?: Array< ModelUserConditionInput | null > | null,
+  or?: Array< ModelUserConditionInput | null > | null,
+  not?: ModelUserConditionInput | null,
+};
+
 export type User = {
   __typename: "User",
   id: string,
-  displayName?: string | null,
+  displayName: string,
   email: string,
   networth: number,
-  image?: string | null,
-  trades?:  Array<Trade | null > | null,
-  portfolio?:  Array<PortfolioCoin | null > | null,
-  followers?: Array< string | null > | null,
-  following?: Array< string | null > | null,
+  image: string,
+  trades?:  Array<Trade > | null,
+  portfolio?:  Array<PortfolioCoin > | null,
+  followers?: Array< string > | null,
+  following?: Array< string > | null,
   createdAt: string,
   updatedAt: string,
-  watchlist?: Array< string | null > | null,
-  owner?: string | null,
+  watchlist?: Array< string > | null,
 };
 
 export type Trade = {
@@ -122,6 +157,7 @@ export type Trade = {
   amount: number,
   price: number,
   date: string,
+  image: string,
 };
 
 export type PortfolioCoin = {
@@ -137,13 +173,13 @@ export type UpdateUserInput = {
   email?: string | null,
   networth?: number | null,
   image?: string | null,
-  trades?: Array< TradeInput | null > | null,
-  portfolio?: Array< PortfolioCoinInput | null > | null,
-  followers?: Array< string | null > | null,
-  following?: Array< string | null > | null,
+  trades?: Array< TradeInput > | null,
+  portfolio?: Array< PortfolioCoinInput > | null,
+  followers?: Array< string > | null,
+  following?: Array< string > | null,
   createdAt?: string | null,
   updatedAt?: string | null,
-  watchlist?: Array< string | null > | null,
+  watchlist?: Array< string > | null,
 };
 
 export type DeleteUserInput = {
@@ -163,37 +199,6 @@ export type CreateCoinInput = {
   priceHistory?: string | null,
 };
 
-export type ModelCoinConditionInput = {
-  cgId?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  symbol?: ModelStringInput | null,
-  image?: ModelStringInput | null,
-  currentPrice?: ModelFloatInput | null,
-  valueChange1H?: ModelFloatInput | null,
-  valueChange24H?: ModelFloatInput | null,
-  valueChange7D?: ModelFloatInput | null,
-  priceHistory?: ModelStringInput | null,
-  and?: Array< ModelCoinConditionInput | null > | null,
-  or?: Array< ModelCoinConditionInput | null > | null,
-  not?: ModelCoinConditionInput | null,
-};
-
-export type Coin = {
-  __typename: "Coin",
-  id: string,
-  cgId: string,
-  name: string,
-  symbol: string,
-  image?: string | null,
-  currentPrice: number,
-  valueChange1H: number,
-  valueChange24H: number,
-  valueChange7D: number,
-  priceHistory?: string | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
 export type UpdateCoinInput = {
   id: string,
   cgId?: string | null,
@@ -205,10 +210,6 @@ export type UpdateCoinInput = {
   valueChange24H?: number | null,
   valueChange7D?: number | null,
   priceHistory?: string | null,
-};
-
-export type DeleteCoinInput = {
-  id: string,
 };
 
 export type ModelUserFilterInput = {
@@ -343,6 +344,29 @@ export type ModelSubscriptionCoinFilterInput = {
   or?: Array< ModelSubscriptionCoinFilterInput | null > | null,
 };
 
+export type DeleteCoinMutationVariables = {
+  input: DeleteCoinInput,
+  condition?: ModelCoinConditionInput | null,
+};
+
+export type DeleteCoinMutation = {
+  deleteCoin?:  {
+    __typename: "Coin",
+    id: string,
+    cgId: string,
+    name: string,
+    symbol: string,
+    image?: string | null,
+    currentPrice: number,
+    valueChange1H: number,
+    valueChange24H: number,
+    valueChange7D: number,
+    priceHistory?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateUserMutationVariables = {
   input: CreateUserInput,
   condition?: ModelUserConditionInput | null,
@@ -352,10 +376,10 @@ export type CreateUserMutation = {
   createUser?:  {
     __typename: "User",
     id: string,
-    displayName?: string | null,
+    displayName: string,
     email: string,
     networth: number,
-    image?: string | null,
+    image: string,
     trades?:  Array< {
       __typename: "Trade",
       id: string,
@@ -363,19 +387,19 @@ export type CreateUserMutation = {
       amount: number,
       price: number,
       date: string,
-    } | null > | null,
+      image: string,
+    } > | null,
     portfolio?:  Array< {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
       coinId: string,
-    } | null > | null,
-    followers?: Array< string | null > | null,
-    following?: Array< string | null > | null,
+    } > | null,
+    followers?: Array< string > | null,
+    following?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    watchlist?: Array< string | null > | null,
-    owner?: string | null,
+    watchlist?: Array< string > | null,
   } | null,
 };
 
@@ -388,10 +412,10 @@ export type UpdateUserMutation = {
   updateUser?:  {
     __typename: "User",
     id: string,
-    displayName?: string | null,
+    displayName: string,
     email: string,
     networth: number,
-    image?: string | null,
+    image: string,
     trades?:  Array< {
       __typename: "Trade",
       id: string,
@@ -399,19 +423,19 @@ export type UpdateUserMutation = {
       amount: number,
       price: number,
       date: string,
-    } | null > | null,
+      image: string,
+    } > | null,
     portfolio?:  Array< {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
       coinId: string,
-    } | null > | null,
-    followers?: Array< string | null > | null,
-    following?: Array< string | null > | null,
+    } > | null,
+    followers?: Array< string > | null,
+    following?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    watchlist?: Array< string | null > | null,
-    owner?: string | null,
+    watchlist?: Array< string > | null,
   } | null,
 };
 
@@ -424,10 +448,10 @@ export type DeleteUserMutation = {
   deleteUser?:  {
     __typename: "User",
     id: string,
-    displayName?: string | null,
+    displayName: string,
     email: string,
     networth: number,
-    image?: string | null,
+    image: string,
     trades?:  Array< {
       __typename: "Trade",
       id: string,
@@ -435,19 +459,19 @@ export type DeleteUserMutation = {
       amount: number,
       price: number,
       date: string,
-    } | null > | null,
+      image: string,
+    } > | null,
     portfolio?:  Array< {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
       coinId: string,
-    } | null > | null,
-    followers?: Array< string | null > | null,
-    following?: Array< string | null > | null,
+    } > | null,
+    followers?: Array< string > | null,
+    following?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    watchlist?: Array< string | null > | null,
-    owner?: string | null,
+    watchlist?: Array< string > | null,
   } | null,
 };
 
@@ -497,29 +521,6 @@ export type UpdateCoinMutation = {
   } | null,
 };
 
-export type DeleteCoinMutationVariables = {
-  input: DeleteCoinInput,
-  condition?: ModelCoinConditionInput | null,
-};
-
-export type DeleteCoinMutation = {
-  deleteCoin?:  {
-    __typename: "Coin",
-    id: string,
-    cgId: string,
-    name: string,
-    symbol: string,
-    image?: string | null,
-    currentPrice: number,
-    valueChange1H: number,
-    valueChange24H: number,
-    valueChange7D: number,
-    priceHistory?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
 export type GetUserQueryVariables = {
   id: string,
 };
@@ -528,10 +529,10 @@ export type GetUserQuery = {
   getUser?:  {
     __typename: "User",
     id: string,
-    displayName?: string | null,
+    displayName: string,
     email: string,
     networth: number,
-    image?: string | null,
+    image: string,
     trades?:  Array< {
       __typename: "Trade",
       id: string,
@@ -539,19 +540,19 @@ export type GetUserQuery = {
       amount: number,
       price: number,
       date: string,
-    } | null > | null,
+      image: string,
+    } > | null,
     portfolio?:  Array< {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
       coinId: string,
-    } | null > | null,
-    followers?: Array< string | null > | null,
-    following?: Array< string | null > | null,
+    } > | null,
+    followers?: Array< string > | null,
+    following?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    watchlist?: Array< string | null > | null,
-    owner?: string | null,
+    watchlist?: Array< string > | null,
   } | null,
 };
 
@@ -567,10 +568,10 @@ export type ListUsersQuery = {
     items:  Array< {
       __typename: "User",
       id: string,
-      displayName?: string | null,
+      displayName: string,
       email: string,
       networth: number,
-      image?: string | null,
+      image: string,
       trades?:  Array< {
         __typename: "Trade",
         id: string,
@@ -578,19 +579,19 @@ export type ListUsersQuery = {
         amount: number,
         price: number,
         date: string,
-      } | null > | null,
+        image: string,
+      } > | null,
       portfolio?:  Array< {
         __typename: "PortfolioCoin",
         id: string,
         amount: number,
         coinId: string,
-      } | null > | null,
-      followers?: Array< string | null > | null,
-      following?: Array< string | null > | null,
+      } > | null,
+      followers?: Array< string > | null,
+      following?: Array< string > | null,
       createdAt: string,
       updatedAt: string,
-      watchlist?: Array< string | null > | null,
-      owner?: string | null,
+      watchlist?: Array< string > | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -648,17 +649,16 @@ export type ListCoinsQuery = {
 
 export type OnCreateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnCreateUserSubscription = {
   onCreateUser?:  {
     __typename: "User",
     id: string,
-    displayName?: string | null,
+    displayName: string,
     email: string,
     networth: number,
-    image?: string | null,
+    image: string,
     trades?:  Array< {
       __typename: "Trade",
       id: string,
@@ -666,35 +666,34 @@ export type OnCreateUserSubscription = {
       amount: number,
       price: number,
       date: string,
-    } | null > | null,
+      image: string,
+    } > | null,
     portfolio?:  Array< {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
       coinId: string,
-    } | null > | null,
-    followers?: Array< string | null > | null,
-    following?: Array< string | null > | null,
+    } > | null,
+    followers?: Array< string > | null,
+    following?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    watchlist?: Array< string | null > | null,
-    owner?: string | null,
+    watchlist?: Array< string > | null,
   } | null,
 };
 
 export type OnUpdateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnUpdateUserSubscription = {
   onUpdateUser?:  {
     __typename: "User",
     id: string,
-    displayName?: string | null,
+    displayName: string,
     email: string,
     networth: number,
-    image?: string | null,
+    image: string,
     trades?:  Array< {
       __typename: "Trade",
       id: string,
@@ -702,35 +701,34 @@ export type OnUpdateUserSubscription = {
       amount: number,
       price: number,
       date: string,
-    } | null > | null,
+      image: string,
+    } > | null,
     portfolio?:  Array< {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
       coinId: string,
-    } | null > | null,
-    followers?: Array< string | null > | null,
-    following?: Array< string | null > | null,
+    } > | null,
+    followers?: Array< string > | null,
+    following?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    watchlist?: Array< string | null > | null,
-    owner?: string | null,
+    watchlist?: Array< string > | null,
   } | null,
 };
 
 export type OnDeleteUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
-  owner?: string | null,
 };
 
 export type OnDeleteUserSubscription = {
   onDeleteUser?:  {
     __typename: "User",
     id: string,
-    displayName?: string | null,
+    displayName: string,
     email: string,
     networth: number,
-    image?: string | null,
+    image: string,
     trades?:  Array< {
       __typename: "Trade",
       id: string,
@@ -738,19 +736,19 @@ export type OnDeleteUserSubscription = {
       amount: number,
       price: number,
       date: string,
-    } | null > | null,
+      image: string,
+    } > | null,
     portfolio?:  Array< {
       __typename: "PortfolioCoin",
       id: string,
       amount: number,
       coinId: string,
-    } | null > | null,
-    followers?: Array< string | null > | null,
-    following?: Array< string | null > | null,
+    } > | null,
+    followers?: Array< string > | null,
+    following?: Array< string > | null,
     createdAt: string,
     updatedAt: string,
-    watchlist?: Array< string | null > | null,
-    owner?: string | null,
+    watchlist?: Array< string > | null,
   } | null,
 };
 

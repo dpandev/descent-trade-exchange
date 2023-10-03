@@ -2,6 +2,28 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const deleteCoin = /* GraphQL */ `
+  mutation DeleteCoin(
+    $input: DeleteCoinInput!
+    $condition: ModelCoinConditionInput
+  ) {
+    deleteCoin(input: $input, condition: $condition) {
+      id
+      cgId
+      name
+      symbol
+      image
+      currentPrice
+      valueChange1H
+      valueChange24H
+      valueChange7D
+      priceHistory
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -19,6 +41,7 @@ export const createUser = /* GraphQL */ `
         amount
         price
         date
+        image
         __typename
       }
       portfolio {
@@ -32,7 +55,6 @@ export const createUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
-      owner
       __typename
     }
   }
@@ -54,6 +76,7 @@ export const updateUser = /* GraphQL */ `
         amount
         price
         date
+        image
         __typename
       }
       portfolio {
@@ -67,7 +90,6 @@ export const updateUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
-      owner
       __typename
     }
   }
@@ -89,6 +111,7 @@ export const deleteUser = /* GraphQL */ `
         amount
         price
         date
+        image
         __typename
       }
       portfolio {
@@ -102,7 +125,6 @@ export const deleteUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
-      owner
       __typename
     }
   }
@@ -135,28 +157,6 @@ export const updateCoin = /* GraphQL */ `
     $condition: ModelCoinConditionInput
   ) {
     updateCoin(input: $input, condition: $condition) {
-      id
-      cgId
-      name
-      symbol
-      image
-      currentPrice
-      valueChange1H
-      valueChange24H
-      valueChange7D
-      priceHistory
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteCoin = /* GraphQL */ `
-  mutation DeleteCoin(
-    $input: DeleteCoinInput!
-    $condition: ModelCoinConditionInput
-  ) {
-    deleteCoin(input: $input, condition: $condition) {
       id
       cgId
       name
