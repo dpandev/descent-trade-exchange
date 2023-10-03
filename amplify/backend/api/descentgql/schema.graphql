@@ -50,6 +50,7 @@ type Coin
 type Trade @model @auth(rules: [{ allow: public }, { allow: private }]) {
   id: ID!
   coinId: String!
+  coinSymbol: String!
   amount: Float!
   price: Float!
   date: String!

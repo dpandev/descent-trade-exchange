@@ -14,6 +14,7 @@ export const onCreateUser = /* GraphQL */ `
         items {
           id
           coinId
+          coinSymbol
           amount
           price
           date
@@ -60,6 +61,7 @@ export const onUpdateUser = /* GraphQL */ `
         items {
           id
           coinId
+          coinSymbol
           amount
           price
           date
@@ -106,6 +108,7 @@ export const onDeleteUser = /* GraphQL */ `
         items {
           id
           coinId
+          coinSymbol
           amount
           price
           date
@@ -310,6 +313,7 @@ export const onCreateTrade = /* GraphQL */ `
     onCreateTrade(filter: $filter) {
       id
       coinId
+      coinSymbol
       amount
       price
       date
@@ -347,6 +351,7 @@ export const onUpdateTrade = /* GraphQL */ `
     onUpdateTrade(filter: $filter) {
       id
       coinId
+      coinSymbol
       amount
       price
       date
@@ -384,6 +389,7 @@ export const onDeleteTrade = /* GraphQL */ `
     onDeleteTrade(filter: $filter) {
       id
       coinId
+      coinSymbol
       amount
       price
       date

@@ -14,6 +14,7 @@ export const getUser = /* GraphQL */ `
         items {
           id
           coinId
+          coinSymbol
           amount
           price
           date
@@ -242,6 +243,7 @@ export const getTrade = /* GraphQL */ `
     getTrade(id: $id) {
       id
       coinId
+      coinSymbol
       amount
       price
       date
@@ -284,6 +286,7 @@ export const listTrades = /* GraphQL */ `
       items {
         id
         coinId
+        coinSymbol
         amount
         price
         date
@@ -329,6 +332,7 @@ export const tradesByUserID = /* GraphQL */ `
       items {
         id
         coinId
+        coinSymbol
         amount
         price
         date
