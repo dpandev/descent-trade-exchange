@@ -4,8 +4,6 @@ import { StyleSheet } from 'react-native';
 import ProfileScreen from '../ProfileScreen';
 import LeaderboardScreen from '../LeaderboardScreen';
 import FollowingScreen from '../FollowingScreen';
-
-import { userInfo } from '../../../assets/dummyData/userInfo';
 import { useAuthContext } from '../../utils/AuthContext';
 
 export default function SocialScreen() {

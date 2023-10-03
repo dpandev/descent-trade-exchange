@@ -11,7 +11,6 @@ import CoinDetailsScreen from '../screens/CoinDetailsScreen';
 import CoinExchangeScreen from '../screens/CoinExchangeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import { useAuthContext } from "../utils/AuthContext";
-
 import AuthStackNavigator from "./AuthStackNavigator";
 import PlayerDetailsScreen from "../screens/PlayerDetailsScreen";
 
@@ -19,14 +18,11 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStackNavigator() {
   const user = useAuthContext();
-
   const colorScheme = useColorScheme();
-
-  console.log('userRootStackNav:', user)
 
   return (
     <>
-    { user?.id ? (
+    { user ? (
       <Stack.Navigator>
         <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
         <Stack.Group screenOptions={{ presentation: 'modal' }}>

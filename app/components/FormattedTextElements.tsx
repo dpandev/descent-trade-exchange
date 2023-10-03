@@ -1,18 +1,18 @@
 import React from 'react'
 import { Text } from './Themed'
-import { StyleSheet } from 'react-native'
+import { StyleProp, StyleSheet, TextStyle } from 'react-native'
 
 interface NumberProps {
   value: number;
   isMoney?: boolean;
   isColored?: boolean;
   fixed?: number;
-  style?: {};
+  style?: StyleProp<TextStyle>;
 }
 
 interface DateProps {
   value: string;
-  style?: {};
+  style?: StyleProp<TextStyle>;
 }
 
 const styles = StyleSheet.create({
@@ -34,7 +34,6 @@ const shortenDate = (value: string) => {
 }
 
 const abbreviateNumber = (num: any, fixed: number) => {
-  console.log('thisNum:', num)
   if (num === null) { return null }
   if (num === 0) { return '0' }
   fixed = (!fixed || fixed < 0) ? 0 : fixed; // number of decimal places to show
@@ -102,6 +101,24 @@ export function ShortDate({ value, style = {} }: DateProps) {
   return (
     <Text style={[styles.green, style]}>
       {shortenDate(value)}
+    </Text>
+  );
+}
+
+export function DateAndTime({ value, style = {} }: DateProps) {
+  const date: Date = new Date(value);
+  let hours: number = date.getHours();
+  let minutes: number | string = date.getMinutes();
+  let ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12;//the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  let strTime = hours + ':' + minutes + ' ' + ampm;
+  let fulldate = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
+  return (
+    <Text style={[{textAlign: 'right'}, styles.green, style]}>
+      {fulldate}{'\n'}
+      {strTime}
     </Text>
   );
 }

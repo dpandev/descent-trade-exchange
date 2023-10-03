@@ -3,6 +3,7 @@ import { Image, StyleSheet } from 'react-native';
 import { Networth } from '../FormattedTextElements';
 import { ElementView, Text, ListItemButton, FollowButton } from '../Themed';
 import { useNavigation } from "@react-navigation/native";
+import { useAuthContext } from '../../utils/AuthContext';
 
 export interface UserRankingItemProps {
   user: {
@@ -10,7 +11,7 @@ export interface UserRankingItemProps {
     image: string,
     displayName: string,
     networth: number,
-    following: boolean,
+    followers: [string]
   },
   place: number,
 }
@@ -22,12 +23,13 @@ export default function UserRankingItem(props: UserRankingItemProps) {
       image,
       displayName,
       networth,
-      following,
+      followers
     },
     place
   } = props;
 
-  const [activeFollow, setActiveFollow] = useState<boolean>(following)
+  const user = useAuthContext();
+  const [activeFollow, setActiveFollow] = useState<boolean>(followers.filter(x => x === user.id).length > 0);
   const navigation = useNavigation();
 
   const onPressed = () => {
@@ -36,6 +38,7 @@ export default function UserRankingItem(props: UserRankingItemProps) {
 
   const followPressed = () => {
     setActiveFollow(prevState => !prevState);
+    //TODO mutation gql
   }
 
   return (
@@ -52,11 +55,14 @@ export default function UserRankingItem(props: UserRankingItemProps) {
         </ElementView>
       </ElementView>
       <ElementView style={styles.right}>
-        <FollowButton inverted={!activeFollow} activeState={activeFollow}
-          onPress={followPressed}
-        >
-          {activeFollow ? "Following" : "Follow"}
-        </FollowButton>
+        {followers.filter(x => x === user.id).includes(user.id) 
+        
+          ? <FollowButton inverted={!activeFollow} activeState={activeFollow} onPress={followPressed}>
+              {activeFollow ? "Following" : "Follow"}
+            </FollowButton>
+
+          : null
+        }
       </ElementView>
     </ListItemButton>
   );

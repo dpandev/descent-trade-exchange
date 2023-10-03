@@ -1,32 +1,67 @@
 import React, { useEffect, useState } from 'react';
 import { Image, FlatList, StyleSheet } from 'react-native';
-import { View, Text } from '../../components/Themed'
+import { ElementView, Text } from '../../components/Themed'
 import UserRankingItem from "../../components/molecules/UserRankingItem";
 import Searchbar from '../../components/atoms/inputs/Searchbar';
 
-import { userInfo } from '../../../assets/dummyData/userInfo';
+import { useAuthContext } from '../../utils/AuthContext';
+import { API, graphqlOperation } from 'aws-amplify';
+import { listUsers } from '../../../src/graphql/queries';
+
+type User = {
+  id: string;
+  displayName: string;
+  image: string;
+  createdAt: string;
+  networth: number;
+  followers: [string];
+  trades: any;
+}
 
 export default function LeaderboardScreen() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [search, setSearch] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
+  const [usersList, setUsersList] = useState<User[]>([]);
+  const [nextToken, setNextToken] = useState<string>();
 
-  const FollowingData = userInfo[0].following
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      let response;
+      // send graphql req without nextToken if data doesnt exist in state yet
+      if (usersList.length > 0 || usersList !== null) {
+        response = await API.graphql({
+          ...graphqlOperation(
+            listUsers,
+            { limit: 10, nextToken: nextToken }
+          ),
+        });
+      } else {
+        response = await API.graphql({
+          ...graphqlOperation(
+            listUsers,
+          ),
+        });
+      }
+      if (response.data.listUsers.items) {
+        setUsersList(response.data.listUsers.items);
 
-  const temp = () => {
-    setIsLoading(false)
-  }
-
-  const fetchUsers = () => {
-    // setIsLoading(true)
-    // setTimeout(temp, 500)
+        if (response.data.nextToken) {
+          setNextToken(response.data.nextToken);
+        }
+      }
+    } catch(error) {
+      console.error(error);
+    }
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   return (
-    <View style={styles.root}>
+    <ElementView style={styles.root}>
       <Searchbar 
         placeholder={'search for a user'} 
         value={search}
@@ -36,12 +71,13 @@ export default function LeaderboardScreen() {
         style={{width: '100%'}}
         onRefresh={fetchUsers}
         refreshing={isLoading}
-        data={FollowingData.map(item => ({...item})).sort((a, b) => (a.networth < b.networth) ? 1 : -1)}
+        data={usersList.map(item => ({...item})).sort((a, b) => (a.networth < b.networth) ? 1 : -1)}
         renderItem={({item, index}) => <UserRankingItem user={item} place={index + 1} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
+        ListEmptyComponent={<Text style={styles.noDataMsg}>pull down to refresh</Text>}
       />
-    </View>
+    </ElementView>
   );
 };
 
@@ -55,5 +91,9 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  noDataMsg: {
+    textAlign: 'center',
+    color: '#FE4A76',
   },
 });

@@ -1,33 +1,32 @@
 import { StyleSheet, Image } from 'react-native';
-import React, { useState } from 'react';
-import { View, Text, RoundedButton } from '../../components/Themed';
+import React from 'react';
+import { Text, RoundedButton, ElementView } from '../../components/Themed';
 import { AbbreviateNum, Networth, ShortDate } from '../../components/FormattedTextElements';
 import { useNavigation } from '@react-navigation/native';
+import TradesDisplay from '../../components/organisms/TradesDisplay';
+import { AuthUserType } from '../../utils/AuthContext';
 
-export default function ProfileScreen({user}: any) {
+export default function ProfileScreen({user}: {user: AuthUserType}) {
   const navigation = useNavigation();
-  console.log('profileUser', user.id);
-  console.log('trades:', user);
 
   const onSettingsPressed = () => {
     navigation.navigate('Settings');
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.profileContainer}>
+    <ElementView style={styles.root}>
+      <ElementView style={styles.profileContainer}>
         <Image 
-          src={user?.image} 
-          source={{ uri: user?.image }} 
+          source={{ uri: user?.image! }} 
           width={50}
           height={50}
           style={styles.profileImage}
         />
-        <View style={styles.profileInfo}>
+        <ElementView style={styles.profileInfo}>
           <Text style={styles.profileName}>{user?.displayName}</Text>
           <Text style={styles.profileText}>
             Net Worth: {''}
-            <Networth value={user?.networth} />
+            <Networth value={user?.networth!} />
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
@@ -39,9 +38,12 @@ export default function ProfileScreen({user}: any) {
             {/* <Text style={styles.profileTextData}>{user?.followers?.length.toLocaleString('en-US')}</Text> */}
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
-          <ShortDate value={user?.createdAt} />
-        </View>
-      </View>
+          <ShortDate value={user?.createdAt!} />
+        </ElementView>
+      </ElementView>
+      <ElementView style={styles.tradesDisplay}>
+        <TradesDisplay listOfTrades={user?.trades || []}></TradesDisplay>
+      </ElementView>
       <RoundedButton
         inverted
         onPress={onSettingsPressed} 
@@ -50,7 +52,7 @@ export default function ProfileScreen({user}: any) {
       >
         Settings
       </RoundedButton>
-    </View>
+    </ElementView>
   );
 }
 
@@ -89,5 +91,11 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     paddingHorizontal: 45,
     width: 'auto',
+  },
+  tradesDisplay: {
+    width: '100%',
+    maxWidth: 325,
+    marginTop: 25,
+    height: '60%',
   },
 });

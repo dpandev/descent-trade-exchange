@@ -1,58 +1,81 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Image, Pressable, ActivityIndicator, StyleSheet, View } from 'react-native';
-import { ElementView, Text, RoundedButton } from '../../components/Themed'
-import { AbbreviateNum, Networth, PercentageChange, PreciseMoney, ShortDate } from "../../components/FormattedTextElements";
-import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from 'react';
+import { Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { ElementView, Text, View } from '../../components/Themed'
+import { AbbreviateNum, Networth, ShortDate } from "../../components/FormattedTextElements";
+import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native";
 import { API, graphqlOperation } from 'aws-amplify';
 import { getUser } from '../../../src/graphql/queries';
+import TradesDisplay from '../../components/organisms/TradesDisplay';
+import { GetUserQuery, Trade } from '../../../src/API';
+import { AmplifyGraphQLResult } from '../../types';
 
 type PlayerDetails = {
-  displayName: string;
-  image: string;
+  displayName: string | null | undefined;
+  image: string | null | undefined;
   networth: number;
   createdAt: string;
-  trades: any;
-  followers: [];
-  following: [];
+  trades: Trade[] | (Trade | null)[] | null;
+  followers: (string | null)[] | null | undefined;
+  following: (string | null)[] | null | undefined;
 }
 
 const PlayerDetailsScreen = () => {
   const route: RouteProp<ParamListBase> = useRoute();
-
   const [player, setPlayer] = useState<PlayerDetails>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
   const fetchPlayerData = async () => {
+    setIsLoading(true);
     if (!route.params?.id) {
       return;
     }
     try {
-      const response = await API.graphql(graphqlOperation(getUser, { id: route.params.id }));
-      setPlayer(response.data.getUser);
+      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
+        ...graphqlOperation(
+          getUser, 
+          { id: route.params.id }
+        ),
+      }) as { data: GetUserQuery };
+      if (response.data.getUser) {
+        setPlayer({
+          displayName: response.data.getUser.displayName,
+          image: response.data.getUser.image,
+          networth: response.data.getUser.networth,
+          createdAt: response.data.getUser.createdAt,
+          trades: response.data.getUser.trades!,
+          followers: response.data.getUser.followers,
+          following: response.data.getUser.following,
+        });
+      }
     } catch(error) {
-      console.log('error2', error);
+      console.error('error2', error);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
     fetchPlayerData();
-    console.log('running a player marathon');
   }, []);
 
-  if (!player) {
-    return (<ActivityIndicator />);
+  if (!player || isLoading) {
+    return (
+      <ElementView style={{ alignItems: 'center' }}>
+        <ActivityIndicator />
+      </ElementView>
+    );
   }
 
   return (
     <View style={styles.root}>
       <View style={styles.profileContainer}>
         <Image 
-          src={player?.image} 
-          source={{ uri: player?.image }} 
+          src={player?.image!} 
+          source={{ uri: player?.image! }} 
           width={50}
           height={50}
           style={styles.profileImage}
         />
-        <View style={styles.profileInfo}>
+        <ElementView style={styles.profileInfo}>
           <Text style={styles.profileName}>{player?.displayName}</Text>
           <Text style={styles.profileText}>
             Net Worth: {''}
@@ -60,17 +83,19 @@ const PlayerDetailsScreen = () => {
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            {/* <AbbreviateNum value={player?.trades?.length || 0} style={styles.profileTextData}/> */}
+            <AbbreviateNum value={player?.trades?.length || 0} />
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            {/* <AbbreviateNum value={player?.followers?.length || 0} style={styles.profileTextData}/> */}
-            {/* <Text style={styles.profileTextData}>{player?.followers?.length.toLocaleString('en-US')}</Text> */}
+            <AbbreviateNum value={player?.followers?.length || 0} />
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
           <ShortDate value={player?.createdAt} />
-        </View>
+        </ElementView>
       </View>
+      <ElementView style={styles.tradesDisplay}>
+        <TradesDisplay listOfTrades={player?.trades}></TradesDisplay>
+      </ElementView>
     </View>
   );
 };
@@ -105,7 +130,11 @@ const styles = StyleSheet.create({
   profileText: {
     marginVertical: 2,
   },
-  profileTextData: {
-    color: '#3EF03E',
+  tradesDisplay: {
+    width: '100%',
+    paddingHorizontal: 10,
+    maxWidth: 325,
+    marginTop: 25,
+    height: '60%',
   },
 });

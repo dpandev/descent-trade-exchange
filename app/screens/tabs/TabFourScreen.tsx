@@ -1,16 +1,10 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet} from 'react-native';
+import { StyleSheet} from 'react-native';
 import SocialScreen from '../SocialScreen';
 import { View } from '../../components/Themed';
 import PageHeader from '../../components/molecules/PageHeader';
-import { useAuthContext } from '../../utils/AuthContext';
 
 export default function TabFourScreen() {
-  const user = useAuthContext();
-
-  if (!user.id) {
-    return <ActivityIndicator />
-  }
 
   return (
     <View style={styles.root}>
