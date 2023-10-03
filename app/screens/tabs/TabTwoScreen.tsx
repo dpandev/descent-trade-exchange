@@ -7,52 +7,49 @@ import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify'
 import { Coin, PortfolioCoin } from '../../../src/API';
 import { useAuthContext } from '../../utils/AuthContext';
-import { getUser, listCoins } from '../../../src/graphql/queries';
+import { listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
 
 export default function TabTwoScreen() {
 
   const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoinProps[]>([]);
   const [coins, setCoins] = useState<Coin[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const user = useAuthContext();
+  const { user, setUser } = useAuthContext();
 
   const fetchAssets = async () => {
+    if (!user) return;
     setIsLoading(true);
     try {
-      const response2 = await API.graphql(
+      const coinsResponse = await API.graphql(
         graphqlOperation(
           listCoins,
         ),
       );
-      if (response2.data.listCoins) {
-        setCoins(response2.data.listCoins.items);
+      if (coinsResponse.data.listCoins) {
+        setCoins(coinsResponse.data.listCoins.items);
       }
 
       const response = await API.graphql(
         graphqlOperation(
-          getUser,
-          { id: user.id },
+          portfolioCoinsByUserID,
+          { userID: user.id },
         ),
       );
 
-      if (response.data.getUser) {
-        let portfolioCoinsResponse: PortfolioCoin[] = response.data.getUser.portfolio;
-        let allCoinsResponse: Coin[] = [...response2.data.listCoins.items];
-        let empty: PortfolioCoinProps[] = [];
+      if (response.data.portfolioCoinsByUserID) {
+        let portfolioCoinsResponse: PortfolioCoin[] = response.data.portfolioCoinsByUserID.items;
+        let allCoinsResponse: Coin[] = [...coinsResponse.data.listCoins.items];
+        let pCoins: PortfolioCoinProps[] = [];
         for (let i = 0; i < portfolioCoinsResponse.length; i++) {
-          console.log('running...', i)
           let obj: PortfolioCoinProps = {
             portfolioCoin: {
             coin: allCoinsResponse.find(x => x.id === portfolioCoinsResponse[i].coinId)!,
-            amount: portfolioCoinsResponse[i].amount
+            amount: portfolioCoinsResponse[i].amount,
             }
           }
-          console.log('\n\nOBJ:', obj)
-          empty.push(obj)
-          console.log('l',empty)
+          pCoins.push(obj);
         }
-        console.log('po',empty)
-        setPortfolioCoins(empty)
+        setPortfolioCoins(pCoins);
       }
 
     } catch (error) {

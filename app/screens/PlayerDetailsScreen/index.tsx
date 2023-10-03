@@ -14,7 +14,7 @@ type PlayerDetails = {
   image: string | null | undefined;
   networth: number;
   createdAt: string;
-  trades: Trade[] | (Trade | null)[] | null;
+  trades: Trade[] | (Trade | null)[] | null | undefined;
   followers: (string | null)[] | null | undefined;
   following: (string | null)[] | null | undefined;
 }
@@ -42,7 +42,7 @@ const PlayerDetailsScreen = () => {
           image: response.data.getUser.image,
           networth: response.data.getUser.networth,
           createdAt: response.data.getUser.createdAt,
-          trades: response.data.getUser.trades!,
+          trades: response.data.getUser.trades?.items || [],
           followers: response.data.getUser.followers,
           following: response.data.getUser.following,
         });
@@ -94,7 +94,7 @@ const PlayerDetailsScreen = () => {
         </ElementView>
       </View>
       <ElementView style={styles.tradesDisplay}>
-        <TradesDisplay listOfTrades={player?.trades}></TradesDisplay>
+        <TradesDisplay listOfTrades={player?.trades || null}></TradesDisplay>
       </ElementView>
     </View>
   );

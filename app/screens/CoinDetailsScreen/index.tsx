@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Pressable, ActivityIndicator } from 'react-native';
-import { ElementView, Text, RoundedButton } from '../../components/Themed'
+import { ElementView, Text, RoundedButton } from '../../components/Themed';
 import { Octicons } from "@expo/vector-icons";
 import styles from "./styles";
 import { PercentageChange, PreciseMoney } from "../../components/FormattedTextElements";
 import CoinPriceGraph from "../../components/organisms/PriceGraph";
-import { ParamListBase, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { API, graphqlOperation } from 'aws-amplify';
-import { getCoin, getUser } from '../../../src/graphql/queries';
+import { getCoin, getPortfolioCoin, getUser } from '../../../src/graphql/queries';
 import { useAuthContext } from '../../utils/AuthContext';
-import { Coin, GetCoinQuery, GetUserQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
+import { Coin, GetCoinQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
 import { updateUser } from '../../../src/graphql/mutations';
 
 const CoinDetailsScreen = () => {
-  const user = useAuthContext();
+  const { user, setUser } = useAuthContext();
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RootStackParamList, 'CoinDetails'>>();
   const [coin, setCoin] = useState<Coin | null | undefined>(null);
@@ -46,21 +46,18 @@ const CoinDetailsScreen = () => {
       return;
     }
     try {
-      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
-        ...graphqlOperation(
-          getUser, 
-          { id: user.id },
+      const response = await API.graphql<AmplifyGraphQLResult<typeof getPortfolioCoin>>(
+        graphqlOperation(
+          getPortfolioCoin, 
+          { id: `${user.id}-${route.params.id}` },
         ),
-      }) as { data: GetUserQuery };
-      if (response.data.getUser?.portfolio) {
-        let portCoin: PortfolioCoin | undefined = [...response.data.getUser.portfolio].find(x => x?.coinId === route.params?.id);
-        if (portCoin) {
-          setPortfolioCoin(portCoin);
-        }
-        if (coin) {
-          if (response.data.getUser?.watchlist?.includes(coin.id)) {
-            setStarActive(true);
-          }
+      );
+      if (response.data.getPortfolioCoin) {
+        setPortfolioCoin(response.data.getPortfolioCoin);
+      }
+      if (coin) {
+        if (user?.watchlist?.includes(coin.id)) {
+          setStarActive(true);
         }
       }
     } catch(error) {
@@ -82,6 +79,7 @@ const CoinDetailsScreen = () => {
       }) as { data: UpdateUserMutation };
       if (response.data.updateUser) {
         setStarActive(true);
+        setUser(response.data.updateUser);
       }
     } catch(error) {
       console.error(error);
@@ -102,12 +100,12 @@ const CoinDetailsScreen = () => {
       }) as { data: UpdateUserMutation };
       if (response.data.updateUser) {
         setStarActive(false);
+        setUser(response.data.updateUser);
       }
     } catch(error) {
       console.error(error); 
     }
   }
-  
 
   useEffect(() => {
     fetchCoinData();

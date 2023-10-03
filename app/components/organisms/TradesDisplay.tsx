@@ -7,15 +7,17 @@ import { Trade } from '../../../src/API';
 export default function TradesDisplay({
   listOfTrades
 }: {
-  listOfTrades: Trade[], 
+  listOfTrades: Trade[] | (Trade | null)[] | null | undefined, 
 }) {
-
+  if (!listOfTrades) {
+    return <Text style={styles.noDataMsg}>This user has no recent trades</Text>;
+  }
   return (
     <ElementView style={styles.root}>
       <Text style={styles.heading}>Recent Trades</Text>
       <FlatList
         style={{width: '100%'}}
-        data={listOfTrades?.map(item => ({...item})).sort((a, b) => (a.date! < b.date!) ? 1 : -1)}
+        data={listOfTrades.map(item => ({...item})).sort((a, b) => (a.date! < b.date!) ? 1 : -1)}
         renderItem={({item}) => <TradeItem props={item} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}

@@ -7,15 +7,19 @@ import { GetUserQuery, User } from '../../src/API';
 export type AuthUserType = User | null;
 
 export type AuthUserSetterType = React.Dispatch<React.SetStateAction<AuthUserType>>;
-export type AuthUserContext = AuthUserType;
+export interface AuthUserContext { 
+  user: AuthUserType, 
+  setUser: AuthUserSetterType 
+};
 
 interface AuthContextProps {
   children?: ReactNode;
 }
 
 const initialState: AuthUserType = null;
+const initialSetUser: AuthUserSetterType = () => {};
 
-const AuthContext = createContext<AuthUserContext>(initialState);
+const AuthContext = createContext<AuthUserContext>({ user: initialState, setUser: initialSetUser });
 
 export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUserType>(initialState);
@@ -29,6 +33,7 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
         ),
       }) as { data: GetUserQuery };
       if (response.data.getUser) {
+        console.log('getUser', response.data.getUser)
         setUser({ ...user, ...response.data.getUser });
       }
       return;
@@ -40,6 +45,7 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
       if (event === 'signIn') {
+        console.log('hub', event, data)
         fetchUserData(data.signInUserSession.accessToken.payload.sub);
       }
       if (event === 'signOut') {
@@ -51,7 +57,7 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={user}>
+    <AuthContext.Provider value={{user, setUser}}>
       {children}
     </AuthContext.Provider>
   );

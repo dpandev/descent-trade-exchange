@@ -1,6 +1,6 @@
 import { ActivatedButton, ElementView } from '../../components/Themed';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, FlatList, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
 import { AmplifyGraphQLResult } from '../../types';
 import { getUser, listCoins } from '../../../src/graphql/queries';
@@ -9,7 +9,7 @@ import { useAuthContext } from '../../utils/AuthContext';
 import CoinListing from '../../components/organisms/CoinListing';
 
 const MarketListScreen = () => {
-  const user = useAuthContext();
+  const { user } = useAuthContext();
   const [allCoins, setAllCoins] = useState<Coin[]>([]);
   const [watchlist, setWatchlist] = useState<Coin[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,8 +22,14 @@ const MarketListScreen = () => {
           listCoins,
         ),
       }) as { data: ListCoinsQuery };
-      if (response.data.listCoins) {
-        setAllCoins([...response.data.listCoins.items]);
+      if (response.data.listCoins?.items) {
+        let coinList: Coin[] = [];
+        for (let i = 0; i < response.data.listCoins.items.length; i++) {
+          if (typeof response.data.listCoins.items[i] !== null) {
+            coinList.push(response.data.listCoins.items[i]!);
+          }
+        }
+        setAllCoins(coinList);
       }
     } catch (error) {
       console.error(error);
@@ -33,6 +39,7 @@ const MarketListScreen = () => {
   }
 
   const fetchWatchlist = async () => {
+    if (!user) return;
     setIsLoading(true);
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
@@ -45,7 +52,6 @@ const MarketListScreen = () => {
         if (allCoins) {
           let watchlist = [...allCoins].filter(x => response.data.getUser?.watchlist?.includes(x!.id));
           setWatchlist(watchlist);
-          console.log('w-now', watchlist)
         }
       }
     } catch (error) {
@@ -87,7 +93,7 @@ const MarketListScreen = () => {
   const tabs = [
     { id: 0, name: '% Hour', component: <CoinListing props={{ data: sortByTrendingHour(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
     { id: 1, name: '% Day', component: <CoinListing props={{ data: sortByTrendingDay(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
-    { id: 2, name: 'Watchlist', component: <CoinListing props={{ data: watchlist, refreshFunction: fetchWatchlist, isLoading: isLoading }} /> },
+    { id: 2, name: 'Watchlist', component: <CoinListing props={{ data: getWatchlist(), refreshFunction: fetchWatchlist, isLoading: isLoading }} /> },
   ]
 
   const [active, setActive] = useState<number>(0);
@@ -97,7 +103,6 @@ const MarketListScreen = () => {
   }
 
   return (
-    <>
       <ElementView style={styles.root}>
         <ElementView style={styles.header}>
           <ElementView inverted style={styles.buttonsContainer}>
@@ -114,9 +119,10 @@ const MarketListScreen = () => {
             ))}
           </ElementView>
         </ElementView>
+        <ElementView style={styles.tabComponent}>
+          {tabs[active].component}
+        </ElementView>
       </ElementView>
-      {tabs[active].component}
-    </>
   );
 }
 
@@ -125,6 +131,7 @@ export default MarketListScreen;
 const styles = StyleSheet.create({
   root: {
     width: '100%',
+    height: '100%',
     maxWidth: 400,
     alignItems: 'center',
   },
@@ -156,5 +163,8 @@ const styles = StyleSheet.create({
   noDataMsg: {
     textAlign: 'center',
     color: '#FE4A76',
+  },
+  tabComponent: {
+    height: '70%',
   },
 });

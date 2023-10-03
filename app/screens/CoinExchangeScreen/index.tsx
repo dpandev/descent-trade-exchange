@@ -17,25 +17,20 @@ import {
 import { PreciseMoney } from '../../components/FormattedTextElements';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../types';
-// import { listPortfolioCoins } from '../../src/graphql/queries';
-// import { exchangeCoins } from './mutations';
-// import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
-
-import { userInfo } from '../../../assets/dummyData/userInfo';
-import { getUser } from '../../../src/graphql/queries';
+import { getPortfolioCoin } from '../../../src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
-import { PortfolioCoinProps } from '../../components/molecules/PortfolioCoin';
 import { useAuthContext } from '../../utils/AuthContext';
 import { PortfolioCoin } from '../../../src/API';
+import { exchangeCoins } from './mutations';
 
 const CoinExchangeScreen = () => {
 
-  const [coinAmount, setCoinAmount] = useState<number>();
-  const [coinUSDValue, setCoinUSDValue] = useState<number>();
-  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState<PortfolioCoin>();
+  const [coinAmount, setCoinAmount] = useState<string>('');
+  const [coinUSDValue, setCoinUSDValue] = useState<string>('');
+  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState<PortfolioCoin | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const user = useAuthContext();
+  const { user } = useAuthContext();
 
   const navigation = useNavigation();
   const route = useRoute<RouteProp<RootStackParamList, 'CoinExchange'>>();
@@ -49,14 +44,13 @@ const CoinExchangeScreen = () => {
     try {
       const response = await API.graphql(
         graphqlOperation(
-          getUser,
-          { id: user.id }
+          getPortfolioCoin,
+          { id: `${user.id}-usdc` }
         ),
       );
-      const userPortfolio: PortfolioCoin[] = response.data.getUser.portfolio.items;
-      const usdPortfolioCoin: PortfolioCoin | undefined = userPortfolio.find(x => x.coinId === 'usd-coin');
-      if (usdPortfolioCoin) {
-        setUsdPortfolioCoin(usdPortfolioCoin);
+      let usdCoin: PortfolioCoin = response.data.getPortfolioCoin;
+      if (usdCoin) {
+        setUsdPortfolioCoin(usdCoin);
       }
     } catch(error) {
       console.error(error);
@@ -68,31 +62,31 @@ const CoinExchangeScreen = () => {
   }, []);
 
   useEffect(() => {
-    const amount = coinAmount;
+    const amount = parseFloat(coinAmount);
     if (!amount && amount !== 0) {
-      setCoinAmount(0);
-      setCoinUSDValue(0);
+      setCoinAmount('');
+      setCoinUSDValue('');
       return;
     }
-    setCoinUSDValue(amount * coin?.currentPrice);
+    setCoinUSDValue((amount * coin?.currentPrice).toString());
   }, [coinAmount]);
 
   useEffect(() => {
-    const amount = coinUSDValue;
+    const amount = parseFloat(coinUSDValue);
     if (!amount && amount !== 0) {
-      setCoinAmount(0);
-      setCoinUSDValue(0);
+      setCoinAmount('');
+      setCoinUSDValue('');
       return;
     }
-    setCoinAmount(amount / coin?.currentPrice);
+    setCoinAmount((amount / coin?.currentPrice).toString());
   }, [coinUSDValue]);
 
   const onSellAll = () => {
-    setCoinAmount(portfolioCoin.amount);
+    setCoinAmount((portfolioCoin.amount).toString());
   }
 
   const onBuyAll = () => {
-    setCoinUSDValue(usdPortfolioCoin?.amount || 0);
+    setCoinUSDValue((usdPortfolioCoin?.amount || 0).toString());
   }
 
   const placeOrder = async () => {
@@ -128,6 +122,7 @@ const CoinExchangeScreen = () => {
   }
 
   const onPlaceOrder = async () => {
+    if (!coinAmount || !coinUSDValue) return;
     const maxUsd = usdPortfolioCoin?.amount || 0;
     if (isBuy && parseFloat(coinUSDValue) > maxUsd) {
       Alert.alert('Oops!', `Not enough USD coins. Max: ${maxUsd}`);

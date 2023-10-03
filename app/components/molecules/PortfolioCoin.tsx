@@ -29,8 +29,6 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
 
   const navigation = useNavigation();
 
-  console.log('propss:', props)
-
   return (
     <ListItemButton 
       buttonStyles={styles.root} 

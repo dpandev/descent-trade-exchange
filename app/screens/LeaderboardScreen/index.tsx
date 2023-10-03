@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Image, FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { ElementView, Text } from '../../components/Themed'
 import UserRankingItem from "../../components/molecules/UserRankingItem";
 import Searchbar from '../../components/atoms/inputs/Searchbar';
-
-import { useAuthContext } from '../../utils/AuthContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../../src/graphql/queries';
 

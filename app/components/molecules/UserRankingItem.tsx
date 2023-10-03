@@ -28,8 +28,8 @@ export default function UserRankingItem(props: UserRankingItemProps) {
     place
   } = props;
 
-  const user = useAuthContext();
-  const [activeFollow, setActiveFollow] = useState<boolean>(followers.filter(x => x === user.id).length > 0);
+  const { user } = useAuthContext();
+  const [activeFollow, setActiveFollow] = useState<boolean>(followers.filter(x => x === user!.id).length > 0);
   const navigation = useNavigation();
 
   const onPressed = () => {
@@ -55,7 +55,7 @@ export default function UserRankingItem(props: UserRankingItemProps) {
         </ElementView>
       </ElementView>
       <ElementView style={styles.right}>
-        {followers.filter(x => x === user.id).includes(user.id) 
+        {followers.filter(x => x === user!.id).includes(user!.id) 
         
           ? <FollowButton inverted={!activeFollow} activeState={activeFollow} onPress={followPressed}>
               {activeFollow ? "Following" : "Follow"}

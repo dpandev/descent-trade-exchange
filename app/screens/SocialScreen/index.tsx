@@ -8,7 +8,7 @@ import { useAuthContext } from '../../utils/AuthContext';
 
 export default function SocialScreen() {
 
-  const user = useAuthContext();
+  const { user } = useAuthContext();
 
   const tabs = [
     { id: 0, name: 'Profile', component: <ProfileScreen user={user} /> },

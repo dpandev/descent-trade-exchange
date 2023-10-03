@@ -8,8 +8,11 @@ import { Trade } from '../../../src/API';
 export default function TradeItem({
   props
 }: {
-  props: Trade
+  props: Trade | null | undefined
 }) {
+  if (!props) {
+    return <Text style={styles.currencyText}>Error displaying trade</Text>;
+  }
   return (
     <ListItemButton
       buttonStyles={styles.root}
@@ -20,8 +23,8 @@ export default function TradeItem({
       <ElementView style={styles.middle}>
         <ElementView style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text style={styles.currencyText}>USD{' '}</Text>
-          <Octicons name="arrow-switch" size={24} color="white" />
-          <Text style={styles.currencyText}>{' '}{props.coinId.toUpperCase()}</Text>
+          <Octicons name="arrow-switch" size={16} color="white" />
+          <Text style={styles.currencyText}>{' '}{props.coinSymbol.toUpperCase()}</Text>
         </ElementView>
         <ElementView style={styles.tradeInfo}>
           <Text>Shares: </Text>
