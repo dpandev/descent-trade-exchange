@@ -1,29 +1,32 @@
 import { ActivatedButton, ElementView } from '../../components/Themed';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, FlatList, Text } from 'react-native';
-import MarketCoin from '../../components/molecules/MarketCoin';
+import { API, graphqlOperation } from 'aws-amplify';
+import { AmplifyGraphQLResult } from '../../types';
+import { getUser, listCoins } from '../../../src/graphql/queries';
+import { Coin, GetUserQuery, ListCoinsQuery } from '../../../src/API';
+import { useAuthContext } from '../../utils/AuthContext';
+import CoinListing from '../../components/organisms/CoinListing';
 
-import { userInfo } from '../../../assets/dummyData/userInfo';
-import { market } from '../../../assets/dummyData/market';
-
-export default function MarketListScreen() {
-
-  const user = userInfo[0];
-
-  const [allCoins, setAllCoins] = useState(market);
-  const [watchlist, setWatchlist] = useState(user.watchlist);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [activeTab, setActiveTab] = useState(0);
+const MarketListScreen = () => {
+  const user = useAuthContext();
+  const [allCoins, setAllCoins] = useState<Coin[]>([]);
+  const [watchlist, setWatchlist] = useState<Coin[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchCoins = async () => {
     setIsLoading(true);
     try {
-      // const response = await API.graphql(graphqlOperation(listCoins))
-      // setAllCoins(response.data.listCoins.items)
-      setAllCoins(market)//dummydata
+      const response = await API.graphql<AmplifyGraphQLResult<typeof listCoins>>({
+        ...graphqlOperation(
+          listCoins,
+        ),
+      }) as { data: ListCoinsQuery };
+      if (response.data.listCoins) {
+        setAllCoins([...response.data.listCoins.items]);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -32,11 +35,21 @@ export default function MarketListScreen() {
   const fetchWatchlist = async () => {
     setIsLoading(true);
     try {
-      // const response = await API.graphql(graphqlOperation(listCoins))
-      // setAllCoins(response.data.listCoins.items)
-      setWatchlist(user.watchlist);
+      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
+        ...graphqlOperation(
+          getUser,
+          { id: user.id }
+        ),
+      }) as { data: GetUserQuery };
+      if (response.data.getUser?.watchlist) {
+        if (allCoins) {
+          let watchlist = [...allCoins].filter(x => response.data.getUser?.watchlist?.includes(x!.id));
+          setWatchlist(watchlist);
+          console.log('w-now', watchlist)
+        }
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -44,30 +57,43 @@ export default function MarketListScreen() {
 
   useEffect(() => {
     fetchCoins();
-  }, []);
-
-  useEffect(() => {
     fetchWatchlist();
   }, []);
 
+  const getWatchlist = () => {
+    if (watchlist) {
+      return [...watchlist].sort();
+    } else {
+      return [];
+    }
+  }
+
   const sortByTrendingDay = () => {
-    return [...allCoins].sort((a, b) => (a.valueChange24H < b.valueChange24H ? 1 : -1));
+    if (allCoins) {
+      return [...allCoins].sort((a, b) => (a!.valueChange24H < b!.valueChange24H ? 1 : -1));
+    } else {
+      return [];
+    }
   }
 
   const sortByTrendingHour = () => {
-    return [...allCoins].sort((a, b) => (a.valueChange1H < b.valueChange1H ? 1 : -1));
+    if (allCoins) {
+      return [...allCoins].sort((a, b) => (a!.valueChange1H < b!.valueChange1H ? 1 : -1));
+    } else {
+      return [];
+    }
   }
 
   const tabs = [
-    { id: 0, name: '% Hour', data: sortByTrendingHour() },
-    { id: 1, name: '% Day', data: sortByTrendingDay() },
-    { id: 2, name: 'Watchlist', data: watchlist },
+    { id: 0, name: '% Hour', component: <CoinListing props={{ data: sortByTrendingHour(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
+    { id: 1, name: '% Day', component: <CoinListing props={{ data: sortByTrendingDay(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
+    { id: 2, name: 'Watchlist', component: <CoinListing props={{ data: watchlist, refreshFunction: fetchWatchlist, isLoading: isLoading }} /> },
   ]
 
+  const [active, setActive] = useState<number>(0);
+
   const onButtonPress = (tabId: number) => {
-    console.log('pressed:', tabId)
-    setActiveTab(tabId);
-    console.log('active tab changed to:', activeTab)
+    setActive(tabs[tabId].id);
   }
 
   return (
@@ -77,7 +103,7 @@ export default function MarketListScreen() {
           <ElementView inverted style={styles.buttonsContainer}>
             {tabs.length > 0 && tabs.map((tab) => (
               <ActivatedButton
-                activeState={tab.id === activeTab}
+                activeState={tab.id === active}
                 key={tab.id}
                 buttonStyles={styles.button}
                 textStyles={styles.buttonText}
@@ -89,19 +115,12 @@ export default function MarketListScreen() {
           </ElementView>
         </ElementView>
       </ElementView>
-      <FlatList 
-        style={{width: '100%'}}
-        data={tabs[activeTab].data}
-        onRefresh={tabs[activeTab].name === 'watchlist' ? fetchWatchlist : fetchCoins}
-        refreshing={isLoading}
-        renderItem={({item}) => <MarketCoin marketCoin={item} />}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponentStyle={{alignItems: 'center'}}
-        ListEmptyComponent={<Text style={styles.noDataMsg}>pull down to refresh</Text>}
-      />
+      {tabs[active].component}
     </>
   );
 }
+
+export default MarketListScreen;
 
 const styles = StyleSheet.create({
   root: {

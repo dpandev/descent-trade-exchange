@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TextInput,
   Alert,
@@ -15,123 +15,114 @@ import {
   Text 
 } from '../../components/Themed';
 import { PreciseMoney } from '../../components/FormattedTextElements';
-import { useNavigation, useRoute } from '@react-navigation/native';
-// import { API, graphqlOperation } from 'aws-amplify';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../../types';
 // import { listPortfolioCoins } from '../../src/graphql/queries';
 // import { exchangeCoins } from './mutations';
 // import { AuthenticatedUserContext } from '../../navigation/AuthenticatedUserProvider';
 
 import { userInfo } from '../../../assets/dummyData/userInfo';
-
-const USD_COIN_ID = 'usd';//TODO remove
-
-export type PortfolioCoin = {
-  // id: string;
-  amount: number;
-  // coinId: string;
-  coin: {}; //temp for dummy data
-}
+import { getUser } from '../../../src/graphql/queries';
+import { API, graphqlOperation } from 'aws-amplify';
+import { PortfolioCoinProps } from '../../components/molecules/PortfolioCoin';
+import { useAuthContext } from '../../utils/AuthContext';
+import { PortfolioCoin } from '../../../src/API';
 
 const CoinExchangeScreen = () => {
 
-  const [coinAmount, setCoinAmount] = useState<string>('')
-  const [coinUSDValue, setCoinUSDValue] = useState<string>('')
-  // const [usdPortfolioCoin, setUsdPortfolioCoin] = useState(null);
-  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState<PortfolioCoin>(userInfo[0].portfolioCoins[0]);
+  const [coinAmount, setCoinAmount] = useState<number>();
+  const [coinUSDValue, setCoinUSDValue] = useState<number>();
+  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState<PortfolioCoin>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // const { theUser } = useContext(AuthenticatedUserContext)
-  // const userId = theUser.id
+  const user = useAuthContext();
 
   const navigation = useNavigation();
-  const route = useRoute();
+  const route = useRoute<RouteProp<RootStackParamList, 'CoinExchange'>>();
 
-  const isBuy = route?.params?.isBuy;
-  const coin = route?.params?.coin;
-  const portfolioCoin = route?.params?.portfolioCoin;
+  const isBuy = route.params?.isBuy;
+  const coin = route.params?.coin;
+  const portfolioCoin = route.params?.portfolioCoin;
 
   const getUSDPortfolioCoin = async () => {
+    if (!user) return;
     try {
-      // const response = await API.graphql(
-      //   graphqlOperation(listPortfolioCoins,
-      //     { filter: {
-      //         and: {
-      //           coinId: { eq: USD_COIN_ID },
-      //           userId: { eq: userId }
-      //         }
-      //       }
-      //     }
-      //   )
-      // )
-      // if (response.data.listPortfolioCoins.items.length > 0) {
-      //   setUsdPortfolioCoin(response.data.listPortfolioCoins.items[0]);
-      // }
-      const dummyCoin = userInfo[0].portfolioCoins[0]
-      setUsdPortfolioCoin(dummyCoin)
-    } catch (e) {
-      console.error(e);
+      const response = await API.graphql(
+        graphqlOperation(
+          getUser,
+          { id: user.id }
+        ),
+      );
+      const userPortfolio: PortfolioCoin[] = response.data.getUser.portfolio.items;
+      const usdPortfolioCoin: PortfolioCoin | undefined = userPortfolio.find(x => x.coinId === 'usd-coin');
+      if (usdPortfolioCoin) {
+        setUsdPortfolioCoin(usdPortfolioCoin);
+      }
+    } catch(error) {
+      console.error(error);
     }
   }
 
   useEffect(() => {
     getUSDPortfolioCoin();
-  }, [])
+  }, []);
 
   useEffect(() => {
-    const amount = parseFloat(coinAmount)
+    const amount = coinAmount;
     if (!amount && amount !== 0) {
-      setCoinAmount("");
-      setCoinUSDValue("");
+      setCoinAmount(0);
+      setCoinUSDValue(0);
       return;
     }
-    setCoinUSDValue((amount * coin?.currentPrice).toString());
+    setCoinUSDValue(amount * coin?.currentPrice);
   }, [coinAmount]);
 
   useEffect(() => {
-    const amount = parseFloat(coinUSDValue)
+    const amount = coinUSDValue;
     if (!amount && amount !== 0) {
-      setCoinAmount("");
-      setCoinUSDValue("");
+      setCoinAmount(0);
+      setCoinUSDValue(0);
       return;
     }
-    setCoinAmount((amount / coin?.currentPrice).toString());
+    setCoinAmount(amount / coin?.currentPrice);
   }, [coinUSDValue]);
 
   const onSellAll = () => {
-    // setCoinAmount(portfolioCoin.amount);
+    setCoinAmount(portfolioCoin.amount);
   }
 
   const onBuyAll = () => {
-    // setCoinUSDValue(usdPortfolioCoin?.amount || 0);
+    setCoinUSDValue(usdPortfolioCoin?.amount || 0);
   }
 
   const placeOrder = async () => {
+    if (!user) return;
     if (isLoading) {
       return;
     }
-    // setIsLoading(true);
-    // try {
-    //   const variables = {
-    //     coinId: coin.id,
-    //     isBuy,
-    //     amount: parseFloat(coinAmount),
-    //     usdPortfolioCoinId: usdPortfolioCoin?.id,
-    //     coinPortfolioCoinId: portfolioCoin?.id,
-    //     userId: userId
-    //   }
+    setIsLoading(true);
+    try {
+      const variables = {
+        coinId: coin.id,
+        isBuy,
+        amount: coinAmount,
+        usdPortfolioCoinId: usdPortfolioCoin?.id,
+        coinPortfolioCoinId: portfolioCoin?.id,
+        userId: user.id
+      }
 
-    //   const response = await API.graphql(
-    //     graphqlOperation(exchangeCoins, variables)
-    //   )
-    //   if (response.data.exchangeCoins) {
-    //     navigation.navigate('TabTwo');
-    //   } else {
-    //     Alert.alert('Error', 'There was an error exchanging coins');
-    //   }
-    // } catch (e) {
-    //   Alert.alert('Error', 'There was an error exchanging coins');
-    //   console.error(e);
-    // }
+      const response = await API.graphql(
+        graphqlOperation(exchangeCoins, variables)
+      )
+      if (response.data.exchangeCoins) {
+        navigation.navigate('TabTwo');
+      } else {
+        Alert.alert('Error', 'There was an error exchanging coins');
+      }
+    } catch (e) {
+      Alert.alert('Error', 'There was an error exchanging coins');
+      console.error(e);
+    }
     navigation.navigate('TabTwo');
     setIsLoading(false);
   }

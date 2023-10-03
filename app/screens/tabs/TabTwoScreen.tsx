@@ -1,44 +1,62 @@
 import { StyleSheet, FlatList } from 'react-native';
-import { View, ElementView } from '../../components/Themed';
-import PortfolioCoin from '../../components/molecules/PortfolioCoin';
+import { ElementView } from '../../components/Themed';
+import PortfolioCoinComponent, { PortfolioCoinProps } from '../../components/molecules/PortfolioCoin';
 import PageHeader from '../../components/molecules/PageHeader';
 import { PreciseMoney } from '../../components/FormattedTextElements';
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify'
-
-import { AuthUserType, useAuthContext } from '../../utils/AuthContext';
-import { getUser } from '../../../src/graphql/queries';
-
-type PortfolioCoin = {
-  id: string;
-  coinId: string;
-  amount: number;
-}
+import { Coin, PortfolioCoin } from '../../../src/API';
+import { useAuthContext } from '../../utils/AuthContext';
+import { getUser, listCoins } from '../../../src/graphql/queries';
 
 export default function TabTwoScreen() {
 
-  const [userInfo, setUserInfo] = useState<AuthUserType>();
-  const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoin[]>([]);
+  const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoinProps[]>([]);
+  const [coins, setCoins] = useState<Coin[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const theUser = useAuthContext();
+  const user = useAuthContext();
 
   const fetchAssets = async () => {
     setIsLoading(true);
     try {
-      const response = await API.graphql({
-        ...graphqlOperation(
-          getUser,
-          { id: theUser.id },
+      const response2 = await API.graphql(
+        graphqlOperation(
+          listCoins,
         ),
-        authMode: "API_KEY"
-      });
+      );
+      if (response2.data.listCoins) {
+        setCoins(response2.data.listCoins.items);
+      }
 
-      console.log('roro', response.data.getUser.portfolio.items)
-      setPortfolioCoins(response.data.getUser.portfolio.items);
-      setUserInfo(response.data.getUser);
+      const response = await API.graphql(
+        graphqlOperation(
+          getUser,
+          { id: user.id },
+        ),
+      );
+
+      if (response.data.getUser) {
+        let portfolioCoinsResponse: PortfolioCoin[] = response.data.getUser.portfolio;
+        let allCoinsResponse: Coin[] = [...response2.data.listCoins.items];
+        let empty: PortfolioCoinProps[] = [];
+        for (let i = 0; i < portfolioCoinsResponse.length; i++) {
+          console.log('running...', i)
+          let obj: PortfolioCoinProps = {
+            portfolioCoin: {
+            coin: allCoinsResponse.find(x => x.id === portfolioCoinsResponse[i].coinId)!,
+            amount: portfolioCoinsResponse[i].amount
+            }
+          }
+          console.log('\n\nOBJ:', obj)
+          empty.push(obj)
+          console.log('l',empty)
+        }
+        console.log('po',empty)
+        setPortfolioCoins(empty)
+      }
 
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -49,10 +67,10 @@ export default function TabTwoScreen() {
   }, []);
 
   return (
-    <View style={styles.root}>
+    <ElementView style={styles.root}>
       <PageHeader title={"Assets"} />
       <ElementView style={styles.balanceContainer}>
-        <PreciseMoney value={userInfo?.networth || 0} style={styles.balance} />
+        <PreciseMoney value={user?.networth || 0} style={styles.balance} />
       </ElementView>
       <FlatList
         style={{width: '100%'}}
@@ -60,11 +78,11 @@ export default function TabTwoScreen() {
         // keyExtractor={(item, index) => item.id}
         onRefresh={fetchAssets}
         refreshing={isLoading}
-        renderItem={({item}) => <PortfolioCoin portfolioCoin={item} />}
+        renderItem={({item}) => <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
       />
-    </View>
+    </ElementView>
   );
 }
 

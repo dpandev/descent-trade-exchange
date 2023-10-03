@@ -28,7 +28,7 @@ export default function PriceGraph({ dataString }: PriceGraphProps) {
         width={Dimensions.get("window").width - 30}
         height={220}
         yAxisLabel="$"
-        yAxisSuffix="k"
+        yAxisSuffix=""
         withOuterLines={false}
         withInnerLines={false}
         yAxisInterval={1} // optional, defaults to 1

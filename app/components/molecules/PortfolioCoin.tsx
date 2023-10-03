@@ -3,17 +3,11 @@ import { Image, StyleSheet } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { ElementView, Text, ListItemButton } from '../../components/Themed';
 import { TruncatedDecimal, PreciseMoney } from '../FormattedTextElements';
+import { Coin } from '../../../src/API';
 
 export interface PortfolioCoinProps {
   portfolioCoin: {
-    coin: {
-      id: string,
-      image: string,
-      name: string,
-      symbol: string,
-      currentPrice: number,
-      priceHistory: string,
-    },
+    coin: Coin,
     amount: number,
   }
 }
@@ -35,13 +29,15 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
 
   const navigation = useNavigation();
 
+  console.log('propss:', props)
+
   return (
     <ListItemButton 
       buttonStyles={styles.root} 
       onPress={() => navigation.navigate('CoinDetails', { id })}
     >
       <ElementView style={styles.left}>
-        <Image style={styles.image} source={{ uri: image }} />
+        <Image style={styles.image} source={{ uri: image! }} />
         <ElementView>
           <Text style={styles.currency}>{name}</Text>
           <Text style={styles.symbol}>{symbol.toUpperCase()}</Text>
@@ -51,7 +47,7 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
         <PreciseMoney 
           value={currentPrice * amount} 
           style={styles.value} 
-          isColored={true} 
+          isColored
         />
         <Text style={styles.symbol}>
           {symbol != 'USD'

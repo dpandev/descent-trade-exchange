@@ -3,31 +3,22 @@ import { Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ElementView, Text, ListItemButton } from '../Themed';
 import { PercentageChange, TruncatedDecimal } from '../FormattedTextElements';
+import { Coin } from '../../../src/API';
+const assetImg = require('../../../assets/images/dgb.png');
 
-export interface MarketCoinProps {
-  marketCoin: {
-    id: string,
-    image: string,
-    name: string,
-    symbol: string,
-    currentPrice: number,
-    valueChange24H: number,
-  }
-}
+const profileImgFallback = Image.resolveAssetSource(assetImg).uri;
 
-export default function MarketCoin (props: MarketCoinProps) {
+export default function MarketCoin ({props}: {props: Coin}) {
   const navigation = useNavigation();
 
   const {
-    marketCoin: {
-      id,
-      image,
-      name,
-      symbol,
-      currentPrice,
-      valueChange24H,
-    },
-  } = props
+    id,
+    image,
+    name,
+    symbol,
+    currentPrice,
+    valueChange24H,
+  } = props;
 
   const onPressed = () => {
     navigation.navigate('CoinDetails', { id });
@@ -39,7 +30,7 @@ export default function MarketCoin (props: MarketCoinProps) {
       onPress={onPressed}
     >
       <ElementView style={styles.left}>
-        <Image style={styles.image} source={{ uri: image }} />
+        <Image style={styles.image} source={{ uri: image! }} />
         <ElementView>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.symbol}>{symbol.toUpperCase()}</Text>

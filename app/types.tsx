@@ -1,6 +1,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { GraphQLResult } from "@aws-amplify/api";
 
 declare global {
   namespace ReactNavigation {
@@ -13,7 +14,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   SignupScreen: undefined;
   SigninScreen: undefined;
-  CoinDetails: any;
+  CoinDetails: { id: string };
   CoinExchange: any;
   PlayerDetails: any;
   Settings: undefined;
@@ -37,3 +38,5 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >;
+
+export type AmplifyGraphQLResult<T extends {}> = Promise<GraphQLResult<T>>;

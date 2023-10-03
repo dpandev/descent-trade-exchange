@@ -1,26 +1,23 @@
 import React, { useState } from 'react';
 import { StyleSheet} from 'react-native';
-import { Text, View } from '../../components/Themed';
+import { ElementView } from '../../components/Themed';
 import PageHeader from '../../components/molecules/PageHeader';
 import MarketListScreen from '../MarketScreen';
-import Searchbar from '../../components/atoms/inputs/Searchbar';
-// import { API, graphqlOperation } from 'aws-amplify';
-// import { listCoins } from '../../src/graphql/queries';
 
 export default function TabThreeScreen() {
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string>('');
 
   const useSearch = () => {
     console.log('searching...', search);
   }
 
   return (
-    <View style={styles.root}>
+    <ElementView style={styles.root}>
       <PageHeader title='Trading' searchbarOptions={{ value: search, setValue: setSearch, onSubmit: useSearch }} />
       <MarketListScreen />
-    </View>
-  )
+    </ElementView>
+  );
 }
 
 const styles = StyleSheet.create({

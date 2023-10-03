@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   },
   symbol: {
     color: '#6b6b6b',
+    textTransform: 'uppercase',
   },
   rowText: {
     flexDirection: 'row',
