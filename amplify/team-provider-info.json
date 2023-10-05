@@ -1,0 +1,32 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplify02141e02e8b84-staging-151844-authRole",
+      "UnauthRoleArn": "arn:aws:iam::297776297371:role/amplify-amplify02141e02e8b84-staging-151844-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::297776297371:role/amplify-amplify02141e02e8b84-staging-151844-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-amplify02141e02e8b84-staging-151844-deployment",
+      "UnauthRoleName": "amplify-amplify02141e02e8b84-staging-151844-unauthRole",
+      "StackName": "amplify-amplify02141e02e8b84-staging-151844",
+      "StackId": "arn:aws:cloudformation:us-east-2:297776297371:stack/amplify-amplify02141e02e8b84-staging-151844/7b2b2d20-5edb-11ee-b8b2-0af6f2ba9b3d",
+      "AmplifyAppId": "d3t74ukoawygij",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-amplify02141e02e8b84-staging-151844-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "descentauth1": {
+          "googleClientId": "256451623525-3pdf15onu39lir51mvm0rri0sn3ohsbp.apps.googleusercontent.com"
+        }
+      },
+      "function": {
+        "descentauth1PostConfirmation": {
+          "deploymentBucketName": "amplify-amplify02141e02e8b84-staging-151844-deployment",
+          "s3Key": "amplify-builds/descentauth1PostConfirmation-335577694336417a6533-build.zip"
+        }
+      },
+      "api": {
+        "descentgql": {}
+      }
+    }
+  }
+}

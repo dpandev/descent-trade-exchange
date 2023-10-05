@@ -1,0 +1,28 @@
+export default {
+  light: {
+    text: '#FFCC70',
+    buttonText: '#FFFADD',
+    background: '#FFFADD',
+    primary: '#8ECDDD',
+    secondary: '#22668D',
+    tint: '#952323',
+    tabIconDefault: '#FFFADD',
+    tabIconSelected: '#EAEFF2',
+    transparent: 'rgba(0, 0, 0, 0)',
+    green: '#2ceb77',
+    red: '#f44336',
+  },
+  dark: {
+    text: '#fff',
+    buttonText: '#fff',
+    background: '#030303',
+    primary: '#1A1C2A',
+    secondary: '#772ceb',
+    tint: '#8F43EE',
+    tabIconDefault: '#929292',
+    tabIconSelected: '#fff',
+    transparent: 'rgba(0, 0, 0, 0)',
+    green: '#2ceb77',
+    red: '#f44336',
+  },
+};
