@@ -1,60 +1,36 @@
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Text, RoundedButton, ElementView } from '../../components/Themed';
 import { AbbreviateNum, Networth, ShortDate } from '../../components/FormattedTextElements';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TradesDisplay from '../../components/organisms/TradesDisplay';
-import { AuthUserType } from '../../utils/AuthContext';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getUser, tradesByUserID } from '../../../src/graphql/queries';
-import { Trade } from '../../../src/API';
+import { getUser } from '../../../src/graphql/queries';
+import { GetUserQuery, Trade, User } from '../../../src/API';
+import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
 
-export default function ProfileScreen({user}: {user: AuthUserType}) {
-  const [userTrades, setUserTrades] = useState<Trade[]>([]);
-  const navigation = useNavigation();
+export default function ProfileScreen({user}: {user: User}) {
+  const [userData, setUserData] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
-  const fetchProfile = async () => {
-    if (!user) return;
+  const fetchProfile = async (): Promise<void> => {
     try {
-      const response = await API.graphql(
+      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>(
         graphqlOperation(
           getUser,
           { id: user.id }
         ),
-      );
-      const fetchedUser: AuthUserType = response.data.getUser;
-      if (fetchedUser) {
-        user = fetchedUser;
-      }
-    } catch(error) {
-      console.error(error);
-    }
-  }
+      ) as { data: GetUserQuery };
 
-  const fetchTrades = async () => {
-    if (!user) return;
-    if (user.trades?.items) {
-      let tradesList: Trade[] = [];
-      for (let i = 0; i < user.trades.items.length; i++) {
-        if (typeof user.trades.items[i] !== null) {
-          tradesList.push(user.trades.items[i]!);
-        }
-      }
-      setUserTrades(tradesList);
-    }
-    try {
-      const response = await API.graphql(
-        graphqlOperation(
-          tradesByUserID,
-          { userID: user.id }
-        ),
-      );
-      const trades: Trade[] = response.data.tradesByUserID.items;
-      if (trades) {
-        setUserTrades([...trades]);
+      if (response.data.getUser) {
+        const fetchedUser: User = response.data.getUser;
+        setUserData(fetchedUser);
       }
     } catch(error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -63,9 +39,12 @@ export default function ProfileScreen({user}: {user: AuthUserType}) {
   }
 
   useEffect(() => {
-    fetchTrades();
-    // fetchProfile();
+    fetchProfile();
   }, []);
+
+  if (isLoading) {
+    return <ActivityIndicator />
+  }
 
   return (
     <ElementView style={styles.root}>
@@ -84,7 +63,7 @@ export default function ProfileScreen({user}: {user: AuthUserType}) {
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            <AbbreviateNum value={userTrades.length || 0} style={styles.profileTextData}/>
+            <AbbreviateNum value={userData?.trades?.items.length || 0} style={styles.profileTextData}/>
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
@@ -96,7 +75,7 @@ export default function ProfileScreen({user}: {user: AuthUserType}) {
         </ElementView>
       </ElementView>
       <ElementView style={styles.tradesDisplay}>
-        <TradesDisplay listOfTrades={userTrades || []}></TradesDisplay>
+        <TradesDisplay listOfTrades={userData?.trades?.items || []}></TradesDisplay>
       </ElementView>
       <RoundedButton
         inverted

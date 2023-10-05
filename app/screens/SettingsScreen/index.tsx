@@ -6,12 +6,12 @@ import { Auth } from 'aws-amplify';
 export default function SettingsScreen() {
 
   const onSignOut = async () => {
-    console.log('signout')
+    console.warn('signout')
     await Auth.signOut();
   }
 
   const changeTheme = () => {
-    console.log('changing theme')
+    console.warn('changing theme')
   }
 
   return (

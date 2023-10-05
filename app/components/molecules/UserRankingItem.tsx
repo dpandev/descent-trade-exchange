@@ -4,32 +4,33 @@ import { Networth } from '../FormattedTextElements';
 import { ElementView, Text, ListItemButton, FollowButton } from '../Themed';
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from '../../utils/AuthContext';
+import { UpdateUserMutation, User } from '../../../src/API';
+import { API, graphqlOperation } from 'aws-amplify';
+import { updateUser } from '../../../src/graphql/mutations';
+import { AmplifyGraphQLResult } from '../../types';
 
 export interface UserRankingItemProps {
-  user: {
-    id: string,
-    image: string,
-    displayName: string,
-    networth: number,
-    followers: [string]
-  },
+  userData: User,
   place: number,
 }
 
 export default function UserRankingItem(props: UserRankingItemProps) {
   const {
-    user: {
+    userData: {
       id,
       image,
       displayName,
       networth,
-      followers
+      followers,
     },
     place
   } = props;
 
   const { user } = useAuthContext();
-  const [activeFollow, setActiveFollow] = useState<boolean>(followers.filter(x => x === user!.id).length > 0);
+  if (!followers || !user) {
+    throw new Error;
+  }
+  const [activeFollow, setActiveFollow] = useState<boolean>(followers.filter(x => x === user.id).includes(user.id));
   const navigation = useNavigation();
 
   const onPressed = () => {
@@ -37,8 +38,47 @@ export default function UserRankingItem(props: UserRankingItemProps) {
   }
 
   const followPressed = () => {
-    setActiveFollow(prevState => !prevState);
-    //TODO mutation gql
+    if (user?.id && user?.following && followers && id) {
+      if (!activeFollow) {//add
+        updateFollowList(id, [...followers, user.id], true);
+        updateFollowList(user.id, [...user.following, id], false);
+        setActiveFollow(true);
+      } else if (activeFollow) {//remove
+        updateFollowList(id, [...followers.filter(x => x !== user.id)], true);
+        updateFollowList(user.id, [...user.following.filter(x => x !== id)], false);
+        setActiveFollow(false);
+      }
+    }
+  }
+
+  const updateFollowList = async (userToUpdate: any, following: any, isFollowersList: boolean): Promise<void> => {
+    if (isFollowersList) {
+      try {
+        let response: { data: UpdateUserMutation };
+        response = await API.graphql<AmplifyGraphQLResult<typeof updateUser>>({
+          ...graphqlOperation(
+            updateUser,
+            { input: { id: userToUpdate, followers: following } }
+          ),
+        }) as { data: UpdateUserMutation };
+      } catch(error) {
+        console.error(error);
+        throw new Error;
+      }
+    } else {
+      try {
+        let response: { data: UpdateUserMutation };
+        response = await API.graphql<AmplifyGraphQLResult<typeof updateUser>>({
+          ...graphqlOperation(
+            updateUser,
+            { input: { id: userToUpdate, following: following } }
+          ),
+        }) as { data: UpdateUserMutation };
+      } catch(error) {
+        console.error(error);
+        throw new Error;
+      }
+    }
   }
 
   return (
@@ -55,8 +95,7 @@ export default function UserRankingItem(props: UserRankingItemProps) {
         </ElementView>
       </ElementView>
       <ElementView style={styles.right}>
-        {followers.filter(x => x === user!.id).includes(user!.id) 
-        
+        {followers?.length && user !== null && user.id !== id
           ? <FollowButton inverted={!activeFollow} activeState={activeFollow} onPress={followPressed}>
               {activeFollow ? "Following" : "Follow"}
             </FollowButton>

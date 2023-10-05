@@ -5,46 +5,38 @@ import UserRankingItem from "../../components/molecules/UserRankingItem";
 import Searchbar from '../../components/atoms/inputs/Searchbar';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../../src/graphql/queries';
-import { AuthUserType } from '../../utils/AuthContext';
+import { AmplifyGraphQLResult } from '../../types';
+import { ListUsersQuery, User } from '../../../src/API';
 
-type FollowedUserType = {
-  id: string;
-  displayName: string;
-  networth: number;
-  email: string;
-  image: string;
-  followers: [string];
-  trades: any;
-  createdAt: string;
-}
 
-const FollowingScreen = ({user}: {user: AuthUserType}) => {
+const FollowingScreen = ({user}: {user: User}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-  const [followingList, setFollowingList] = useState<FollowedUserType[]>([]);
+  const [followingList, setFollowingList] = useState<User[]>([]);
 
   const fetchUsers = async () => {
     setIsLoading(true);
-    if (user!.following) {
-      for (let i = 0; i < user!.following.length; i++) {
-        try {
-          const response = await API.graphql({
-            ...graphqlOperation(
-              listUsers,
-              { filter: {
-                followers: {
-                  contains: user!.id
-                }
-              }}
-            ),
-          });
-          setFollowingList(response.data.listUsers.items);
-        } catch(error) {
-          console.error(error);
-        }
-        setIsLoading(false);
+    try {
+      const response = await API.graphql<AmplifyGraphQLResult<typeof listUsers>>({
+        ...graphqlOperation(
+          listUsers,
+          { filter: {
+            followers: {
+              contains: user!.id
+            }
+          }}
+        ),
+      }) as { data: ListUsersQuery };
+      if (response.data.listUsers?.items) {
+        const fetchedUsers: User[] = response.data.listUsers.items.filter(
+          (item): item is User => item != null
+        );
+        setFollowingList(fetchedUsers);
       }
+    } catch(error) {
+      console.error(error);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -63,7 +55,7 @@ const FollowingScreen = ({user}: {user: AuthUserType}) => {
         data={followingList}
         onRefresh={fetchUsers}
         refreshing={isLoading}
-        renderItem={({item, index}) => <UserRankingItem user={item} place={index + 1} />}
+        renderItem={({item, index}) => <UserRankingItem userData={item} place={index + 1} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
         ListEmptyComponent={<Text style={styles.noDataMsg}>pull down to refresh</Text>}

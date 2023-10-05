@@ -9,22 +9,28 @@ export default function TradesDisplay({
 }: {
   listOfTrades: Trade[] | (Trade | null)[] | null | undefined, 
 }) {
+  let filteredTrades: Trade[];
   if (!listOfTrades) {
     return <Text style={styles.noDataMsg}>This user has no recent trades</Text>;
+  } else {
+    filteredTrades = [...listOfTrades].filter(
+      (item): item is Trade => item != null
+    );
+
+    return (
+      <ElementView style={styles.root}>
+        <Text style={styles.heading}>Recent Trades</Text>
+        <FlatList
+          style={{width: '100%'}}
+          data={filteredTrades.map(item => ({...item})).sort((a, b) => (a.date! < b.date!) ? 1 : -1)}
+          renderItem={({item}) => <TradeItem props={item} />}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponentStyle={{alignItems: 'center'}}
+          ListEmptyComponent={<Text style={styles.noDataMsg}>This user has no recent trades</Text>}
+        />
+      </ElementView>
+    );
   }
-  return (
-    <ElementView style={styles.root}>
-      <Text style={styles.heading}>Recent Trades</Text>
-      <FlatList
-        style={{width: '100%'}}
-        data={listOfTrades.map(item => ({...item})).sort((a, b) => (a.date! < b.date!) ? 1 : -1)}
-        renderItem={({item}) => <TradeItem props={item} />}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponentStyle={{alignItems: 'center'}}
-        ListEmptyComponent={<Text style={styles.noDataMsg}>This user has no recent trades</Text>}
-      />
-    </ElementView>
-  );
 }
 
 const styles = StyleSheet.create({

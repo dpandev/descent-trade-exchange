@@ -5,23 +5,24 @@ import ProfileScreen from '../ProfileScreen';
 import LeaderboardScreen from '../LeaderboardScreen';
 import FollowingScreen from '../FollowingScreen';
 import { useAuthContext } from '../../utils/AuthContext';
+import { ComponentTabItem } from '../../types';
 
 export default function SocialScreen() {
 
   const { user } = useAuthContext();
 
-  const tabs = [
-    { id: 0, name: 'Profile', component: <ProfileScreen user={user} /> },
+  const tabs: ComponentTabItem[] = [
+    { id: 0, name: 'Profile', component: <ProfileScreen user={user!} /> },
     { id: 1, name: 'Rankings', component: <LeaderboardScreen /> },
-    { id: 2, name: 'Following', component: <FollowingScreen user={user} /> },
+    { id: 2, name: 'Following', component: <FollowingScreen user={user!} /> },
   ]
 
-  const [active, setActive] = useState(tabs[0]);
+  const [activeTab, setActiveTab] = useState<ComponentTabItem>(tabs[0]);
 
   // type onPress: (event: GestureResponderEvent) => void;
 
   const onButtonPress = (tabId: number) => {
-    setActive(tabs[tabId]);
+    setActiveTab(tabs[tabId]);
   }
 
   return (
@@ -31,7 +32,7 @@ export default function SocialScreen() {
           <ElementView inverted style={styles.buttonsContainer}>
             {tabs.length > 0 && tabs.map((tab) => (
               <ActivatedButton
-                activeState={tab.id === active.id}
+                activeState={tab.id === activeTab.id}
                 key={tab.id}
                 buttonStyles={styles.button}
                 textStyles={styles.buttonText}
@@ -44,7 +45,7 @@ export default function SocialScreen() {
         </ElementView>
       </ElementView>
       <ElementView style={styles.component}>
-        {active.component}
+        {activeTab.component}
       </ElementView>
     </>
   );

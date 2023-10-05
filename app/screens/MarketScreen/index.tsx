@@ -2,7 +2,7 @@ import { ActivatedButton, ElementView } from '../../components/Themed';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
-import { AmplifyGraphQLResult } from '../../types';
+import { AmplifyGraphQLResult, ComponentTabItem } from '../../types';
 import { getUser, listCoins } from '../../../src/graphql/queries';
 import { Coin, GetUserQuery, ListCoinsQuery } from '../../../src/API';
 import { useAuthContext } from '../../utils/AuthContext';
@@ -50,7 +50,7 @@ const MarketListScreen = () => {
       }) as { data: GetUserQuery };
       if (response.data.getUser?.watchlist) {
         if (allCoins) {
-          let watchlist = [...allCoins].filter(x => response.data.getUser?.watchlist?.includes(x!.id));
+          const watchlist = [...allCoins].filter(x => response.data.getUser?.watchlist?.includes(x!.id));
           setWatchlist(watchlist);
         }
       }
@@ -90,16 +90,16 @@ const MarketListScreen = () => {
     }
   }
 
-  const tabs = [
+  const tabs: ComponentTabItem[] = [
     { id: 0, name: '% Hour', component: <CoinListing props={{ data: sortByTrendingHour(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
     { id: 1, name: '% Day', component: <CoinListing props={{ data: sortByTrendingDay(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
     { id: 2, name: 'Watchlist', component: <CoinListing props={{ data: getWatchlist(), refreshFunction: fetchWatchlist, isLoading: isLoading }} /> },
-  ]
+  ];
 
-  const [active, setActive] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<ComponentTabItem>(tabs[0]);
 
   const onButtonPress = (tabId: number) => {
-    setActive(tabs[tabId].id);
+    setActiveTab(tabs[tabId]);
   }
 
   return (
@@ -108,7 +108,7 @@ const MarketListScreen = () => {
           <ElementView inverted style={styles.buttonsContainer}>
             {tabs.length > 0 && tabs.map((tab) => (
               <ActivatedButton
-                activeState={tab.id === active}
+                activeState={tab.id === activeTab.id}
                 key={tab.id}
                 buttonStyles={styles.button}
                 textStyles={styles.buttonText}
@@ -120,7 +120,7 @@ const MarketListScreen = () => {
           </ElementView>
         </ElementView>
         <ElementView style={styles.tabComponent}>
-          {tabs[active].component}
+          {activeTab.component}
         </ElementView>
       </ElementView>
   );

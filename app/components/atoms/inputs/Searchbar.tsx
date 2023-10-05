@@ -46,7 +46,7 @@ export default function Searchbar({
   keyboardAppearance = 'default', 
   keyboardType = 'default',  
   componentStyles = {}, 
-  onSubmit = () => console.log('set me up'),
+  onSubmit = () => console.error('set me up'),
   ...otherProps 
 }: SearchbarProps) {
 

@@ -15,12 +15,12 @@ import {
   Text 
 } from '../../components/Themed';
 import { PreciseMoney } from '../../components/FormattedTextElements';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '../../types';
+import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { AmplifyGraphQLResult, RootStackParamList, RootTabParamList } from '../../types';
 import { getPortfolioCoin } from '../../../src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
 import { useAuthContext } from '../../utils/AuthContext';
-import { PortfolioCoin } from '../../../src/API';
+import { GetPortfolioCoinQuery, PortfolioCoin } from '../../../src/API';
 import { exchangeCoins } from './mutations';
 
 const CoinExchangeScreen = () => {
@@ -32,23 +32,27 @@ const CoinExchangeScreen = () => {
 
   const { user } = useAuthContext();
 
-  const navigation = useNavigation();
-  const route = useRoute<RouteProp<RootStackParamList, 'CoinExchange'>>();
+  const navigation: NavigationProp<RootTabParamList> = useNavigation();
+  const route: RouteProp<RootStackParamList, 'CoinExchange'> = useRoute();
 
   const isBuy = route.params?.isBuy;
   const coin = route.params?.coin;
   const portfolioCoin = route.params?.portfolioCoin;
 
-  const getUSDPortfolioCoin = async () => {
+  const getUSDPortfolioCoin = async (): Promise<void> => {
     if (!user) return;
     try {
-      const response = await API.graphql(
+      const response = await API.graphql<AmplifyGraphQLResult<typeof getPortfolioCoin>>(
         graphqlOperation(
           getPortfolioCoin,
           { id: `${user.id}-usdc` }
         ),
+      ) as { data: GetPortfolioCoinQuery };
+      const fetchedCoin: PortfolioCoin[] = [response.data.getPortfolioCoin].filter(
+        (item): item is PortfolioCoin => item != null
       );
-      let usdCoin: PortfolioCoin = response.data.getPortfolioCoin;
+      // let usdCoin: PortfolioCoin = response.data.getPortfolioCoin;
+      let usdCoin: PortfolioCoin = fetchedCoin[0];
       if (usdCoin) {
         setUsdPortfolioCoin(usdCoin);
       }
@@ -81,15 +85,15 @@ const CoinExchangeScreen = () => {
     setCoinAmount((amount / coin?.currentPrice).toString());
   }, [coinUSDValue]);
 
-  const onSellAll = () => {
+  const onSellAll = (): void => {
     setCoinAmount((portfolioCoin.amount).toString());
   }
 
-  const onBuyAll = () => {
+  const onBuyAll = (): void => {
     setCoinUSDValue((usdPortfolioCoin?.amount || 0).toString());
   }
 
-  const placeOrder = async () => {
+  const placeOrder = async (): Promise<void> => {
     if (!user) return;
     if (isLoading) {
       return;
@@ -105,14 +109,15 @@ const CoinExchangeScreen = () => {
         userId: user.id
       }
 
-      const response = await API.graphql(
-        graphqlOperation(exchangeCoins, variables)
-      )
-      if (response.data.exchangeCoins) {
-        navigation.navigate('TabTwo');
-      } else {
-        Alert.alert('Error', 'There was an error exchanging coins');
-      }
+      // const response = await API.graphql<AmplifyGraphQLResult<typeof exchangeCoins>>(
+      //   graphqlOperation(exchangeCoins, variables)
+      // ) as { data: any};
+      // if (response.data.exchangeCoins) {
+      //   navigation.navigate('TabTwo');
+      // } else {
+      //   Alert.alert('Error', 'There was an error exchanging coins');
+      // }
+      throw new Error;
     } catch (e) {
       Alert.alert('Error', 'There was an error exchanging coins');
       console.error(e);
@@ -121,7 +126,7 @@ const CoinExchangeScreen = () => {
     setIsLoading(false);
   }
 
-  const onPlaceOrder = async () => {
+  const onPlaceOrder = async (): Promise<void> => {
     if (!coinAmount || !coinUSDValue) return;
     const maxUsd = usdPortfolioCoin?.amount || 0;
     if (isBuy && parseFloat(coinUSDValue) > maxUsd) {

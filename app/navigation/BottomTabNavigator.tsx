@@ -3,7 +3,6 @@ import { RootTabScreenProps, RootTabParamList } from "../types";
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
-
 import TabOneScreen from '../screens/tabs/TabOneScreen';
 import TabTwoScreen from '../screens/tabs/TabTwoScreen';
 import TabThreeScreen from '../screens/tabs/TabThreeScreen';
@@ -34,7 +33,7 @@ export default function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
+          title: 'Dashboard',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         })}
       />
@@ -42,7 +41,7 @@ export default function BottomTabNavigator() {
         name="TabTwo"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
+          title: 'Portfolio',
           tabBarIcon: ({ color }) => <TabBarIcon name="wallet" color={color} />,
         }}
       />
@@ -50,7 +49,7 @@ export default function BottomTabNavigator() {
         name="TabThree"
         component={TabThreeScreen}
         options={{
-          title: 'Tab Three',
+          title: 'Markets',
           tabBarIcon: ({ color }) => <TabBarIcon name="stats-chart" color={color} />,
         }}
       />
@@ -58,7 +57,7 @@ export default function BottomTabNavigator() {
         name="TabFour"
         component={TabFourScreen}
         options={{
-          title: 'Tab Four',
+          title: 'Social',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
         }}
       />

@@ -5,16 +5,8 @@ import UserRankingItem from "../../components/molecules/UserRankingItem";
 import Searchbar from '../../components/atoms/inputs/Searchbar';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../../src/graphql/queries';
-
-type User = {
-  id: string;
-  displayName: string;
-  image: string;
-  createdAt: string;
-  networth: number;
-  followers: [string];
-  trades: any;
-}
+import { AmplifyGraphQLResult } from '../../types';
+import { ListUsersQuery, User } from '../../../src/API';
 
 export default function LeaderboardScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,36 +14,43 @@ export default function LeaderboardScreen() {
   const [usersList, setUsersList] = useState<User[]>([]);
   const [nextToken, setNextToken] = useState<string>();
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      let response;
+      let response: { data: ListUsersQuery };
       // send graphql req without nextToken if data doesnt exist in state yet
-      if (usersList.length > 0 || usersList !== null) {
-        response = await API.graphql({
+      if (usersList.length > 0) {
+        response = await API.graphql<AmplifyGraphQLResult<typeof listUsers>>({
           ...graphqlOperation(
             listUsers,
-            { limit: 10, nextToken: nextToken }
+            { limit: 20, nextToken: nextToken }
           ),
-        });
+        }) as { data: ListUsersQuery };
+      } else if (usersList != null) {
+        response = await API.graphql<AmplifyGraphQLResult<typeof listUsers>>({
+          ...graphqlOperation(
+            listUsers,
+          ),
+        })  as { data: ListUsersQuery };
       } else {
-        response = await API.graphql({
-          ...graphqlOperation(
-            listUsers,
-          ),
-        });
+        throw new Error;
       }
-      if (response.data.listUsers.items) {
-        setUsersList(response.data.listUsers.items);
 
-        if (response.data.nextToken) {
-          setNextToken(response.data.nextToken);
+      if (response.data.listUsers?.items) {
+        const fetchedUsers: User[] = response.data.listUsers.items.filter(
+          (item): item is User => item != null
+        );
+        setUsersList(fetchedUsers);
+
+        if (response.data.listUsers.nextToken) {
+          setNextToken(response.data.listUsers.nextToken);
         }
       }
     } catch(error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -69,8 +68,8 @@ export default function LeaderboardScreen() {
         style={{width: '100%'}}
         onRefresh={fetchUsers}
         refreshing={isLoading}
-        data={usersList.map(item => ({...item})).sort((a, b) => (a.networth < b.networth) ? 1 : -1)}
-        renderItem={({item, index}) => <UserRankingItem user={item} place={index + 1} />}
+        data={usersList.map((item: User) => ({...item})).sort((a, b) => (a.networth < b.networth) ? 1 : -1)}
+        renderItem={({item, index}: {item: User, index: number}) => <UserRankingItem userData={item} place={index + 1} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
         ListEmptyComponent={<Text style={styles.noDataMsg}>pull down to refresh</Text>}

@@ -1,7 +1,7 @@
 import { StyleSheet, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import React, { useState } from 'react';
-import { View, ElementView, Text, RoundedButton, ScrollView, LabelledInputField, ThemedButton } from '../../components/Themed';
-import { useNavigation } from '@react-navigation/native';
+import { ElementView, Text, RoundedButton, ScrollView, LabelledInputField, ThemedButton } from '../../components/Themed';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
 
 export default function SignupScreen() {
@@ -9,14 +9,14 @@ export default function SignupScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
-  const onPressSignin = () => {
+  const onPressSignin = (): void => {
     navigation.navigate('SigninScreen');
   }
 
-  const onPressSignup = () => {
-    console.log('sign up pressed');
+  const onPressSignup = (): void => {
+    console.warn('sign up pressed');
   }
 
   return (
@@ -26,7 +26,7 @@ export default function SignupScreen() {
         style={styles.container}
       >
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{marginTop: 50}}>
-          <View style={styles.root}>
+          <ElementView style={styles.root}>
             <Text style={[styles.title, styles.lightColor]}>Create an account</Text>
             <ElementView style={styles.form}>
 
@@ -95,7 +95,7 @@ export default function SignupScreen() {
                 Sign in
               </ThemedButton>
             </ElementView>
-          </View>
+          </ElementView>
         </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -137,8 +137,6 @@ const styles = StyleSheet.create({
   },
   signinLabel: {
     fontSize: 16,
-    // marginTop: 50,
-    // marginBottom: 50,
   },
   signinBtn: {
     flexDirection: 'row',

@@ -3,7 +3,6 @@ import 'react-native-gesture-handler';
 import useColorScheme from './app/hooks/useColorScheme';
 import Navigation from './app/navigation';
 import * as WebBrowser from 'expo-web-browser';
-
 import { Amplify } from 'aws-amplify';
 import awsExports from './src/aws-exports';
 import { Linking, Platform } from 'react-native';

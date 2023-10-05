@@ -4,11 +4,14 @@ import { Text, ElementView, ListItemButton } from '../Themed';
 import { AbbreviateNum, DateAndTime, PreciseMoney } from '../FormattedTextElements';
 import { Octicons } from '@expo/vector-icons';
 import { Trade } from '../../../src/API';
+const assetImg = require('../../../assets/images/dgb.png');
+
+const imgFallback = Image.resolveAssetSource(assetImg).uri;
 
 export default function TradeItem({
   props
 }: {
-  props: Trade | null | undefined
+  props: Trade
 }) {
   if (!props) {
     return <Text style={styles.currencyText}>Error displaying trade</Text>;
@@ -18,7 +21,7 @@ export default function TradeItem({
       buttonStyles={styles.root}
     >
       <ElementView style={styles.left}>
-        <Image style={styles.image} source={{ uri: props.image }}></Image>
+        <Image style={styles.image} source={{ uri: props.image || imgFallback }}></Image>
       </ElementView>
       <ElementView style={styles.middle}>
         <ElementView style={{ flexDirection: 'row', alignItems: 'center' }}>

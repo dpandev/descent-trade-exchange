@@ -9,7 +9,7 @@ export default function TabThreeScreen() {
   const [search, setSearch] = useState<string>('');
 
   const useSearch = () => {
-    console.log('searching...', search);
+    console.warn('searching...', search);
   }
 
   return (

@@ -1,17 +1,17 @@
 import { StyleSheet, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import React, { useState } from 'react';
-import { View, ElementView, Text, RoundedButton, LabelledInputField, ThemedButton, TextButton } from '../../components/Themed';
-import { useNavigation } from '@react-navigation/native';
+import { ScrollView, ElementView, Text, RoundedButton, LabelledInputField, TextButton } from '../../components/Themed';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
 
 export default function SigninScreen() {
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const onPressSignin = () => {
-    console.log("signin pressed");
+    console.warn("signin pressed");
   }
 
   const onPressSignup = () => {
@@ -24,7 +24,7 @@ export default function SigninScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        <View style={styles.root}>
+        <ScrollView style={styles.root}>
           <Text style={styles.title} darkColor=''>Sign in to an existing account</Text>
           <ElementView style={styles.form}>
             <LabelledInputField 
@@ -62,7 +62,7 @@ export default function SigninScreen() {
               Sign up
             </TextButton>
           </ElementView>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

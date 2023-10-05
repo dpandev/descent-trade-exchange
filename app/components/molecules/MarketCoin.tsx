@@ -6,7 +6,7 @@ import { PercentageChange, TruncatedDecimal } from '../FormattedTextElements';
 import { Coin } from '../../../src/API';
 const assetImg = require('../../../assets/images/dgb.png');
 
-const profileImgFallback = Image.resolveAssetSource(assetImg).uri;
+const imgFallback = Image.resolveAssetSource(assetImg).uri;
 
 export default function MarketCoin ({props}: {props: Coin}) {
   const navigation = useNavigation();
@@ -30,7 +30,7 @@ export default function MarketCoin ({props}: {props: Coin}) {
       onPress={onPressed}
     >
       <ElementView style={styles.left}>
-        <Image style={styles.image} source={{ uri: image! }} />
+        <Image style={styles.image} source={{ uri: image || imgFallback }} />
         <ElementView>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.symbol}>{symbol.toUpperCase()}</Text>

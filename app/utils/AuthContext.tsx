@@ -4,27 +4,27 @@ import { getUser } from '../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../types';
 import { GetUserQuery, User } from '../../src/API';
 
-export type AuthUserType = User | null;
+export type AuthUserType = User;
 
-export type AuthUserSetterType = React.Dispatch<React.SetStateAction<AuthUserType>>;
+export type AuthUserSetterType = React.Dispatch<React.SetStateAction<AuthUserType | null>>;
 export interface AuthUserContext { 
-  user: AuthUserType, 
-  setUser: AuthUserSetterType 
+  user: AuthUserType | null, 
+  setUser: AuthUserSetterType
 };
 
 interface AuthContextProps {
   children?: ReactNode;
 }
 
-const initialState: AuthUserType = null;
+const initialState: AuthUserType | null = null;
 const initialSetUser: AuthUserSetterType = () => {};
 
 const AuthContext = createContext<AuthUserContext>({ user: initialState, setUser: initialSetUser });
 
 export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
-  const [user, setUser] = useState<AuthUserType>(initialState);
+  const [user, setUser] = useState<AuthUserType | null>(initialState);
 
-  const fetchUserData = async (loginUser: string) => {//fetch user from db using id from cognito
+  const fetchUserData = async (loginUser: string): Promise<void> => {//fetch user from db using id from cognito
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
         ...graphqlOperation(
@@ -33,8 +33,8 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
         ),
       }) as { data: GetUserQuery };
       if (response.data.getUser) {
-        console.log('getUser', response.data.getUser)
-        setUser({ ...user, ...response.data.getUser });
+        let userObj: AuthUserType = response.data.getUser;
+        setUser({ ...user, ...userObj });
       }
       return;
     } catch(error) {
@@ -45,7 +45,6 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
       if (event === 'signIn') {
-        console.log('hub', event, data)
         fetchUserData(data.signInUserSession.accessToken.payload.sub);
       }
       if (event === 'signOut') {

@@ -5,20 +5,17 @@ import { Octicons } from "@expo/vector-icons";
 import styles from "./styles";
 import { PercentageChange, PreciseMoney } from "../../components/FormattedTextElements";
 import CoinPriceGraph from "../../components/organisms/PriceGraph";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { API, graphqlOperation } from 'aws-amplify';
-import { getCoin, getPortfolioCoin, getUser } from '../../../src/graphql/queries';
+import { getCoin, getPortfolioCoin } from '../../../src/graphql/queries';
 import { useAuthContext } from '../../utils/AuthContext';
-import { Coin, GetCoinQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
-import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
+import { Coin, GetCoinQuery, GetPortfolioCoinQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
+import { AmplifyGraphQLResult, RootStackScreenProps } from '../../types';
 import { updateUser } from '../../../src/graphql/mutations';
 
-const CoinDetailsScreen = () => {
+const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDetails'>) => {
   const { user, setUser } = useAuthContext();
-  const navigation = useNavigation();
-  const route = useRoute<RouteProp<RootStackParamList, 'CoinDetails'>>();
-  const [coin, setCoin] = useState<Coin | null | undefined>(null);
-  const [portfolioCoin, setPortfolioCoin] = useState<PortfolioCoin | null | undefined>(null);
+  const [coin, setCoin] = useState<Coin>();
+  const [portfolioCoin, setPortfolioCoin] = useState<PortfolioCoin>();
   const [starActive, setStarActive] = useState<boolean>();
 
   const fetchCoinData = async () => {
@@ -51,9 +48,12 @@ const CoinDetailsScreen = () => {
           getPortfolioCoin, 
           { id: `${user.id}-${route.params.id}` },
         ),
-      );
+      ) as { data: GetPortfolioCoinQuery };
       if (response.data.getPortfolioCoin) {
-        setPortfolioCoin(response.data.getPortfolioCoin);
+        const fetchedCoin: PortfolioCoin[] = [response.data.getPortfolioCoin].filter(
+          (item): item is PortfolioCoin => item != null
+        );
+        setPortfolioCoin(fetchedCoin[0]);
       }
       if (coin) {
         if (user?.watchlist?.includes(coin.id)) {
@@ -116,10 +116,12 @@ const CoinDetailsScreen = () => {
   }, [coin]);
 
   const onBuy = () => {
+    if (!coin || !portfolioCoin) throw new Error;
     navigation.navigate('CoinExchange', { isBuy: true, coin, portfolioCoin });
   }
 
   const onSell = () => {
+    if (!coin || !portfolioCoin) throw new Error;
     navigation.navigate('CoinExchange', { isBuy: false, coin, portfolioCoin });
   }
 

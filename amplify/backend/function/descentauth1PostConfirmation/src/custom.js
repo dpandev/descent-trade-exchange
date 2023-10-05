@@ -7,7 +7,7 @@ const { default: fetch, Request } = require("node-fetch");
 exports.handler = async (event, context) => {
   // insert code to be executed by your lambda trigger
   if (!event.request.userAttributes.sub) {
-    console.log("Error: No user was written to DynamoDB")
+    console.log("Error: No new user was created!")
     context.done(null, event);
     return;
   }
@@ -85,7 +85,7 @@ exports.handler = async (event, context) => {
   }
 
   if (event.request.userAttributes.picture) {
-    variables.userInput.image = event.request.userAttributes.picture;
+    variables.userInput.input.image = event.request.userAttributes.picture;
   }
 
   const setOptions = (query, variables) => {
@@ -103,15 +103,10 @@ exports.handler = async (event, context) => {
   const request2 = new Request(GRAPHQL_ENDPOINT, setOptions(createNewPortfolioQuery, variables.portfolioInput));
   const request3 = new Request(GRAPHQL_ENDPOINT, setOptions(createNewTradeQuery, variables.tradeInput));
 
-  try {
-    response = await fetch(request)
-      .then(await fetch(request2).then(res => console.log('req2', res)))
-      .then(await fetch(request3).then(res => console.log('req3', res)))
-      .then(res => console.log(res))
-      .catch(error => console.log('error', error))
-  } catch (error) {
-    console.log(error)
-  }
+  response = await fetch(request)
+    .then(await fetch(request2))
+    .then(await fetch(request3))
+    .catch(error => console.log(error))
 
   context.done(null, event);
 };

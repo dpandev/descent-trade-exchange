@@ -2,12 +2,8 @@ import { StyleSheet } from 'react-native';
 import { RootTabScreenProps } from '../../types';
 import React from 'react';
 import { FollowButton, RoundedButton, Text, View } from '../../components/Themed';
-import Colors from '../../constants/Colors';
-import useColorScheme from '../../hooks/useColorScheme';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
-
-  const colorScheme = useColorScheme();
 
   return (
     <View style={styles.root}>

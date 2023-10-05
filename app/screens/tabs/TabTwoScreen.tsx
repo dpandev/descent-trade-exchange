@@ -4,54 +4,61 @@ import PortfolioCoinComponent, { PortfolioCoinProps } from '../../components/mol
 import PageHeader from '../../components/molecules/PageHeader';
 import { PreciseMoney } from '../../components/FormattedTextElements';
 import { useState, useEffect } from 'react';
-import { API, graphqlOperation } from 'aws-amplify'
-import { Coin, PortfolioCoin } from '../../../src/API';
+import { API, graphqlOperation } from 'aws-amplify';
+import { Coin, ListCoinsQuery, PortfolioCoin, PortfolioCoinsByUserIDQuery } from '../../../src/API';
 import { useAuthContext } from '../../utils/AuthContext';
 import { listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
+import { AmplifyGraphQLResult } from '../../types';
 
 export default function TabTwoScreen() {
 
   const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoinProps[]>([]);
-  const [coins, setCoins] = useState<Coin[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { user, setUser } = useAuthContext();
+  const { user } = useAuthContext();
 
-  const fetchAssets = async () => {
+  const fetchAssets = async (): Promise<void> => {
     if (!user) return;
     setIsLoading(true);
     try {
-      const coinsResponse = await API.graphql(
+      const coinsResponse = await API.graphql<AmplifyGraphQLResult<typeof listCoins>>(
         graphqlOperation(
           listCoins,
         ),
-      );
+      ) as { data: ListCoinsQuery };
+
       if (coinsResponse.data.listCoins) {
-        setCoins(coinsResponse.data.listCoins.items);
-      }
+        let allCoinsResponse: Coin[] = coinsResponse.data.listCoins.items.filter(
+          (item): item is Coin => item != null
+        );
 
-      const response = await API.graphql(
-        graphqlOperation(
-          portfolioCoinsByUserID,
-          { userID: user.id },
-        ),
-      );
-
-      if (response.data.portfolioCoinsByUserID) {
-        let portfolioCoinsResponse: PortfolioCoin[] = response.data.portfolioCoinsByUserID.items;
-        let allCoinsResponse: Coin[] = [...coinsResponse.data.listCoins.items];
-        let pCoins: PortfolioCoinProps[] = [];
-        for (let i = 0; i < portfolioCoinsResponse.length; i++) {
-          let obj: PortfolioCoinProps = {
-            portfolioCoin: {
-            coin: allCoinsResponse.find(x => x.id === portfolioCoinsResponse[i].coinId)!,
-            amount: portfolioCoinsResponse[i].amount,
+        const response = await API.graphql<AmplifyGraphQLResult<typeof portfolioCoinsByUserID>>(
+          graphqlOperation(
+            portfolioCoinsByUserID,
+            { userID: user.id },
+          ),
+        ) as { data: PortfolioCoinsByUserIDQuery };
+  
+        if (response.data.portfolioCoinsByUserID) {
+          let portfolioCoinsResponse: PortfolioCoin[] = response.data.portfolioCoinsByUserID.items.filter(
+            (item): item is PortfolioCoin => item != null
+          );
+          let pCoins: PortfolioCoinProps[] = [];
+  
+          for (let i = 0; i < portfolioCoinsResponse.length; i++) {
+            let checkedCoin: Coin | undefined = allCoinsResponse.find(x => x.id === portfolioCoinsResponse[i].coinId);
+            if (checkedCoin) {
+              let obj: PortfolioCoinProps = {
+                portfolioCoin: {
+                  coin: checkedCoin,
+                  amount: portfolioCoinsResponse[i].amount,
+                }
+              }
+              pCoins.push(obj);
             }
           }
-          pCoins.push(obj);
+          setPortfolioCoins(pCoins);
         }
-        setPortfolioCoins(pCoins);
       }
-
     } catch (error) {
       console.error(error);
     } finally {
@@ -72,7 +79,6 @@ export default function TabTwoScreen() {
       <FlatList
         style={{width: '100%'}}
         data={portfolioCoins}
-        // keyExtractor={(item, index) => item.id}
         onRefresh={fetchAssets}
         refreshing={isLoading}
         renderItem={({item}) => <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} />}

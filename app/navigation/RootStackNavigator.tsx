@@ -2,8 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
-import React, { useState } from 'react';
-
+import React from 'react';
 import BottomTabNavigator from './BottomTabNavigator';
 import ModalScreen from '../screens/modals/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
@@ -19,8 +18,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function RootStackNavigator() {
   const { user } = useAuthContext();
   const colorScheme = useColorScheme();
-
-  console.log('rootstack:', user);
 
   return (
     <>

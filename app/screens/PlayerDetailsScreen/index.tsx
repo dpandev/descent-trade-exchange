@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Image, ActivityIndicator, StyleSheet } from 'react-native';
 import { ElementView, Text, View } from '../../components/Themed'
 import { AbbreviateNum, Networth, ShortDate } from "../../components/FormattedTextElements";
-import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { API, graphqlOperation } from 'aws-amplify';
 import { getUser } from '../../../src/graphql/queries';
 import TradesDisplay from '../../components/organisms/TradesDisplay';
 import { GetUserQuery, Trade } from '../../../src/API';
-import { AmplifyGraphQLResult } from '../../types';
+import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
+const assetImg = require('../../../assets/images/dgb.png');
+
+const imgFallback = Image.resolveAssetSource(assetImg).uri;
 
 type PlayerDetails = {
   displayName: string | null | undefined;
@@ -20,7 +23,7 @@ type PlayerDetails = {
 }
 
 const PlayerDetailsScreen = () => {
-  const route: RouteProp<ParamListBase> = useRoute();
+  const route: RouteProp<RootStackParamList, 'PlayerDetails'> = useRoute();
   const [player, setPlayer] = useState<PlayerDetails>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
@@ -70,7 +73,7 @@ const PlayerDetailsScreen = () => {
       <View style={styles.profileContainer}>
         <Image 
           src={player?.image!} 
-          source={{ uri: player?.image! }} 
+          source={{ uri: player?.image || imgFallback }} 
           width={50}
           height={50}
           style={styles.profileImage}
