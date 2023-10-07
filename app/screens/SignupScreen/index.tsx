@@ -1,11 +1,34 @@
-import { StyleSheet, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { 
+  StyleSheet, 
+  Platform, 
+  Keyboard, 
+  TouchableWithoutFeedback, 
+  Alert
+} from 'react-native';
 import React, { useState } from 'react';
-import { ElementView, Text, RoundedButton, ScrollView, LabelledInputField, ThemedButton } from '../../components/Themed';
+import { 
+  ElementView, 
+  Text, 
+  RoundedButton, 
+  ScrollView, 
+  LabelledInputField, 
+  ThemedButton,
+  KeyboardAvoidingView 
+} from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
+import { Auth } from 'aws-amplify';
+
+type SignupParams = {
+  username: string;
+  password: string;
+  attributes: { email: string, 'custom:displayName': string };
+  autoSignIn: { enabled: true };
+}
 
 export default function SignupScreen() {
 
+  const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -15,20 +38,66 @@ export default function SignupScreen() {
     navigation.navigate('SigninScreen');
   }
 
-  const onPressSignup = (): void => {
-    console.warn('sign up pressed');
+  function simplePasswordValidation(pass: string, confirmPass: string) {
+    if (pass !== confirmPass) {
+      throw new Error('Passwords do no match! Please try again.');
+    }
+    if (pass.length < 8) {
+      throw new Error('Password must be at least 8 characters in length.');
+    }
+  }
+
+  const onPressSignup = async (): Promise<void> => {
+    const userData: SignupParams = {
+      username: email,
+      password: password,
+      attributes: {
+        email: email,
+        'custom:displayName': username,
+      },
+      autoSignIn: {
+        enabled: true,
+      },
+    };
+
+    try {
+      simplePasswordValidation(password, confirmPassword);
+      const { user } = await Auth.signUp(userData);
+      console.log('signupUser:',user);
+      navigation.navigate('ConfirmCode');
+    } catch(error: any) {
+      console.log('signupError:', error);
+      if (error.message) {
+        Alert.alert(error.message);
+      } else {
+        Alert.alert(error.toString());
+      }
+    }
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
       >
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{marginTop: 50}}>
           <ElementView style={styles.root}>
             <Text style={[styles.title, styles.lightColor]}>Create an account</Text>
             <ElementView style={styles.form}>
+
+              <LabelledInputField 
+                value={username}
+                setValue={setUsername}
+                onSubmitEditing={Keyboard.dismiss}
+                label={'Username'}
+                labelStyles={styles.purpleColor}
+                placeholder={'your-username'}
+                placeholderTextColor={styles.lightColor.color}
+                textContentType={'username'}
+                keyboardAppearance={'dark'}
+                componentStyles={styles.inputContainer}
+                selectionColor={styles.purpleColor.color}
+              />
 
               <LabelledInputField 
                 value={email}
@@ -103,9 +172,6 @@ export default function SignupScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    //
-  },
   root: {
     flex: 1,
     alignItems: 'center',
@@ -125,18 +191,20 @@ const styles = StyleSheet.create({
     borderBottomColor: '#D1D1D1',
   },
   purpleColor: {
-    color: '#6338F1',
+    color: '#772ceb',
   },
   lightColor: {
     color: '#D1D1D1',
   },
   signupBtn: {
-    alignSelf: 'center',
-    padding: 30,
-    maxWidth: 275,
+    // alignSelf: 'center',
+    // padding: 30,
+    // maxWidth: 275,
+    marginBottom: 'auto',
   },
   signinLabel: {
     fontSize: 16,
+    marginTop: 'auto',
   },
   signinBtn: {
     flexDirection: 'row',

@@ -31,7 +31,7 @@ export default function RootStackNavigator() {
             options={{ 
               headerStyle: { backgroundColor: Colors[colorScheme].secondary },
               headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'},   
+              headerTitleStyle: { fontWeight: 'bold' },   
               presentation: 'modal', 
             }}
           />
@@ -44,7 +44,7 @@ export default function RootStackNavigator() {
               title: 'Details', 
               headerStyle: { backgroundColor: Colors[colorScheme].secondary },
               headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'},  
+              headerTitleStyle: { fontWeight: 'bold' },  
             }} 
           />
           <Stack.Screen 
@@ -54,7 +54,7 @@ export default function RootStackNavigator() {
               title: 'Exchange', 
               headerStyle: { backgroundColor: Colors[colorScheme].secondary }, 
               headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'}, 
+              headerTitleStyle: { fontWeight: 'bold' }, 
             }} 
           />
           <Stack.Screen 
@@ -64,7 +64,7 @@ export default function RootStackNavigator() {
               title: 'Player Details', 
               headerStyle: { backgroundColor: Colors[colorScheme].secondary },
               headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'},  
+              headerTitleStyle: { fontWeight: 'bold' },  
             }} 
           />
         </Stack.Group>

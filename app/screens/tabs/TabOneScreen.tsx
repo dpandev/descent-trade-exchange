@@ -1,24 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { RootTabScreenProps } from '../../types';
 import React from 'react';
-import { FollowButton, RoundedButton, Text, View } from '../../components/Themed';
+import { Text, View } from '../../components/Themed';
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
   return (
     <View style={styles.root}>
-      <Text>Tab 1</Text>
-      <FollowButton>
-        Following
-      </FollowButton>
-      <FollowButton>
-        Follow
-      </FollowButton>
-      <RoundedButton
-        buttonStyles={styles.btn}
-      >
-        Continue with Apple
-      </RoundedButton>
+      <Text>News Display</Text>
     </View>
   );
 }

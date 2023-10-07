@@ -12,6 +12,9 @@ exports.handler = async (event, context) => {
     return;
   }
 
+  console.log('event', event);
+  console.log('context', context);
+
   const date = new Date();
 
   const GRAPHQL_ENDPOINT = process.env.API_DESCENT_GRAPHQLENDPOINTOUTPUT;
@@ -86,6 +89,10 @@ exports.handler = async (event, context) => {
 
   if (event.request.userAttributes.picture) {
     variables.userInput.input.image = event.request.userAttributes.picture;
+  }
+
+  if (event.request.userAttributes['custom:displayName']) {
+    variables.userInput.input.displayName = event.request.userAttributes['custom:displayName'];
   }
 
   const setOptions = (query, variables) => {

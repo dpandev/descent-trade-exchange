@@ -1,5 +1,6 @@
 import { StyleSheet, TextInput, View, Text, KeyboardTypeOptions, StyleProp, TextStyle, ColorValue } from 'react-native';
 import React, { Component } from 'react';
+// import useColorScheme from '../../../hooks/useColorScheme';
 
 interface TheProps {
   value: string;
@@ -18,9 +19,12 @@ interface TheProps {
   label?: string;
   labelStyles?: StyleProp<TextStyle>;
   componentStyles?: StyleProp<TextStyle>;
+  disabled?: boolean;
 }
 
 export default class LabelledTextInput extends Component<TheProps>{
+  // let colorScheme = useColorScheme();
+
   render() {
     return (
       <View style={[styles.root, this.props.componentStyles]}>
@@ -33,17 +37,18 @@ export default class LabelledTextInput extends Component<TheProps>{
           onSubmitEditing={this.props.onSubmitEditing}
           value={this.props.value}
           onChangeText={this.props.setValue}
-          maxLength={this.props.maxLength ? this.props.maxLength : 30}
-          textContentType={this.props.textContentType ? this.props.textContentType : 'none'}
+          maxLength={this.props.maxLength || 30}
+          textContentType={this.props.textContentType || 'none'}
           style={[styles.input, this.props.inputStyles]}
-          placeholder={this.props?.placeholder || ''}
-          placeholderTextColor={this.props.placeholderTextColor ? this.props.placeholderTextColor : 'black'}
-          secureTextEntry={this.props.secureTextEntry ? this.props.secureTextEntry : false}
-          selectionColor={this.props.selectionColor ? this.props.selectionColor : 'white'}
-          autoCorrect={this.props.autoCorrect ? this.props.autoCorrect : false}
+          placeholder={this.props.placeholder || ''}
+          placeholderTextColor={this.props.placeholderTextColor || 'black'}
+          secureTextEntry={this.props.secureTextEntry || false}
+          selectionColor={this.props.selectionColor || 'white'}
+          autoCorrect={this.props.autoCorrect || false}
           autoCapitalize={'none'}
-          keyboardType={this.props.keyboardType ? this.props.keyboardType : 'default'}
-          keyboardAppearance={this.props.keyboardAppearance ? this.props.keyboardAppearance : 'default'}
+          keyboardType={this.props.keyboardType || 'default'}
+          keyboardAppearance={this.props.keyboardAppearance || 'default'}
+          editable={this.props.disabled || true}
         />
       </View>
     );
@@ -53,15 +58,16 @@ export default class LabelledTextInput extends Component<TheProps>{
 const styles = StyleSheet.create({
   root: {
     alignSelf: 'center',
-    width: '95%',
+    width: '100%',
     maxWidth: 400,
     borderBottomWidth: 1,
     marginVertical: 15,
     paddingVertical: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0)',
+    paddingHorizontal: 10,
+    // backgroundColor: 'rgba(0, 0, 0, 0)',
   },
   input: {
-    color: 'white',
+    // color: 'white',
     fontSize: 18,
   },
   placeholderText: {},

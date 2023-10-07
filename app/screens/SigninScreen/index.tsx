@@ -1,8 +1,9 @@
-import { StyleSheet, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import React, { useState } from 'react';
-import { ScrollView, ElementView, Text, RoundedButton, LabelledInputField, TextButton } from '../../components/Themed';
+import { ElementView, Text, RoundedButton, LabelledInputField, TextButton } from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
+import { Auth } from 'aws-amplify';
 
 export default function SigninScreen() {
 
@@ -10,73 +11,90 @@ export default function SigninScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const onPressSignin = () => {
-    console.warn("signin pressed");
+  const onPressSignin = async (): Promise<void> => {
+    try {
+      await Auth.signIn(email, password);
+    } catch(error: any) {
+      console.log(error);
+      if (error.message) {
+        Alert.alert(error.message);
+      } else {
+        Alert.alert(error.toString());
+      }
+    }
   }
 
-  const onPressSignup = () => {
+  const onPressSignup = (): void => {
     navigation.navigate('SignupScreen');
+  }
+
+  const onPressConfirmCode = (): void => {
+    navigation.navigate('ConfirmCode');
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <ScrollView style={styles.root}>
-          <Text style={styles.title} darkColor=''>Sign in to an existing account</Text>
-          <ElementView style={styles.form}>
-            <LabelledInputField 
-              value={email}
-              setValue={setEmail}
-              onSubmitEditing={Keyboard.dismiss}
-              label={'E-Mail'}
-              placeholder={'yourname@example.com'}
-              textContentType={'emailAddress'}
-            />
-            <LabelledInputField 
-              value={password}
-              setValue={setPassword}
-              onSubmitEditing={Keyboard.dismiss}
-              label={'Password'}
-              secureTextEntry={true}
-              placeholder={'yourpassword'}
-              textContentType={'password'}
-            />
-            <RoundedButton 
-              onPress={onPressSignin}
-              buttonStyles={styles.signinBtn}
-            >
-              Sign in
-            </RoundedButton>
-            <SocialLoginButtons />
-            <Text style={styles.signupLabel}>Don't have an account?</Text>
-            <TextButton
-              onPress={onPressSignup}
-              buttonStyles={styles.signupBtn}
-              textStyles={styles.signupBtnText}
-              icon={'angle-right'}
-              iconSize={25}
-            >
-              Sign up
-            </TextButton>
-          </ElementView>
-        </ScrollView>
-      </KeyboardAvoidingView>
+      <ElementView style={styles.root}>
+        <Text style={styles.title} darkColor=''>Sign in to an existing account</Text>
+        <ElementView style={styles.form}>
+          <LabelledInputField 
+            value={email}
+            setValue={setEmail}
+            onSubmitEditing={Keyboard.dismiss}
+            label={'E-Mail'}
+            placeholder={'yourname@example.com'}
+            textContentType={'emailAddress'}
+          />
+          <LabelledInputField 
+            value={password}
+            setValue={setPassword}
+            onSubmitEditing={Keyboard.dismiss}
+            label={'Password'}
+            secureTextEntry={true}
+            placeholder={'yourpassword'}
+            textContentType={'password'}
+          />
+          <RoundedButton 
+            onPress={onPressSignin}
+            buttonStyles={styles.signinBtn}
+          >
+            Sign in
+          </RoundedButton>
+          <SocialLoginButtons />
+          <Text style={styles.signupLabel}>Don't have an account?</Text>
+          <TextButton
+            onPress={onPressSignup}
+            buttonStyles={styles.signupBtn}
+            textStyles={styles.signupBtnText}
+            icon={'angle-right'}
+            iconSize={25}
+          >
+            Sign up
+          </TextButton>
+
+          <Text style={{ ...styles.signupLabel, marginTop: 25 }}>Have a confirm code?</Text>
+          <TextButton
+            onPress={onPressConfirmCode}
+            buttonStyles={styles.signupBtn}
+            textStyles={styles.signupBtnText}
+            icon={'angle-right'}
+            iconSize={25}
+          >
+            Enter confirm code
+          </TextButton>
+        </ElementView>
+      </ElementView>
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   root: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    height: '100%',
     padding: 25,
   },
   title: {
@@ -86,19 +104,20 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '100%',
+    maxWidth: 325,
+    justifyContent: 'center',
   },
   signinBtn: {
     alignSelf: 'center',
-    width: '50%',
+    width: '100%',
+    maxWidth: 200,
   },
   signupLabel: {
     fontSize: 16,
-    marginTop: 50,
+    marginTop: 'auto',
   },
   signupBtn: {
     flexDirection: 'row',
-    // backgroundColor: 'transparent',
-    // borderWidth: 0,
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingVertical: 10,

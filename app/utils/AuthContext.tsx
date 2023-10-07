@@ -4,7 +4,10 @@ import { getUser } from '../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../types';
 import { GetUserQuery, User } from '../../src/API';
 
-export type AuthUserType = User;
+// export type AuthUserType = User;
+export interface AuthUserType extends User {
+  token?: string;
+}
 
 export type AuthUserSetterType = React.Dispatch<React.SetStateAction<AuthUserType | null>>;
 export interface AuthUserContext { 
@@ -38,13 +41,15 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
       }
       return;
     } catch(error) {
-      console.error(error);
+      console.log(error);
     }
   }
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      if (event === 'signIn') {
+      console.log('hubEvent:', event);
+      console.log('hubData:', data);
+      if (event === 'signIn' || 'autoSignIn') {
         fetchUserData(data.signInUserSession.accessToken.payload.sub);
       }
       if (event === 'signOut') {

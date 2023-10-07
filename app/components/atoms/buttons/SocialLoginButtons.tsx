@@ -19,9 +19,9 @@ export default function SocialLoginButtons() {
 
   return (
     <>
-      <RoundedButton onPress={onSignInApple}>
+      {/* <RoundedButton onPress={onSignInApple}>
         Continue with Apple
-      </RoundedButton>
+      </RoundedButton> */}
 
       <RoundedButton onPress={onSignInGoogle}>
         Continue with Google

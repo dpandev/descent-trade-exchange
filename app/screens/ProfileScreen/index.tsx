@@ -6,7 +6,7 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TradesDisplay from '../../components/organisms/TradesDisplay';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getUser } from '../../../src/graphql/queries';
-import { GetUserQuery, Trade, User } from '../../../src/API';
+import { GetUserQuery, User } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
 
 export default function ProfileScreen({user}: {user: User}) {
@@ -42,7 +42,7 @@ export default function ProfileScreen({user}: {user: User}) {
     fetchProfile();
   }, []);
 
-  if (isLoading) {
+  if (isLoading || !userData) {
     return <ActivityIndicator />
   }
 
@@ -50,16 +50,16 @@ export default function ProfileScreen({user}: {user: User}) {
     <ElementView style={styles.root}>
       <ElementView style={styles.profileContainer}>
         <Image 
-          source={{ uri: user?.image! }} 
+          source={{ uri: userData?.image! }} 
           width={50}
           height={50}
           style={styles.profileImage}
         />
         <ElementView style={styles.profileInfo}>
-          <Text style={styles.profileName}>{user?.displayName}</Text>
+          <Text style={styles.profileName}>{userData?.displayName}</Text>
           <Text style={styles.profileText}>
             Net Worth: {''}
-            <Networth value={user?.networth!} />
+            <Networth value={userData?.networth!} />
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
@@ -67,11 +67,11 @@ export default function ProfileScreen({user}: {user: User}) {
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            <AbbreviateNum value={user?.followers?.length || 0} style={styles.profileTextData}/>
+            <AbbreviateNum value={userData?.followers?.length || 0} style={styles.profileTextData}/>
             {/* <Text style={styles.profileTextData}>{user?.followers?.length.toLocaleString('en-US')}</Text> */}
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
-          <ShortDate value={user?.createdAt!} />
+          <ShortDate value={userData?.createdAt!} />
         </ElementView>
       </ElementView>
       <ElementView style={styles.tradesDisplay}>
