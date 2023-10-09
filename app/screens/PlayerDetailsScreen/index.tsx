@@ -29,7 +29,7 @@ const PlayerDetailsScreen = () => {
   
   const fetchPlayerData = async () => {
     setIsLoading(true);
-    if (!route.params?.id) {
+    if (!route.params.id) {
       return;
     }
     try {
@@ -45,15 +45,16 @@ const PlayerDetailsScreen = () => {
           image: response.data.getUser.image,
           networth: response.data.getUser.networth,
           createdAt: response.data.getUser.createdAt,
-          trades: response.data.getUser.trades?.items || [],
+          trades: response.data.getUser.trades.items,
           followers: response.data.getUser.followers,
           following: response.data.getUser.following,
         });
       }
     } catch(error) {
-      console.error('error2', error);
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const PlayerDetailsScreen = () => {
 
   if (!player || isLoading) {
     return (
-      <ElementView style={{ alignItems: 'center' }}>
+      <ElementView style={{ alignItems: 'center', marginTop: 25 }}>
         <ActivityIndicator />
       </ElementView>
     );
@@ -70,34 +71,34 @@ const PlayerDetailsScreen = () => {
 
   return (
     <View style={styles.root}>
+      <Text style={styles.profileName}>{player.displayName}</Text>
       <View style={styles.profileContainer}>
         <Image 
-          src={player?.image!} 
-          source={{ uri: player?.image || imgFallback }} 
+          src={player.image!} 
+          source={{ uri: player.image || imgFallback }} 
           width={50}
           height={50}
           style={styles.profileImage}
         />
         <ElementView style={styles.profileInfo}>
-          <Text style={styles.profileName}>{player?.displayName}</Text>
           <Text style={styles.profileText}>
             Net Worth: {''}
-            <Networth value={player?.networth} />
+            <Networth value={player.networth} />
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            <AbbreviateNum value={player?.trades?.length || 0} />
+            <AbbreviateNum value={player.trades.length || 0} />
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            <AbbreviateNum value={player?.followers?.length || 0} />
+            <AbbreviateNum value={player.followers.length || 0} />
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
-          <ShortDate value={player?.createdAt} />
+          <ShortDate value={player.createdAt} />
         </ElementView>
       </View>
       <ElementView style={styles.tradesDisplay}>
-        <TradesDisplay listOfTrades={player?.trades || null}></TradesDisplay>
+        <TradesDisplay listOfTrades={player.trades || []}></TradesDisplay>
       </ElementView>
     </View>
   );
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   profileName: {
     fontWeight: 'bold',
     fontSize: 20,
-    marginBottom: 6,
+    marginBottom: 12,
   },
   profileText: {
     marginVertical: 2,

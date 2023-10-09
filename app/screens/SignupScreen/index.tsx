@@ -97,6 +97,7 @@ export default function SignupScreen() {
                 keyboardAppearance={'dark'}
                 componentStyles={styles.inputContainer}
                 selectionColor={styles.purpleColor.color}
+                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
               <LabelledInputField 
@@ -111,6 +112,7 @@ export default function SignupScreen() {
                 keyboardAppearance={'dark'}
                 componentStyles={styles.inputContainer}
                 selectionColor={styles.purpleColor.color}
+                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
               <LabelledInputField 
@@ -126,6 +128,7 @@ export default function SignupScreen() {
                 keyboardAppearance={'dark'}
                 componentStyles={styles.inputContainer}
                 selectionColor={styles.purpleColor.color}
+                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
               <LabelledInputField 
@@ -141,6 +144,7 @@ export default function SignupScreen() {
                 keyboardAppearance={'dark'}
                 componentStyles={styles.inputContainer}
                 selectionColor={styles.purpleColor.color}
+                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
               <RoundedButton

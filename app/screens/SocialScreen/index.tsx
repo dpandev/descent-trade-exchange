@@ -5,24 +5,22 @@ import ProfileScreen from '../ProfileScreen';
 import LeaderboardScreen from '../LeaderboardScreen';
 import FollowingScreen from '../FollowingScreen';
 import { useAuthContext } from '../../utils/AuthContext';
-import { ComponentTabItem } from '../../types';
+
+const enum ComponentTabItem {
+  profile = 'Profile',
+  leaderboard = 'Rankings',
+  following = 'Following',
+}
+
+type TabEnum = `${ComponentTabItem}`;
 
 export default function SocialScreen() {
+  const [componentTab, setComponentTab] = useState<TabEnum>(ComponentTabItem.profile);
 
   const { user } = useAuthContext();
 
-  const tabs: ComponentTabItem[] = [
-    { id: 0, name: 'Profile', component: <ProfileScreen user={user!} /> },
-    { id: 1, name: 'Rankings', component: <LeaderboardScreen /> },
-    { id: 2, name: 'Following', component: <FollowingScreen user={user!} /> },
-  ]
-
-  const [activeTab, setActiveTab] = useState<ComponentTabItem>(tabs[0]);
-
-  // type onPress: (event: GestureResponderEvent) => void;
-
-  const onButtonPress = (tabId: number) => {
-    setActiveTab(tabs[tabId]);
+  const onButtonPress = (tabName: TabEnum): void => {
+    setComponentTab(tabName);
   }
 
   return (
@@ -30,22 +28,43 @@ export default function SocialScreen() {
       <ElementView style={styles.root}>
         <ElementView style={styles.header}>
           <ElementView inverted style={styles.buttonsContainer}>
-            {tabs.length > 0 && tabs.map((tab) => (
-              <ActivatedButton
-                activeState={tab.id === activeTab.id}
-                key={tab.id}
-                buttonStyles={styles.button}
-                textStyles={styles.buttonText}
-                onPress={() => onButtonPress(tab.id)}
-              >
-                {tab.name}
-              </ActivatedButton>
-            ))}
+            <ActivatedButton
+              activeState={componentTab === ComponentTabItem.profile}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              onPress={() => onButtonPress(ComponentTabItem.profile)}
+            >
+              {ComponentTabItem.profile}
+            </ActivatedButton>
+            <ActivatedButton
+              activeState={componentTab === ComponentTabItem.leaderboard}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              onPress={() => onButtonPress(ComponentTabItem.leaderboard)}
+            >
+              {ComponentTabItem.leaderboard}
+            </ActivatedButton>
+            <ActivatedButton
+              activeState={componentTab === ComponentTabItem.following}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              onPress={() => onButtonPress(ComponentTabItem.following)}
+            >
+              {ComponentTabItem.following}
+            </ActivatedButton>
           </ElementView>
         </ElementView>
       </ElementView>
       <ElementView style={styles.component}>
-        {activeTab.component}
+        {componentTab === ComponentTabItem.profile &&
+          <ProfileScreen user={user} />
+        }
+        {componentTab === ComponentTabItem.leaderboard &&
+          <LeaderboardScreen />
+        }
+        {componentTab === ComponentTabItem.following &&
+          <FollowingScreen user={user} />
+        }
       </ElementView>
     </>
   );

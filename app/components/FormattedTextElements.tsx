@@ -64,7 +64,7 @@ const abbreviateDecimal = (num: number, fixed?: number) => {
 
 export function AbbreviateNum({ value, style = {} }: NumberProps) {
   return (
-    <Text style={[style, styles.green]}>
+    <Text style={[style, (value > 0 ? styles.green : styles.red)]}>
       {abbreviateNumber(value, 0)}
     </Text>
   );
@@ -92,7 +92,7 @@ export function PreciseMoney({ value, style = {}, isColored }: NumberProps) {
   return (
     <Text style={[isColored ? redGreenExp : {}, style]}>
       {value >= 0 ? '$' : '-$'}
-      {value.toLocaleString('en-US')}
+      {Math.abs(value).toLocaleString('en-US')}
     </Text>
   );
 }

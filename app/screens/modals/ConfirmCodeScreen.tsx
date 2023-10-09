@@ -1,6 +1,6 @@
 import { Alert, Keyboard, Platform, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RoundedButton, ElementView, LabelledInputField, KeyboardAvoidingView } from '../../components/Themed';
+import { RoundedButton, ElementView, LabelledInputField, KeyboardAvoidingView, Text } from '../../components/Themed';
 import { RootStackParamList } from '../../types';
 import { useState } from 'react';
 import { Auth } from 'aws-amplify';
@@ -38,6 +38,7 @@ export default function ConfirmCodeScreen({
         style={styles.root}
       >
         <ElementView style={styles.root}>
+          <Text>Check your email for the confirm code</Text>
           <ElementView style={styles.form}>
             <LabelledInputField 
               value={username}

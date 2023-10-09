@@ -41,12 +41,6 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   NativeStackScreenProps<RootStackParamList>
 >;
 
-export type ComponentTabItem = {
-  id: number;
-  name: string;
-  component: React.ReactElement;
-};
-
 export type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;

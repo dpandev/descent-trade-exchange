@@ -272,7 +272,7 @@ export function TextButton(props: ThemeableButtonProps) {
 }
 
 export function LabelledInputField(props: LabelledInputFieldProps) {
-  const { inputStyles, lightColor, darkColor, ...otherProps } = props;
+  const { lightColor, darkColor, ...otherProps } = props;
 
   return (
     <LabelledTextInput 

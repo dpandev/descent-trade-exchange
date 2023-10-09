@@ -2,131 +2,122 @@ import { ActivatedButton, ElementView } from '../../components/Themed';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
-import { AmplifyGraphQLResult, ComponentTabItem } from '../../types';
 import { getUser, listCoins } from '../../../src/graphql/queries';
 import { Coin, GetUserQuery, ListCoinsQuery } from '../../../src/API';
 import { useAuthContext } from '../../utils/AuthContext';
 import CoinListing from '../../components/organisms/CoinListing';
+import { AmplifyGraphQLResult } from '../../types';
 
-const MarketListScreen = () => {
+const enum ComponentTabItem {
+  byHour = '% Hour',
+  byDay = '% Day',
+  watchlist = 'Watchlist',
+}
+
+type TabEnum = `${ComponentTabItem}`;
+
+export default function MarketListScreen() {
   const { user } = useAuthContext();
+  const [componentTab, setComponentTab] = useState<TabEnum>(ComponentTabItem.byHour);
   const [allCoins, setAllCoins] = useState<Coin[]>([]);
   const [watchlist, setWatchlist] = useState<Coin[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchCoins = async () => {
+  const fetchData = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      const response = await API.graphql<AmplifyGraphQLResult<typeof listCoins>>({
+      const coinsResponse = await API.graphql<AmplifyGraphQLResult<typeof listCoins>>({
         ...graphqlOperation(
           listCoins,
         ),
       }) as { data: ListCoinsQuery };
-      if (response.data.listCoins?.items) {
-        let coinList: Coin[] = [];
-        for (let i = 0; i < response.data.listCoins.items.length; i++) {
-          if (typeof response.data.listCoins.items[i] !== null) {
-            coinList.push(response.data.listCoins.items[i]!);
-          }
-        }
+      let coinList: Coin[] = [];
+      if (coinsResponse.data.listCoins.items) {
+        (Object.values(coinsResponse.data.listCoins.items) as Coin[]).forEach((value) => coinList.push(value));
         setAllCoins(coinList);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
-  const fetchWatchlist = async () => {
-    if (!user) return;
-    setIsLoading(true);
-    try {
-      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
+      const watchlistResponse = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
         ...graphqlOperation(
           getUser,
           { id: user.id }
         ),
       }) as { data: GetUserQuery };
-      if (response.data.getUser?.watchlist) {
-        if (allCoins) {
-          const watchlist = [...allCoins].filter(x => response.data.getUser?.watchlist?.includes(x!.id));
-          setWatchlist(watchlist);
-        }
+      if (watchlistResponse.data.getUser.watchlist) {
+        const watchlist = [...coinList].filter(x => watchlistResponse.data.getUser.watchlist.includes(x.id));
+        setWatchlist(watchlist);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchCoins();
-    fetchWatchlist();
+    fetchData();
   }, []);
 
-  const getWatchlist = () => {
-    if (watchlist) {
-      return [...watchlist].sort();
-    } else {
-      return [];
-    }
+  const getWatchlist = (): Coin[] => {
+    return [...watchlist].sort();
   }
 
-  const sortByTrendingDay = () => {
-    if (allCoins) {
-      return [...allCoins].sort((a, b) => (a!.valueChange24H < b!.valueChange24H ? 1 : -1));
-    } else {
-      return [];
-    }
+  const sortByTrendingDay = (): Coin[] => {
+    return [...allCoins].sort((a, b) => (a!.valueChange24H < b!.valueChange24H ? 1 : -1));
   }
 
-  const sortByTrendingHour = () => {
-    if (allCoins) {
-      return [...allCoins].sort((a, b) => (a!.valueChange1H < b!.valueChange1H ? 1 : -1));
-    } else {
-      return [];
-    }
+  const sortByTrendingHour = (): Coin[] => {
+    return [...allCoins].sort((a, b) => (a!.valueChange1H < b!.valueChange1H ? 1 : -1));
   }
 
-  const tabs: ComponentTabItem[] = [
-    { id: 0, name: '% Hour', component: <CoinListing props={{ data: sortByTrendingHour(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
-    { id: 1, name: '% Day', component: <CoinListing props={{ data: sortByTrendingDay(), refreshFunction: fetchCoins, isLoading: isLoading }} /> },
-    { id: 2, name: 'Watchlist', component: <CoinListing props={{ data: getWatchlist(), refreshFunction: fetchWatchlist, isLoading: isLoading }} /> },
-  ];
-
-  const [activeTab, setActiveTab] = useState<ComponentTabItem>(tabs[0]);
-
-  const onButtonPress = (tabId: number) => {
-    setActiveTab(tabs[tabId]);
+  const onButtonPress = (tabName: TabEnum): void => {
+    setComponentTab(tabName);
   }
 
   return (
       <ElementView style={styles.root}>
         <ElementView style={styles.header}>
           <ElementView inverted style={styles.buttonsContainer}>
-            {tabs.length > 0 && tabs.map((tab) => (
-              <ActivatedButton
-                activeState={tab.id === activeTab.id}
-                key={tab.id}
-                buttonStyles={styles.button}
-                textStyles={styles.buttonText}
-                onPress={() => onButtonPress(tab.id)}
-              >
-                {tab.name}
-              </ActivatedButton>
-            ))}
+            <ActivatedButton
+              activeState={componentTab === ComponentTabItem.byHour}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              onPress={() => onButtonPress(ComponentTabItem.byHour)}
+            >
+              {ComponentTabItem.byHour}
+            </ActivatedButton>
+            <ActivatedButton
+              activeState={componentTab === ComponentTabItem.byDay}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              onPress={() => onButtonPress(ComponentTabItem.byDay)}
+            >
+              {ComponentTabItem.byDay}
+            </ActivatedButton>
+            <ActivatedButton
+              activeState={componentTab === ComponentTabItem.watchlist}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              onPress={() => onButtonPress(ComponentTabItem.watchlist)}
+            >
+              {ComponentTabItem.watchlist}
+            </ActivatedButton>
           </ElementView>
         </ElementView>
         <ElementView style={styles.tabComponent}>
-          {activeTab.component}
+          {componentTab === ComponentTabItem.byHour &&
+            <CoinListing props={{ data: sortByTrendingHour(), refreshFunction: fetchData, isLoading: isLoading }} />
+          }
+          {componentTab === ComponentTabItem.byDay &&
+            <CoinListing props={{ data: sortByTrendingDay(), refreshFunction: fetchData, isLoading: isLoading }} />
+          }
+          {componentTab === ComponentTabItem.watchlist &&
+            <CoinListing props={{ data: getWatchlist(), refreshFunction: fetchData, isLoading: isLoading }} />
+          }
         </ElementView>
       </ElementView>
   );
 }
-
-export default MarketListScreen;
 
 const styles = StyleSheet.create({
   root: {

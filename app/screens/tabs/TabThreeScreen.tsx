@@ -28,8 +28,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: '100%',
   },
-  noDataMsg: {
-    textAlign: 'center',
-    color: '#FE4A76',
-  },
 });

@@ -1,12 +1,9 @@
-import { API, Hub, graphqlOperation } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 import React, { useState, createContext, ReactNode, FC, useContext, useEffect } from 'react'
-import { getUser } from '../../src/graphql/queries';
-import { AmplifyGraphQLResult } from '../types';
-import { GetUserQuery, User } from '../../src/API';
+import LoadingScreenModal from '../components/molecules/LoadingScreenModal';
 
-// export type AuthUserType = User;
-export interface AuthUserType extends User {
-  token?: string;
+export interface AuthUserType {
+  id: string;
 }
 
 export type AuthUserSetterType = React.Dispatch<React.SetStateAction<AuthUserType | null>>;
@@ -26,42 +23,45 @@ const AuthContext = createContext<AuthUserContext>({ user: initialState, setUser
 
 export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUserType | null>(initialState);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchUserData = async (loginUser: string): Promise<void> => {//fetch user from db using id from cognito
+  const fetchUser = async (): Promise<void> => {
+    setIsLoading(true);
     try {
-      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
-        ...graphqlOperation(
-          getUser,
-          { id: loginUser }
-        ),
-      }) as { data: GetUserQuery };
-      if (response.data.getUser) {
-        let userObj: AuthUserType = response.data.getUser;
-        setUser({ ...user, ...userObj });
-      }
-      return;
+      const currentUser = await Auth.currentAuthenticatedUser();
+      setUser({ id: currentUser.attributes.sub });
     } catch(error) {
-      console.log(error);
+      console.log('Not signed in', error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      console.log('hubEvent:', event);
-      console.log('hubData:', data);
-      if (event === 'signIn' || 'autoSignIn') {
-        fetchUserData(data.signInUserSession.accessToken.payload.sub);
-      }
-      if (event === 'signOut') {
-        setUser(initialState);
+      switch (event) {
+        case 'signIn':
+          setUser({ id: data.signInUserSession.accessToken.payload.sub });
+          break;
+        case 'autoSign':
+          console.log('autosignin', data);
+          setUser(data.signInUserSession.accessToken.payload.sub);
+        case 'signOut':
+          setUser(null);
+          break;
       }
     });
+
+    fetchUser();
     
-    return unsubscribe;
+    return unsubscribe; //  stops listening
   }, []);
 
   return (
     <AuthContext.Provider value={{user, setUser}}>
+      {isLoading && 
+        <LoadingScreenModal visible={isLoading} />
+      }
       {children}
     </AuthContext.Provider>
   );

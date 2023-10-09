@@ -7,14 +7,15 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../../types';
 import { ListUsersQuery, User } from '../../../src/API';
+import { AuthUserType } from '../../utils/AuthContext';
 
 
-const FollowingScreen = ({user}: {user: User}) => {
+const FollowingScreen = ({user}: {user: AuthUserType}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [followingList, setFollowingList] = useState<User[]>([]);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (): Promise<void> => {
     setIsLoading(true);
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof listUsers>>({
@@ -22,21 +23,22 @@ const FollowingScreen = ({user}: {user: User}) => {
           listUsers,
           { filter: {
             followers: {
-              contains: user!.id
+              contains: user.id
             }
           }}
         ),
       }) as { data: ListUsersQuery };
-      if (response.data.listUsers?.items) {
+      if (response.data.listUsers.items) {
         const fetchedUsers: User[] = response.data.listUsers.items.filter(
           (item): item is User => item != null
         );
         setFollowingList(fetchedUsers);
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -58,7 +60,6 @@ const FollowingScreen = ({user}: {user: User}) => {
         renderItem={({item, index}) => <UserRankingItem userData={item} place={index + 1} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
-        ListEmptyComponent={<Text style={styles.noDataMsg}>pull down to refresh</Text>}
       />
     </View>
   );
@@ -74,10 +75,6 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  noDataMsg: {
-    textAlign: 'center',
-    color: '#FE4A76',
   },
 });
 

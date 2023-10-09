@@ -39,7 +39,7 @@ export default class LabelledTextInput extends Component<TheProps>{
           onChangeText={this.props.setValue}
           maxLength={this.props.maxLength || 30}
           textContentType={this.props.textContentType || 'none'}
-          style={[styles.input, this.props.inputStyles]}
+          style={this.props.inputStyles}
           placeholder={this.props.placeholder || ''}
           placeholderTextColor={this.props.placeholderTextColor || 'black'}
           secureTextEntry={this.props.secureTextEntry || false}
@@ -65,10 +65,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     // backgroundColor: 'rgba(0, 0, 0, 0)',
-  },
-  input: {
-    // color: 'white',
-    fontSize: 18,
   },
   placeholderText: {},
   label: {

@@ -27,9 +27,7 @@ export default function UserRankingItem(props: UserRankingItemProps) {
   } = props;
 
   const { user } = useAuthContext();
-  if (!followers || !user) {
-    throw new Error;
-  }
+
   const [activeFollow, setActiveFollow] = useState<boolean>(followers.filter(x => x === user.id).includes(user.id));
   const navigation = useNavigation();
 
@@ -38,17 +36,17 @@ export default function UserRankingItem(props: UserRankingItemProps) {
   }
 
   const followPressed = () => {
-    if (user?.id && user?.following && followers && id) {
-      if (!activeFollow) {//add
-        updateFollowList(id, [...followers, user.id], true);
-        updateFollowList(user.id, [...user.following, id], false);
-        setActiveFollow(true);
-      } else if (activeFollow) {//remove
-        updateFollowList(id, [...followers.filter(x => x !== user.id)], true);
-        updateFollowList(user.id, [...user.following.filter(x => x !== id)], false);
-        setActiveFollow(false);
-      }
-    }
+  //   if (user?.id && user?.following && followers && id) {
+  //     if (!activeFollow) {//add
+  //       updateFollowList(id, [...followers, user.id], true);
+  //       updateFollowList(user.id, [...user.following, id], false);
+  //       setActiveFollow(true);
+  //     } else if (activeFollow) {//remove
+  //       updateFollowList(id, [...followers.filter(x => x !== user.id)], true);
+  //       updateFollowList(user.id, [...user.following.filter(x => x !== id)], false);
+  //       setActiveFollow(false);
+  //     }
+  //   }
   }
 
   const updateFollowList = async (userToUpdate: any, following: any, isFollowersList: boolean): Promise<void> => {
@@ -62,8 +60,7 @@ export default function UserRankingItem(props: UserRankingItemProps) {
           ),
         }) as { data: UpdateUserMutation };
       } catch(error) {
-        console.error(error);
-        throw new Error;
+        console.log(error);
       }
     } else {
       try {
@@ -75,8 +72,7 @@ export default function UserRankingItem(props: UserRankingItemProps) {
           ),
         }) as { data: UpdateUserMutation };
       } catch(error) {
-        console.error(error);
-        throw new Error;
+        console.log(error);
       }
     }
   }
@@ -95,7 +91,7 @@ export default function UserRankingItem(props: UserRankingItemProps) {
         </ElementView>
       </ElementView>
       <ElementView style={styles.right}>
-        {followers?.length && user !== null && user.id !== id
+        {followers.length && user !== null && user.id !== id
           ? <FollowButton inverted={!activeFollow} activeState={activeFollow} onPress={followPressed}>
               {activeFollow ? "Following" : "Follow"}
             </FollowButton>

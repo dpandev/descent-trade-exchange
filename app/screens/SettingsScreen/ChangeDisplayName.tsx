@@ -30,13 +30,11 @@ export default function ChangeDisplayName({ visible, setVisible }: ModalProps) {
       throw new Error('Username must be at least 3 characters in length!');
     }
     if (username.length > 16) {
-      console.log('length:', username.length)
       throw new Error('Usermame must not be longer than 16 characters!');
     }
   }
 
   const updateUsername = async (): Promise<void> => {
-    if (!user) return;
     setIsLoading(true);
     
     try {
@@ -54,7 +52,6 @@ export default function ChangeDisplayName({ visible, setVisible }: ModalProps) {
         setVisible(false);
       }
     } catch(error: any) {
-      console.log(error);
       if (error.message) {
         Alert.alert(error.message);
       } else {

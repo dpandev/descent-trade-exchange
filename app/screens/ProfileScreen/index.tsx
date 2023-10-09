@@ -8,8 +8,9 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { getUser } from '../../../src/graphql/queries';
 import { GetUserQuery, User } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
+import { AuthUserType } from '../../utils/AuthContext';
 
-export default function ProfileScreen({user}: {user: User}) {
+export default function ProfileScreen({user}: {user: AuthUserType}) {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
@@ -28,13 +29,13 @@ export default function ProfileScreen({user}: {user: User}) {
         setUserData(fetchedUser);
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
   }
 
-  const onSettingsPressed = () => {
+  const onSettingsPressed = (): void => {
     navigation.navigate('Settings');
   }
 
@@ -43,39 +44,51 @@ export default function ProfileScreen({user}: {user: User}) {
   }, []);
 
   if (isLoading || !userData) {
-    return <ActivityIndicator />
+    return (
+      <>
+        <ActivityIndicator />
+        <RoundedButton
+          inverted
+          onPress={onSettingsPressed} 
+          buttonStyles={styles.settings}
+          textStyles={{ fontSize: 16 }}
+        >
+          Settings
+        </RoundedButton>
+      </>
+    );
   }
 
   return (
     <ElementView style={styles.root}>
+      <Text style={styles.profileName} numberOfLines={1}>{userData.displayName}</Text>
       <ElementView style={styles.profileContainer}>
         <Image 
-          source={{ uri: userData?.image! }} 
+          source={{ uri: userData.image }} 
           width={50}
           height={50}
           style={styles.profileImage}
         />
         <ElementView style={styles.profileInfo}>
-          <Text style={styles.profileName}>{userData?.displayName}</Text>
           <Text style={styles.profileText}>
             Net Worth: {''}
-            <Networth value={userData?.networth!} />
+            <Networth value={userData.networth} />
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            <AbbreviateNum value={userData?.trades?.items.length || 0} style={styles.profileTextData}/>
+            <AbbreviateNum value={userData.trades.items.length || 0} style={styles.profileTextData}/>
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            <AbbreviateNum value={userData?.followers?.length || 0} style={styles.profileTextData}/>
-            {/* <Text style={styles.profileTextData}>{user?.followers?.length.toLocaleString('en-US')}</Text> */}
+            <AbbreviateNum value={userData.followers.length || 0} style={styles.profileTextData}/>
+            {/* <Text style={styles.profileTextData}>{user.followers.length.toLocaleString('en-US')}</Text> */}
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
-          <ShortDate value={userData?.createdAt!} />
+          <ShortDate value={userData.createdAt} />
         </ElementView>
       </ElementView>
       <ElementView style={styles.tradesDisplay}>
-        <TradesDisplay listOfTrades={userData?.trades?.items || []}></TradesDisplay>
+        <TradesDisplay listOfTrades={userData.trades.items || []}></TradesDisplay>
       </ElementView>
       <RoundedButton
         inverted
@@ -91,7 +104,6 @@ export default function ProfileScreen({user}: {user: User}) {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: 25,
@@ -112,7 +124,7 @@ const styles = StyleSheet.create({
   profileName: {
     fontWeight: 'bold',
     fontSize: 20,
-    marginBottom: 6,
+    marginBottom: 12,
   },
   profileText: {
     marginVertical: 2,
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
   settings: {
     marginTop: 'auto',
     paddingHorizontal: 45,
-    width: 'auto',
+    alignSelf: 'center',
   },
   tradesDisplay: {
     width: '100%',

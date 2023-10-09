@@ -44,6 +44,7 @@ export default function SigninScreen() {
             label={'E-Mail'}
             placeholder={'yourname@example.com'}
             textContentType={'emailAddress'}
+            inputStyles={{ color: 'white', fontSize: 18 }}
           />
           <LabelledInputField 
             value={password}
@@ -53,6 +54,7 @@ export default function SigninScreen() {
             secureTextEntry={true}
             placeholder={'yourpassword'}
             textContentType={'password'}
+            inputStyles={{ color: 'white', fontSize: 18 }}
           />
           <RoundedButton 
             onPress={onPressSignin}

@@ -1,23 +1,44 @@
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { ElementView } from '../../components/Themed';
 import PortfolioCoinComponent, { PortfolioCoinProps } from '../../components/molecules/PortfolioCoin';
 import PageHeader from '../../components/molecules/PageHeader';
 import { PreciseMoney } from '../../components/FormattedTextElements';
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { Coin, ListCoinsQuery, PortfolioCoin, PortfolioCoinsByUserIDQuery } from '../../../src/API';
+import { Coin, GetUserQuery, ListCoinsQuery, PortfolioCoin, PortfolioCoinsByUserIDQuery, User } from '../../../src/API';
 import { useAuthContext } from '../../utils/AuthContext';
-import { listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
+import { getUser, listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../../types';
 
 export default function TabTwoScreen() {
 
   const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoinProps[]>([]);
+  const [userData, setUserData] = useState<User>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useAuthContext();
 
+  const fetchProfile = async (): Promise<void> => {
+    setIsLoading(true);
+    try {
+      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>(
+        graphqlOperation(
+          getUser,
+          { id: user.id }
+        ),
+      ) as { data: GetUserQuery };
+
+      if (response.data.getUser) {
+        const fetchedUser: User = response.data.getUser;
+        setUserData(fetchedUser);
+      }
+    } catch(error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const fetchAssets = async (): Promise<void> => {
-    if (!user) return;
     setIsLoading(true);
     try {
       const coinsResponse = await API.graphql<AmplifyGraphQLResult<typeof listCoins>>(
@@ -60,21 +81,31 @@ export default function TabTwoScreen() {
         }
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
   }
 
   useEffect(() => {
+    fetchProfile();
     fetchAssets();
   }, []);
+
+  if (!userData) {
+    return (
+      <ElementView style={styles.root}>
+        <PageHeader title={"Assets"} />
+        <ActivityIndicator />
+      </ElementView>
+    );
+  }
 
   return (
     <ElementView style={styles.root}>
       <PageHeader title={"Assets"} />
       <ElementView style={styles.balanceContainer}>
-        <PreciseMoney value={user?.networth || 0} style={styles.balance} />
+        <PreciseMoney value={userData.networth || 0} style={styles.balance} />
       </ElementView>
       <FlatList
         style={{width: '100%'}}

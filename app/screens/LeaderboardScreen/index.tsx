@@ -72,7 +72,6 @@ export default function LeaderboardScreen() {
         renderItem={({item, index}: {item: User, index: number}) => <UserRankingItem userData={item} place={index + 1} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
-        ListEmptyComponent={<Text style={styles.noDataMsg}>pull down to refresh</Text>}
       />
     </ElementView>
   );
@@ -88,9 +87,5 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  noDataMsg: {
-    textAlign: 'center',
-    color: '#FE4A76',
   },
 });

@@ -7,7 +7,7 @@ import { Trade } from '../../../src/API';
 export default function TradesDisplay({
   listOfTrades
 }: {
-  listOfTrades: Trade[] | (Trade | null)[] | null | undefined, 
+  listOfTrades: Trade[], 
 }) {
   let filteredTrades: Trade[];
   if (!listOfTrades) {
