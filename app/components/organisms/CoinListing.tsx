@@ -14,10 +14,11 @@ const CoinListing = ({props}: {props: ListProps}) => {
   return (
     <ElementView>
       <FlatList 
+        style={{width: '100%'}}
         data={props.data}
         onRefresh={props.refreshFunction}
         refreshing={props.isLoading}
-        renderItem={({item}) => <MarketCoin props={item} />}
+        renderItem={({item}) => <MarketCoin props={item} key={item.id} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
         ListEmptyComponent={<Text>pull down to refresh</Text>}

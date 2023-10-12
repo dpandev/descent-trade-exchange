@@ -5,6 +5,7 @@ import { Auth } from 'aws-amplify';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types';
 import ChangeDisplayName from './ChangeDisplayName';
+import DeleteAccount from './DeleteAccount';
 
 export default function SettingsScreen() {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
@@ -14,11 +15,7 @@ export default function SettingsScreen() {
     await Auth.signOut();
   }
 
-  const changeTheme = (): void => {
-    console.warn('change theme')
-  }
-
-  const onChangeUsername = (): void => {
+  const onDeleteAccount = (): void => {
     setVisible(true);
   }
 
@@ -26,27 +23,18 @@ export default function SettingsScreen() {
     <View style={styles.root}>
       <RoundedButton
         onPress={onSignOut}
-        textStyles={styles.lightColor}
         buttonStyles={styles.signOutBtn}
       >
         Sign Out
       </RoundedButton>
       <RoundedButton
-        onPress={changeTheme}
-        textStyles={styles.lightColor}
+        onPress={onDeleteAccount}
         buttonStyles={styles.signOutBtn}
       >
-        Change Theme
-      </RoundedButton>
-      <RoundedButton
-        onPress={onChangeUsername}
-        textStyles={styles.lightColor}
-        buttonStyles={styles.signOutBtn}
-      >
-        Change Username
+        Delete Account
       </RoundedButton>
 
-      <ChangeDisplayName visible={visible} setVisible={setVisible} />
+      <DeleteAccount visible={visible} setVisible={setVisible} />
     </View>
   );
 }
@@ -57,6 +45,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  lightColor: {},
   signOutBtn: {},
 });

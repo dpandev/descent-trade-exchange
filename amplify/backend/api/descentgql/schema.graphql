@@ -5,15 +5,12 @@
 type User @model @auth(rules: [{ allow: public }, { allow: private }]) {
   id: ID!
   displayName: String!
-  email: String!
   networth: Float!
   image: String!
   trades: [Trade] @hasMany(indexName: "byUser", fields: ["id"])
   portfolio: [PortfolioCoin] @hasMany(indexName: "byUser", fields: ["id"])
-  followers: [String!]
-  following: [String!]
-  createdAt: String!
-  updatedAt: String!
+  createdAt: Float!
+  updatedAt: Float!
   watchlist: [String!]
 }
 
@@ -53,8 +50,9 @@ type Trade @model @auth(rules: [{ allow: public }, { allow: private }]) {
   coinSymbol: String!
   amount: Float!
   price: Float!
-  date: String!
+  date: Float!
   image: String!
   userID: ID! @index(name: "byUser")
   user: User @belongsTo
+  expires_at: Float!
 }

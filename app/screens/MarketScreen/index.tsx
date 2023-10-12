@@ -32,7 +32,7 @@ export default function MarketListScreen() {
         ),
       }) as { data: ListCoinsQuery };
       let coinList: Coin[] = [];
-      if (coinsResponse.data.listCoins.items) {
+      if (coinsResponse.data.listCoins?.items) {
         (Object.values(coinsResponse.data.listCoins.items) as Coin[]).forEach((value) => coinList.push(value));
         setAllCoins(coinList);
       }
@@ -40,11 +40,12 @@ export default function MarketListScreen() {
       const watchlistResponse = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
         ...graphqlOperation(
           getUser,
-          { id: user.id }
+          { id: user?.id }
         ),
       }) as { data: GetUserQuery };
-      if (watchlistResponse.data.getUser.watchlist) {
-        const watchlist = [...coinList].filter(x => watchlistResponse.data.getUser.watchlist.includes(x.id));
+      if (watchlistResponse.data.getUser?.watchlist) {
+        const wList: string[] = watchlistResponse.data.getUser.watchlist;
+        const watchlist = [...coinList].filter(x => wList.includes(x.id));
         setWatchlist(watchlist);
       }
     } catch (error) {
@@ -122,14 +123,12 @@ export default function MarketListScreen() {
 const styles = StyleSheet.create({
   root: {
     width: '100%',
-    height: '100%',
-    maxWidth: 400,
+    flex: 1,
     alignItems: 'center',
   },
   header: {
     width: '90%',
     marginTop: 5,
-    paddingHorizontal: 10,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -156,6 +155,7 @@ const styles = StyleSheet.create({
     color: '#FE4A76',
   },
   tabComponent: {
-    height: '70%',
+    flex: 1,
+    width: '100%',
   },
 });

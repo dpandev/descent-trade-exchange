@@ -7,18 +7,12 @@ import AlternateButton, { AlternateButtonProps } from '../atoms/buttons/Alternat
 
 export interface PageHeaderProps {
   title: string;
-  searchbarOptions?: SearchbarProps;
   iconProps?: AlternateButtonProps;
 }
 
-export default function PageHeader({ title, searchbarOptions, ...otherProps }: PageHeaderProps) {
+export default function PageHeader({ title, ...otherProps }: PageHeaderProps) {
   return (
     <ElementView style={styles.header}>
-      {searchbarOptions &&
-        <ElementView style={styles.search}>
-          <Searchbar {...searchbarOptions} />
-        </ElementView>
-      }
       <ElementView style={styles.row}>
         <Text style={styles.title}>{title}</Text>
         {otherProps?.iconProps?.icon &&
@@ -31,7 +25,7 @@ export default function PageHeader({ title, searchbarOptions, ...otherProps }: P
 
 const styles = StyleSheet.create({
   header: {
-    width: '90%',
+    width: '100%',
     marginTop: 30,
     paddingHorizontal: 10,
   },
@@ -43,9 +37,5 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 38,
     fontWeight: 'bold',
-  },
-  search: {
-    width: '100%',
-    alignSelf: 'center',
   },
 });

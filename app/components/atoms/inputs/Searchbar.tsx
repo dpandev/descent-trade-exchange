@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   input: {
-    marginLeft: 15,
+    paddingLeft: 15,
     fontSize: 18,
     width: '100%',
     height: 30,

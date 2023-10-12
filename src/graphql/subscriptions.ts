@@ -7,7 +7,6 @@ export const onCreateUser = /* GraphQL */ `
     onCreateUser(filter: $filter) {
       id
       displayName
-      email
       networth
       image
       trades {
@@ -20,6 +19,7 @@ export const onCreateUser = /* GraphQL */ `
           date
           image
           userID
+          expires_at
           createdAt
           updatedAt
           __typename
@@ -40,8 +40,6 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      followers
-      following
       createdAt
       updatedAt
       watchlist
@@ -54,7 +52,6 @@ export const onUpdateUser = /* GraphQL */ `
     onUpdateUser(filter: $filter) {
       id
       displayName
-      email
       networth
       image
       trades {
@@ -67,6 +64,7 @@ export const onUpdateUser = /* GraphQL */ `
           date
           image
           userID
+          expires_at
           createdAt
           updatedAt
           __typename
@@ -87,8 +85,6 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      followers
-      following
       createdAt
       updatedAt
       watchlist
@@ -101,7 +97,6 @@ export const onDeleteUser = /* GraphQL */ `
     onDeleteUser(filter: $filter) {
       id
       displayName
-      email
       networth
       image
       trades {
@@ -114,6 +109,7 @@ export const onDeleteUser = /* GraphQL */ `
           date
           image
           userID
+          expires_at
           createdAt
           updatedAt
           __typename
@@ -134,8 +130,6 @@ export const onDeleteUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      followers
-      following
       createdAt
       updatedAt
       watchlist
@@ -155,7 +149,6 @@ export const onCreatePortfolioCoin = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -166,8 +159,6 @@ export const onCreatePortfolioCoin = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
@@ -191,7 +182,6 @@ export const onUpdatePortfolioCoin = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -202,8 +192,6 @@ export const onUpdatePortfolioCoin = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
@@ -227,7 +215,6 @@ export const onDeletePortfolioCoin = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -238,8 +225,6 @@ export const onDeletePortfolioCoin = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
@@ -322,7 +307,6 @@ export const onCreateTrade = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -333,13 +317,12 @@ export const onCreateTrade = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
         __typename
       }
+      expires_at
       createdAt
       updatedAt
       __typename
@@ -360,7 +343,6 @@ export const onUpdateTrade = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -371,13 +353,12 @@ export const onUpdateTrade = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
         __typename
       }
+      expires_at
       createdAt
       updatedAt
       __typename
@@ -398,7 +379,6 @@ export const onDeleteTrade = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -409,13 +389,12 @@ export const onDeleteTrade = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
         __typename
       }
+      expires_at
       createdAt
       updatedAt
       __typename

@@ -1,6 +1,6 @@
 import { StyleSheet, Modal, ActivityIndicator } from 'react-native';
 import React from 'react';
-import { ElementView } from '../../components/Themed';
+import { ElementView, Text } from '../../components/Themed';
 
 interface LoadingScreenModalProps {
   visible: boolean;
@@ -16,6 +16,7 @@ export default function LoadingScreenModal({
       visible={visible}
     >
       <ElementView style={styles.centeredView}>
+        <Text style={styles.text}>Logging you in...</Text>
         <ActivityIndicator size={'large'} color={'white'} />
       </ElementView>
     </Modal>
@@ -28,5 +29,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  },
+  text: {
+    paddingBottom: 25,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });

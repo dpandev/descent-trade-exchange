@@ -164,3 +164,37 @@ export const listCoinsDetails = /* GraphQL */ `
     }
   }
 `;
+
+export const tradesByUserID = /* GraphQL */ `
+  query TradesByUserID(
+    $userID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTradeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    tradesByUserID(
+      userID: $userID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        coinId
+        coinSymbol
+        amount
+        price
+        date
+        image
+        userID
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;

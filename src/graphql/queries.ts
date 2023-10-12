@@ -7,7 +7,6 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       id
       displayName
-      email
       networth
       image
       trades {
@@ -20,6 +19,7 @@ export const getUser = /* GraphQL */ `
           date
           image
           userID
+          expires_at
           createdAt
           updatedAt
           __typename
@@ -40,8 +40,6 @@ export const getUser = /* GraphQL */ `
         nextToken
         __typename
       }
-      followers
-      following
       createdAt
       updatedAt
       watchlist
@@ -59,7 +57,6 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -70,8 +67,6 @@ export const listUsers = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
@@ -92,7 +87,6 @@ export const getPortfolioCoin = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -103,8 +97,6 @@ export const getPortfolioCoin = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
@@ -131,11 +123,8 @@ export const listPortfolioCoins = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
@@ -173,11 +162,8 @@ export const portfolioCoinsByUserID = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
@@ -252,7 +238,6 @@ export const getTrade = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -263,13 +248,12 @@ export const getTrade = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
         __typename
       }
+      expires_at
       createdAt
       updatedAt
       __typename
@@ -295,16 +279,14 @@ export const listTrades = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
           __typename
         }
+        expires_at
         createdAt
         updatedAt
         __typename
@@ -341,16 +323,14 @@ export const tradesByUserID = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
           __typename
         }
+        expires_at
         createdAt
         updatedAt
         __typename

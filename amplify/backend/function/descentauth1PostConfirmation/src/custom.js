@@ -15,7 +15,7 @@ exports.handler = async (event, context) => {
   console.log('event', event);
   console.log('context', context);
 
-  const date = new Date();
+  const date = Math.round(Date.now() / 1000);
 
   const GRAPHQL_ENDPOINT = process.env.API_DESCENT_GRAPHQLENDPOINTOUTPUT;
   const GRAPHQL_API_KEY = process.env.API_DECENT_GRAPHQLKEYOUTPUT;
@@ -41,15 +41,12 @@ exports.handler = async (event, context) => {
   let variables = {
     inputOne: {
       id: event.request.userAttributes.sub,
-      createdAt: date.toISOString(),
-      updatedAt: date.toISOString(),
+      createdAt: date,
+      updatedAt: date,
       displayName: `User_${event.request.userAttributes.sub.substring(0,7)}`,
-      email: event.request.userAttributes.email,
       image: process.env.DEFAULT_PROFILE_IMG,
       networth: 250000,
       watchlist: process.env.USD_COIN_ID,
-      followers: "",
-      following: "",
     },
     inputTwo: {
       id: `${event.request.userAttributes.sub}-${process.env.USD_COIN_ID}`,
@@ -61,10 +58,11 @@ exports.handler = async (event, context) => {
       amount: 250000,
       coinSymbol: process.env.USD_COIN_SYMBOL,
       coinId: process.env.USD_COIN_ID,
-      date: date.toISOString(),
+      date: date,
       price: 1,
       userID: event.request.userAttributes.sub,
       image: process.env.USD_COIN_IMAGE,
+      expires_at: date + (7 * 24 * 60 * 60),
     }
   }
 

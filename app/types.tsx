@@ -16,8 +16,7 @@ export type RootStackParamList = {
   SignupScreen: undefined;
   SigninScreen: undefined;
   CoinDetails: { id: string };
-  CoinExchange: { isBuy: boolean, coin: Coin, portfolioCoin: PortfolioCoin };
-  PlayerDetails: { id: string };
+  CoinExchange: { isBuy: boolean, coin: Coin, portfolioCoin: PortfolioCoin | undefined };
   Settings: undefined;
   Store: undefined;
   Modal: undefined;

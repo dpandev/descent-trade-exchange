@@ -23,7 +23,7 @@ export default function TabTwoScreen() {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>(
         graphqlOperation(
           getUser,
-          { id: user.id }
+          { id: user?.id }
         ),
       ) as { data: GetUserQuery };
 
@@ -52,15 +52,15 @@ export default function TabTwoScreen() {
           (item): item is Coin => item != null
         );
 
-        const response = await API.graphql<AmplifyGraphQLResult<typeof portfolioCoinsByUserID>>(
+        const portfolioResponse = await API.graphql<AmplifyGraphQLResult<typeof portfolioCoinsByUserID>>(
           graphqlOperation(
             portfolioCoinsByUserID,
-            { userID: user.id },
+            { userID: user?.id },
           ),
         ) as { data: PortfolioCoinsByUserIDQuery };
   
-        if (response.data.portfolioCoinsByUserID) {
-          let portfolioCoinsResponse: PortfolioCoin[] = response.data.portfolioCoinsByUserID.items.filter(
+        if (portfolioResponse.data.portfolioCoinsByUserID) {
+          let portfolioCoinsResponse: PortfolioCoin[] = portfolioResponse.data.portfolioCoinsByUserID.items.filter(
             (item): item is PortfolioCoin => item != null
           );
           let pCoins: PortfolioCoinProps[] = [];
@@ -112,7 +112,7 @@ export default function TabTwoScreen() {
         data={portfolioCoins}
         onRefresh={fetchAssets}
         refreshing={isLoading}
-        renderItem={({item}) => <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} />}
+        renderItem={({item}) => <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} key={item.portfolioCoin.coin.id} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponentStyle={{alignItems: 'center'}}
       />
@@ -136,8 +136,7 @@ const styles = StyleSheet.create({
   balance: {
     fontSize: 28,
     fontWeight: 'bold',
-    width: '85%',
     textAlign: 'center',
-    color: '#6338F1',
+    color: '#772ceb',
   },
 });

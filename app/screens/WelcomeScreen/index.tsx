@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
 import { View, Text, ElementView, ThemedButton } from '../../components/Themed';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { RootStackParamList } from '../../types';
 
 export default function WelcomeScreen() {
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   const onGetStarted = () => {
     navigation.navigate('SignupScreen');
@@ -21,8 +22,8 @@ export default function WelcomeScreen() {
         <ElementView style={styles.inner}>
           <Text style={styles.title}>Don't lose your savings in crypto</Text>
           <ElementView style={styles.row}>
-            <Text style={styles.title}>Lose virtual instead </Text>
-            <FontAwesome5 name={'laugh-wink'} color={'#6338F1'} size={25} />
+            <Text style={styles.title}>Lose virtual money instead {' '}</Text>
+            <FontAwesome5 name={'laugh-wink'} color={'white'} size={25} />
           </ElementView>
           <ThemedButton
             onPress={onGetStarted}
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Bradley Hand',
     fontSize: 22,
-    color: '#6338F1',
+    color: 'white',
     textAlign: 'center',
   },
   row: {

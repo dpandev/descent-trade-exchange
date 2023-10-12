@@ -11,6 +11,7 @@ interface DialogInputModalProps {
   action: () => void;
   label: LabelledInputFieldProps ;
   title?: string;
+  statement?: string;
 }
 
 export default function DialogInputModal({ 
@@ -19,7 +20,8 @@ export default function DialogInputModal({
   isLoading,
   action,
   label, 
-  title 
+  title, 
+  statement,
 }: DialogInputModalProps) {
   return (
     <Modal
@@ -36,6 +38,9 @@ export default function DialogInputModal({
               <FontAwesome name="close" size={28} color="white" />
             </TouchableOpacity>
           </ElementView>
+          {statement && 
+            <Text style={styles.statement}>{statement}</Text>
+          }
           <ElementView style={styles.input}>
             <LabelledInputField 
               value={label.value}
@@ -96,6 +101,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#772ceb',
     borderRadius: 8,
     padding: 6,
+  },
+  statement: {
+    marginHorizontal: 10,
+    marginBottom: 10,
+    marginTop: 5,
+    fontSize: 15,
   },
   input: {
     backgroundColor: 'white',

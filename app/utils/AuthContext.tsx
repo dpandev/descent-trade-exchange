@@ -26,12 +26,12 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchUser = async (): Promise<void> => {
-    setIsLoading(true);
     try {
       const currentUser = await Auth.currentAuthenticatedUser();
+      console.log('current:', currentUser)
       setUser({ id: currentUser.attributes.sub });
     } catch(error) {
-      console.log('Not signed in', error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -40,22 +40,31 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
       console.log('hub:', data)
+      setIsLoading(true);
       switch (event) {
         case 'signIn':
           setUser({ id: data.signInUserSession.accessToken.payload.sub });
           break;
         case 'autoSign':
           console.log('autosignin', data);
-          setUser(data.signInUserSession.accessToken.payload.sub);
+          setUser({ id: data.signInUserSession.accessToken.payload.sub });
+          break;
         case 'signOut':
           setUser(null);
+          break;
+        case 'userDeleted':
+          setUser(null);
+          break;
+        default:
+          console.log('event:', event)
           break;
       }
     });
 
     fetchUser();
+    console.log('auth:', user)
     
-    return unsubscribe; //  stops listening
+    return unsubscribe; //  stops listening 
   }, []);
 
   return (

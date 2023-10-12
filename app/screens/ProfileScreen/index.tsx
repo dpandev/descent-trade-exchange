@@ -78,17 +78,12 @@ export default function ProfileScreen({user}: {user: AuthUserType}) {
             Total Trades: {''}
             <AbbreviateNum value={userData.trades?.items.length || 0} style={styles.profileTextData}/>
           </Text>
-          <Text style={styles.profileText}>
-            Followers: {''}
-            <AbbreviateNum value={userData.followers?.length || 0} style={styles.profileTextData}/>
-            {/* <Text style={styles.profileTextData}>{user.followers.length.toLocaleString('en-US')}</Text> */}
-          </Text>
           <Text style={styles.profileText}>Member Since:</Text>
           <ShortDate value={userData.createdAt} />
         </ElementView>
       </ElementView>
       <ElementView style={styles.tradesDisplay}>
-        <TradesDisplay listOfTrades={userData.trades?.items || []}></TradesDisplay>
+        <TradesDisplay></TradesDisplay>
       </ElementView>
     </ElementView>
   );

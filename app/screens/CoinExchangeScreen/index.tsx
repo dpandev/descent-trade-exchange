@@ -42,7 +42,7 @@ const CoinExchangeScreen = () => {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getPortfolioCoin>>(
         graphqlOperation(
           getPortfolioCoin,
-          { id: `${user.id}-usd-coin` }
+          { id: `${user?.id}-usd-coin` }
         ),
       ) as { data: GetPortfolioCoinQuery };
       if (response.data.getPortfolioCoin) {
@@ -55,22 +55,25 @@ const CoinExchangeScreen = () => {
   }
 
   const onSellAll = (): void => {
-    setCoinAmount((portfolioCoin?.amount).toString());
+    if (!portfolioCoin) return;
+    setCoinAmount((portfolioCoin.amount).toString());
   }
 
   const onBuyAll = (): void => {
-    setCoinUSDValue((usdPortfolioCoin?.amount || 0).toString());
+    if (!usdPortfolioCoin) return;
+    setCoinUSDValue((usdPortfolioCoin.amount || 0).toString());
   }
 
   const placeOrder = async (): Promise<void> => {
-    if (isLoading) {
+    if (isLoading || !user || !usdPortfolioCoin) {
       return;
     }
     setIsLoading(true);
+    let date = Date.now() / 1000;
     let variables = {
       inputOne: {//update existing coin portfolioCoin
         id: `${user.id}-${coin.id}`,
-        amount: ( isBuy ? portfolioCoin?.amount + parseFloat(coinAmount) : portfolioCoin?.amount - parseFloat(coinAmount) ),
+        amount: 0,
         coinId: coin.id,
         userID: user.id,
       },
@@ -78,10 +81,11 @@ const CoinExchangeScreen = () => {
         amount: parseFloat(coinAmount),
         coinId: coin.id,
         coinSymbol: coin.symbol,
-        date: new Date().toISOString(),
+        date: date,
         image: coin.image,
         price: coin.currentPrice,
         userID: user.id,
+        expires_at: date + (7 * 24 * 60 * 60),
       },
       inputThree: {//update existing usd portfolioCoin
         id: `${user.id}-usd-coin`,
@@ -91,6 +95,7 @@ const CoinExchangeScreen = () => {
     }
     try {
       if (portfolioCoin) {
+        variables.inputOne.amount = ( isBuy ? portfolioCoin?.amount + parseFloat(coinAmount) : portfolioCoin?.amount - parseFloat(coinAmount) );
         if (isBuy) {
           await API.graphql<AmplifyGraphQLResult<typeof exchangeCoins>>(
             graphqlOperation(exchangeCoins, variables)
@@ -103,7 +108,7 @@ const CoinExchangeScreen = () => {
             graphqlOperation(exchangeCoins, variables)
           ) as { data: any };
         }
-      } else {
+      } else {  //if user does not have this portfolioCoin (first time trading this)
         variables.inputOne.amount = parseFloat(coinAmount);
         await API.graphql<AmplifyGraphQLResult<typeof exchangeCoinsNew>>(
           graphqlOperation(exchangeCoinsNew, variables)
@@ -125,7 +130,7 @@ const CoinExchangeScreen = () => {
       return;
     }
     if (!isBuy && (!portfolioCoin || parseFloat(coinAmount) > portfolioCoin.amount)) {
-      Alert.alert('Oops!', `Not enough ${coin.symbol} coins. Max: ${portfolioCoin.amount || 0}`);
+      Alert.alert('Oops!', `Not enough ${coin.symbol} coins. Max: ${portfolioCoin?.amount || 0}`);
       return;
     }
 
@@ -143,7 +148,7 @@ const CoinExchangeScreen = () => {
       setCoinUSDValue('');
       return;
     }
-    setCoinUSDValue((amount * coin?.currentPrice).toString());
+    setCoinUSDValue((amount * coin.currentPrice).toString());
   }, [coinAmount]);
 
   useEffect(() => {
@@ -153,8 +158,9 @@ const CoinExchangeScreen = () => {
       setCoinUSDValue('');
       return;
     }
-    setCoinAmount((amount / coin?.currentPrice).toString());
+    setCoinAmount((amount / coin.currentPrice).toString());
   }, [coinUSDValue]);
+
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -165,7 +171,7 @@ const CoinExchangeScreen = () => {
       >
         <Text style={styles.title}>
           {isBuy ? 'Buy ' : "Sell "}
-          {coin?.name}
+          {coin.name}
         </Text>
         <Text style={styles.subtitle}>
           1 {coin?.symbol}
@@ -174,12 +180,12 @@ const CoinExchangeScreen = () => {
         </Text>
 
         <ElementView style={styles.inputsContainer}>
-          <Text style={{fontWeight: 'bold'}}>{coin?.symbol}</Text>
+          <Text style={{fontWeight: 'bold'}}>{coin.symbol}</Text>
           <ElementView style={styles.inputContainer}>
             <TextInput
               style={styles.input}
               keyboardType="decimal-pad"
-              placeholder={`0 ${coin?.symbol}`}
+              placeholder={`0 ${coin.symbol}`}
               placeholderTextColor={'#b1b1b1'}
               value={coinAmount}
               onChangeText={setCoinAmount}

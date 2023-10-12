@@ -11,8 +11,6 @@ import CoinExchangeScreen from '../screens/CoinExchangeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import { useAuthContext } from "../utils/AuthContext";
 import AuthStackNavigator from "./AuthStackNavigator";
-import PlayerDetailsScreen from "../screens/PlayerDetailsScreen";
-import TradesModal from "../screens/modals/TradesModal";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -56,26 +54,6 @@ export default function RootStackNavigator() {
               headerStyle: { backgroundColor: Colors[colorScheme].secondary }, 
               headerTintColor: 'white', 
               headerTitleStyle: { fontWeight: 'bold' }, 
-            }} 
-          />
-          <Stack.Screen 
-            name="PlayerDetails" 
-            component={PlayerDetailsScreen} 
-            options={{ 
-              title: 'Player Details', 
-              headerStyle: { backgroundColor: Colors[colorScheme].secondary },
-              headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold' },  
-            }} 
-          />
-          <Stack.Screen 
-            name="TradesModal" 
-            component={TradesModal} 
-            options={{ 
-              title: 'Your Trades', 
-              headerStyle: { backgroundColor: Colors[colorScheme].secondary },
-              headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold' },  
             }} 
           />
         </Stack.Group>

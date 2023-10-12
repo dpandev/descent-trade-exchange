@@ -15,7 +15,7 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="TabThree"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tabIconSelected,
         tabBarStyle: {
@@ -34,7 +34,7 @@ export default function BottomTabNavigator() {
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
           title: 'Dashboard',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="newspaper" color={color} />,
         })}
       />
       <BottomTab.Screen
@@ -57,8 +57,8 @@ export default function BottomTabNavigator() {
         name="TabFour"
         component={TabFourScreen}
         options={{
-          title: 'Social',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
+          title: 'Trades',
+          tabBarIcon: ({ color }) => <TabBarIcon name="file-tray-full" color={color} />,
         }}
       />
     </BottomTab.Navigator>

@@ -25,25 +25,24 @@ export default function ChangeDisplayName({ visible, setVisible }: ModalProps) {
     placeholder: 'Enter a new username...',
   }
 
-  const validateUserEntry = () => {//todo add more
+  const validateUserEntry = (): void => {//todo add more
     if (username.length < 3) {
       throw new Error('Username must be at least 3 characters in length!');
     }
     if (username.length > 16) {
-      throw new Error('Usermame must not be longer than 16 characters!');
+      throw new Error('Username must not be longer than 16 characters!');
     }
   }
 
   const updateUsername = async (): Promise<void> => {
     setIsLoading(true);
-    
     try {
       validateUserEntry();
       const response = await API.graphql<AmplifyGraphQLResult<typeof updateUser>>({
         ...graphqlOperation(
           updateUser, 
           { input: {
-            id: user.id,
+            id: user?.id,
             displayName: username,
           }}
         ),
