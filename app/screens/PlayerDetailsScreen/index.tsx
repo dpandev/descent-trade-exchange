@@ -27,7 +27,7 @@ const PlayerDetailsScreen = () => {
   const [player, setPlayer] = useState<PlayerDetails>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
-  const fetchPlayerData = async () => {
+  const fetchPlayerData = async (): Promise<void> => {
     setIsLoading(true);
     if (!route.params.id) {
       return;
@@ -45,7 +45,7 @@ const PlayerDetailsScreen = () => {
           image: response.data.getUser.image,
           networth: response.data.getUser.networth,
           createdAt: response.data.getUser.createdAt,
-          trades: response.data.getUser.trades.items,
+          trades: response.data.getUser.trades?.items,
           followers: response.data.getUser.followers,
           following: response.data.getUser.following,
         });
@@ -87,11 +87,11 @@ const PlayerDetailsScreen = () => {
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            <AbbreviateNum value={player.trades.length || 0} />
+            <AbbreviateNum value={player.trades?.length || 0} />
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            <AbbreviateNum value={player.followers.length || 0} />
+            <AbbreviateNum value={player.followers?.length || 0} />
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
           <ShortDate value={player.createdAt} />
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     maxWidth: 325,
-    marginTop: 25,
+    marginTop: 0,
     height: '60%',
   },
 });

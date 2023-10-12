@@ -26,7 +26,7 @@ export default function SocialScreen() {
   return (
     <>
       <ElementView style={styles.root}>
-        <ElementView style={styles.header}>
+        <ElementView style={styles.tabs}>
           <ElementView inverted style={styles.buttonsContainer}>
             <ActivatedButton
               activeState={componentTab === ComponentTabItem.profile}
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
   },
-  header: {
+  tabs: {
     width: '100%',
     marginTop: 30,
     paddingHorizontal: 10,

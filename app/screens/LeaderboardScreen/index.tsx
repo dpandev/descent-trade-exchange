@@ -7,6 +7,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../../types';
 import { ListUsersQuery, User } from '../../../src/API';
+import { listUsersProfiles } from '../../../src/customGraphQL/customQueries';
 
 export default function LeaderboardScreen() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -20,16 +21,18 @@ export default function LeaderboardScreen() {
       let response: { data: ListUsersQuery };
       // send graphql req without nextToken if data doesnt exist in state yet
       if (usersList.length > 0) {
-        response = await API.graphql<AmplifyGraphQLResult<typeof listUsers>>({
+        // console.log('using token: ', nextToken)
+        response = await API.graphql<AmplifyGraphQLResult<typeof listUsersProfiles>>({
           ...graphqlOperation(
             listUsers,
-            { limit: 20, nextToken: nextToken }
+            { limit: 10, nextToken: nextToken }
           ),
         }) as { data: ListUsersQuery };
       } else if (usersList != null) {
-        response = await API.graphql<AmplifyGraphQLResult<typeof listUsers>>({
+        response = await API.graphql<AmplifyGraphQLResult<typeof listUsersProfiles>>({
           ...graphqlOperation(
             listUsers,
+            { limit: 10 }
           ),
         })  as { data: ListUsersQuery };
       } else {
@@ -40,14 +43,15 @@ export default function LeaderboardScreen() {
         const fetchedUsers: User[] = response.data.listUsers.items.filter(
           (item): item is User => item != null
         );
-        setUsersList(fetchedUsers);
+        setUsersList([...usersList, ...fetchedUsers]);
 
         if (response.data.listUsers.nextToken) {
+          console.log('got nextToken')
           setNextToken(response.data.listUsers.nextToken);
         }
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }

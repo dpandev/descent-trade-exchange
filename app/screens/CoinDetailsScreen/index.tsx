@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Pressable, ActivityIndicator } from 'react-native';
+import { Image, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { ElementView, Text, RoundedButton } from '../../components/Themed';
 import { Octicons } from "@expo/vector-icons";
 import styles from "./styles";
@@ -132,7 +132,11 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
   }
 
   const onSell = (): void => {
-    navigation.navigate('CoinExchange', { isBuy: false, coin, portfolioCoin });
+    if (coin.id === 'usd-coin') {
+      Alert.alert("Unable to sell USDC. Buy a different coin instead.")
+    } else {
+      navigation.navigate('CoinExchange', { isBuy: false, coin, portfolioCoin });
+    }
   }
 
   const onStarPressed = (): void => {
@@ -143,7 +147,7 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
     }
   }
 
-  if (!coin || !portfolioCoin) {
+  if (!coin) {
     return <ActivityIndicator />;
   }
 
@@ -198,11 +202,11 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
         <Text style={styles.positionLabel}>Position</Text>
         <ElementView>
           <Text>
-          {'Shares: '}{portfolioCoin?.amount?.toLocaleString('en-US') || 0} {coin.symbol.toUpperCase()}
+          {'Shares: '}{portfolioCoin?.amount.toLocaleString('en-US') || 0} {coin.symbol.toUpperCase()}
           </Text>
           <ElementView style={styles.rowText}>
             <Text>{'Value: '}</Text>
-            <PreciseMoney value={coin.currentPrice * (portfolioCoin.amount || 0)} />
+            <PreciseMoney value={coin.currentPrice * (portfolioCoin?.amount || 0)} />
             <Text>{' USD'}</Text>
           </ElementView>
         </ElementView>
@@ -222,6 +226,7 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
           onPress={onSell}
           textStyles={styles.buttonText}
           buttonStyles={styles.button}
+          // disabled={coin.id === 'usd-coin'}
         >
           Sell
         </RoundedButton> 

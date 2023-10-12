@@ -45,6 +45,7 @@ export const getUserProfile = /* GraphQL */ `
         date
       }
       followers
+      following
       createdAt
     }
   }
@@ -104,15 +105,16 @@ export const listUsersProfiles = /* GraphQL */ `
         displayName
         networth
         image
-        trades {
-          id
-          coinId
-          amount
-          price
-          date
+        trades(limit: 5) {
+          items {
+            id
+            coinId
+            amount
+            price
+            date
+          }
         }
         followers
-        following
         createdAt
       }
       nextToken

@@ -11,6 +11,8 @@ import LabelledTextInput from './atoms/inputs/LabelledTextInput';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import { AlternateButton as DefaultAlternateButton, AlternateButtonProps } from './atoms/buttons/AlternateButton';
+import { ReactElement } from 'react';
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -40,6 +42,7 @@ export type ButtonProps = ThemeProps & DefaultButton['props'];
 export type ThemeableButtonProps = ThemeProps & CustomButton['props'];
 export type LabelledInputFieldProps = ThemeProps & LabelledTextInput['props'];
 export type KeyboardAvoidingViewProps = ThemeProps & DefaultKeyboardAvoidingView['props'];
+export type AlternateThemeButtonProps = ThemeProps & AlternateButtonProps;
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -148,6 +151,35 @@ export function ThemedButton(props: ThemeableButtonProps) {
       iconColor={txtStyle.color} 
       icon={icon} 
       {...otherProps} 
+    />
+  );
+}
+
+export function AlternateThemedButton(props: AlternateThemeButtonProps): ReactElement {
+  const { inverted=false, icon, style, activeStyle, inactiveStyle, lightColor, darkColor, ...otherProps } = props;
+  const inactiveStylesThemed: AlternateThemeButtonProps['inactiveStyle'] = {
+    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    ...{inactiveStyle},
+    ...{style},
+  }
+  const activeStylesThemed: AlternateButtonProps['activeStyle'] = {
+    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
+    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
+    ...{activeStyle},
+    ...{style},
+  }
+  const activeIconStyleThemed: AlternateButtonProps['icon'] = {
+    color: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
+    inactiveColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    ...icon,
+  }
+  return (
+    <DefaultAlternateButton 
+      activeStyle={activeStylesThemed}
+      inactiveStyle={inactiveStylesThemed}
+      icon={activeIconStyleThemed}
+      {...otherProps}
     />
   );
 }

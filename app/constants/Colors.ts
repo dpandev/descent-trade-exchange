@@ -11,6 +11,7 @@ export default {
     transparent: 'rgba(0, 0, 0, 0)',
     green: '#2ceb77',
     red: '#f44336',
+    outline: '#22668D',
   },
   dark: {
     text: '#fff',
@@ -24,5 +25,6 @@ export default {
     transparent: 'rgba(0, 0, 0, 0)',
     green: '#2ceb77',
     red: '#f44336',
+    outline: '#D1D1D1',
   },
 };

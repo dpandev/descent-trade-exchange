@@ -20,7 +20,7 @@ export default function ProfileScreen({user}: {user: AuthUserType}) {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>(
         graphqlOperation(
           getUser,
-          { id: user.id }
+          { id: user.id },
         ),
       ) as { data: GetUserQuery };
 
@@ -76,11 +76,11 @@ export default function ProfileScreen({user}: {user: AuthUserType}) {
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            <AbbreviateNum value={userData.trades.items.length || 0} style={styles.profileTextData}/>
+            <AbbreviateNum value={userData.trades?.items.length || 0} style={styles.profileTextData}/>
           </Text>
           <Text style={styles.profileText}>
             Followers: {''}
-            <AbbreviateNum value={userData.followers.length || 0} style={styles.profileTextData}/>
+            <AbbreviateNum value={userData.followers?.length || 0} style={styles.profileTextData}/>
             {/* <Text style={styles.profileTextData}>{user.followers.length.toLocaleString('en-US')}</Text> */}
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
@@ -88,16 +88,8 @@ export default function ProfileScreen({user}: {user: AuthUserType}) {
         </ElementView>
       </ElementView>
       <ElementView style={styles.tradesDisplay}>
-        <TradesDisplay listOfTrades={userData.trades.items || []}></TradesDisplay>
+        <TradesDisplay listOfTrades={userData.trades?.items || []}></TradesDisplay>
       </ElementView>
-      <RoundedButton
-        inverted
-        onPress={onSettingsPressed} 
-        buttonStyles={styles.settings}
-        textStyles={{ fontSize: 16 }}
-      >
-        Settings
-      </RoundedButton>
     </ElementView>
   );
 }
@@ -108,6 +100,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 25,
     width: '100%',
+    height: '100%',
   },
   profileContainer: {
     flexDirection: 'row',
@@ -139,8 +132,12 @@ const styles = StyleSheet.create({
   },
   tradesDisplay: {
     width: '100%',
-    maxWidth: 325,
-    marginTop: 25,
-    height: '60%',
+    maxWidth: 320,
+    marginTop: 10,
+  },
+  squareBtn: {
+    borderRadius: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
   },
 });

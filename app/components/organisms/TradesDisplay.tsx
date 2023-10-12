@@ -7,7 +7,7 @@ import { Trade } from '../../../src/API';
 export default function TradesDisplay({
   listOfTrades
 }: {
-  listOfTrades: Trade[], 
+  listOfTrades: Trade[] | (Trade | null)[], 
 }) {
   let filteredTrades: Trade[];
   if (!listOfTrades) {
@@ -35,7 +35,7 @@ export default function TradesDisplay({
 
 const styles = StyleSheet.create({
   root: {
-    //
+    height: '100%',
   },
   heading: {
     textAlign: 'center',

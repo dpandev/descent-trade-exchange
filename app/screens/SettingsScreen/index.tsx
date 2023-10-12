@@ -19,7 +19,6 @@ export default function SettingsScreen() {
   }
 
   const onChangeUsername = (): void => {
-    // navigation.navigate('');
     setVisible(true);
   }
 

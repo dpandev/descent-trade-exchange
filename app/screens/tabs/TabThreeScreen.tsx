@@ -14,7 +14,16 @@ export default function TabThreeScreen() {
 
   return (
     <ElementView style={styles.root}>
-      <PageHeader title='Trading' searchbarOptions={{ value: search, setValue: setSearch, onSubmit: useSearch }} />
+      <PageHeader 
+        title='Trading' 
+        searchbarOptions={{ 
+          value: search, 
+          setValue: 
+          setSearch, 
+          onSubmit: useSearch,
+          placeholder: 'search for a coin' 
+        }} 
+      />
       <MarketListScreen />
     </ElementView>
   );

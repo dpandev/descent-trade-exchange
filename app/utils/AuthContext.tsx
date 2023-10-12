@@ -39,6 +39,7 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
+      console.log('hub:', data)
       switch (event) {
         case 'signIn':
           setUser({ id: data.signInUserSession.accessToken.payload.sub });

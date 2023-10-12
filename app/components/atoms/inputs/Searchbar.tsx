@@ -29,7 +29,7 @@ export interface SearchbarProps {
   keyboardType?: KeyboardTypeOptions;
   keyboardAppearance?: TextInputProps["keyboardAppearance"];
   componentStyles?: StyleProp<ViewStyle>;
-  onSubmit?: ((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void) | undefined;
+  onSubmit?: ((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void);
 }
 
 export default function Searchbar({ 

@@ -1,10 +1,9 @@
-import { Text, Pressable } from 'react-native';
+import { Text, Pressable, PressableProps } from 'react-native';
 import React, { Component, ReactNode } from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 
-interface TheProps {
-  onPress?: null | (() => void) | undefined;
-  children: string | ReactNode;
+export interface CustomButtonProps extends PressableProps {
+  children?: string | ReactNode;
   textStyles?: {};
   buttonStyles?: {};
   icon?: React.ComponentProps<typeof FontAwesome>['name'];
@@ -16,8 +15,8 @@ export interface TheState {
   activeToggle: boolean;
 }
 
-class CustomButton extends Component<TheProps, TheState>{
-  constructor(props: TheProps) {
+class CustomButton extends Component<CustomButtonProps, TheState>{
+  constructor(props: CustomButtonProps) {
     super(props);
 
     this.state = {
@@ -36,12 +35,12 @@ class CustomButton extends Component<TheProps, TheState>{
   render() {
     return (
       <Pressable 
-        onPress={() => this.props.onPress?.()} 
+        onPress={this.props.onPress} 
         style={this.props.buttonStyles}
         onPressIn={() => this.onPush()}
         onPressOut={() => this.onPush()}
       >
-        {(typeof this.props.children === 'string') 
+        {this.props.children && (typeof this.props.children === 'string') 
           ? <Text style={this.props.textStyles}>{this.props.children}</Text> 
           : this.props.children
         }
