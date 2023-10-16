@@ -3,8 +3,11 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
-    onCreateUser(filter: $filter) {
+  subscription OnCreateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onCreateUser(filter: $filter, owner: $owner) {
       id
       displayName
       networth
@@ -22,6 +25,7 @@ export const onCreateUser = /* GraphQL */ `
           expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -35,6 +39,7 @@ export const onCreateUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -43,13 +48,17 @@ export const onCreateUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
-    onUpdateUser(filter: $filter) {
+  subscription OnUpdateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onUpdateUser(filter: $filter, owner: $owner) {
       id
       displayName
       networth
@@ -67,6 +76,7 @@ export const onUpdateUser = /* GraphQL */ `
           expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -80,6 +90,7 @@ export const onUpdateUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -88,13 +99,17 @@ export const onUpdateUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
-    onDeleteUser(filter: $filter) {
+  subscription OnDeleteUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onDeleteUser(filter: $filter, owner: $owner) {
       id
       displayName
       networth
@@ -112,6 +127,7 @@ export const onDeleteUser = /* GraphQL */ `
           expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -125,6 +141,7 @@ export const onDeleteUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -133,6 +150,7 @@ export const onDeleteUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -140,8 +158,9 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreatePortfolioCoin = /* GraphQL */ `
   subscription OnCreatePortfolioCoin(
     $filter: ModelSubscriptionPortfolioCoinFilterInput
+    $owner: String
   ) {
-    onCreatePortfolioCoin(filter: $filter) {
+    onCreatePortfolioCoin(filter: $filter, owner: $owner) {
       id
       amount
       coinId
@@ -162,10 +181,12 @@ export const onCreatePortfolioCoin = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -173,8 +194,9 @@ export const onCreatePortfolioCoin = /* GraphQL */ `
 export const onUpdatePortfolioCoin = /* GraphQL */ `
   subscription OnUpdatePortfolioCoin(
     $filter: ModelSubscriptionPortfolioCoinFilterInput
+    $owner: String
   ) {
-    onUpdatePortfolioCoin(filter: $filter) {
+    onUpdatePortfolioCoin(filter: $filter, owner: $owner) {
       id
       amount
       coinId
@@ -195,10 +217,12 @@ export const onUpdatePortfolioCoin = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -206,8 +230,9 @@ export const onUpdatePortfolioCoin = /* GraphQL */ `
 export const onDeletePortfolioCoin = /* GraphQL */ `
   subscription OnDeletePortfolioCoin(
     $filter: ModelSubscriptionPortfolioCoinFilterInput
+    $owner: String
   ) {
-    onDeletePortfolioCoin(filter: $filter) {
+    onDeletePortfolioCoin(filter: $filter, owner: $owner) {
       id
       amount
       coinId
@@ -228,10 +253,12 @@ export const onDeletePortfolioCoin = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -294,8 +321,11 @@ export const onDeleteCoin = /* GraphQL */ `
   }
 `;
 export const onCreateTrade = /* GraphQL */ `
-  subscription OnCreateTrade($filter: ModelSubscriptionTradeFilterInput) {
-    onCreateTrade(filter: $filter) {
+  subscription OnCreateTrade(
+    $filter: ModelSubscriptionTradeFilterInput
+    $owner: String
+  ) {
+    onCreateTrade(filter: $filter, owner: $owner) {
       id
       coinId
       coinSymbol
@@ -320,18 +350,23 @@ export const onCreateTrade = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       expires_at
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
 `;
 export const onUpdateTrade = /* GraphQL */ `
-  subscription OnUpdateTrade($filter: ModelSubscriptionTradeFilterInput) {
-    onUpdateTrade(filter: $filter) {
+  subscription OnUpdateTrade(
+    $filter: ModelSubscriptionTradeFilterInput
+    $owner: String
+  ) {
+    onUpdateTrade(filter: $filter, owner: $owner) {
       id
       coinId
       coinSymbol
@@ -356,8 +391,68 @@ export const onUpdateTrade = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
+      expires_at
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onDeleteTrade = /* GraphQL */ `
+  subscription OnDeleteTrade(
+    $filter: ModelSubscriptionTradeFilterInput
+    $owner: String
+  ) {
+    onDeleteTrade(filter: $filter, owner: $owner) {
+      id
+      coinId
+      coinSymbol
+      amount
+      price
+      date
+      image
+      userID
+      user {
+        id
+        displayName
+        networth
+        image
+        trades {
+          nextToken
+          __typename
+        }
+        portfolio {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        watchlist
+        owner
+        __typename
+      }
+      expires_at
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const onCreateArticle = /* GraphQL */ `
+  subscription OnCreateArticle($filter: ModelSubscriptionArticleFilterInput) {
+    onCreateArticle(filter: $filter) {
+      id
+      coinSymbol
+      title
+      url
+      domain
+      publishedAt
+      image
       expires_at
       createdAt
       updatedAt
@@ -365,35 +460,33 @@ export const onUpdateTrade = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteTrade = /* GraphQL */ `
-  subscription OnDeleteTrade($filter: ModelSubscriptionTradeFilterInput) {
-    onDeleteTrade(filter: $filter) {
+export const onUpdateArticle = /* GraphQL */ `
+  subscription OnUpdateArticle($filter: ModelSubscriptionArticleFilterInput) {
+    onUpdateArticle(filter: $filter) {
       id
-      coinId
       coinSymbol
-      amount
-      price
-      date
+      title
+      url
+      domain
+      publishedAt
       image
-      userID
-      user {
-        id
-        displayName
-        networth
-        image
-        trades {
-          nextToken
-          __typename
-        }
-        portfolio {
-          nextToken
-          __typename
-        }
-        createdAt
-        updatedAt
-        watchlist
-        __typename
-      }
+      expires_at
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteArticle = /* GraphQL */ `
+  subscription OnDeleteArticle($filter: ModelSubscriptionArticleFilterInput) {
+    onDeleteArticle(filter: $filter) {
+      id
+      coinSymbol
+      title
+      url
+      domain
+      publishedAt
+      image
       expires_at
       createdAt
       updatedAt

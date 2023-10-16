@@ -20,11 +20,6 @@ export default function WelcomeScreen() {
         style={styles.bgImage}
       >
         <ElementView style={styles.inner}>
-          <Text style={styles.title}>Don't lose your savings in crypto</Text>
-          <ElementView style={styles.row}>
-            <Text style={styles.title}>Lose virtual money instead {' '}</Text>
-            <FontAwesome5 name={'laugh-wink'} color={'white'} size={25} />
-          </ElementView>
           <ThemedButton
             onPress={onGetStarted}
             textStyles={styles.buttonText}

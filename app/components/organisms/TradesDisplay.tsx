@@ -13,7 +13,6 @@ export default function TradesDisplay() {
   const [tradesList, setTradesList] = useState<Trade[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useAuthContext();
-  const aWeekAgo: number = Date.now() - (7 * 24 * 60 * 60 * 1000);
 
   const fetchTrades = async (): Promise<void> => {
     setIsLoading(true);
@@ -21,7 +20,7 @@ export default function TradesDisplay() {
       const response = await API.graphql<AmplifyGraphQLResult<typeof tradesByUserID>>({
         ...graphqlOperation(
           tradesByUserID,
-          { userID: user?.id, limit: 25, filter: {date: {lt: aWeekAgo}} }
+          { userID: user?.id, limit: 25 }
         ),
       }) as { data: TradesByUserIDQuery };
       if (response.data.tradesByUserID?.items) {
@@ -45,18 +44,22 @@ export default function TradesDisplay() {
     <ElementView style={styles.root}>
       <Text style={styles.heading}>Last 7 Days</Text>
       <FlatList
-        style={{width: '100%', height: '100%'}}
-        data={tradesList.map(item => ({...item})).sort((a, b) => (a.date! < b.date!) ? 1 : -1)}
+        initialNumToRender={7}
+        removeClippedSubviews
+        style={{ width: '100%' }}
+        data={tradesList.map(item => ({...item})).sort((a, b) => (a.date < b.date) ? 1 : -1)}
         onRefresh={fetchTrades}
         refreshing={isLoading}
-        renderItem={({item}) => <TradeItem props={item} key={item.id} />}
+        renderItem={_renderitem}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponentStyle={{alignItems: 'center'}}
         ListEmptyComponent={<Text style={styles.noDataMsg}>This user has no recent trades</Text>}
+        ListFooterComponent={<Text style={{ textAlign: 'center', color: '#929292' }}>pull to refresh</Text>}
       />
     </ElementView>
   );
 }
+
+const _renderitem = ({item}: {item: Trade}) => <TradeItem props={item} key={item.id} />;
 
 const styles = StyleSheet.create({
   root: {
@@ -64,6 +67,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     flex: 1,
+    maxWidth: 350,
   },
   heading: {
     textAlign: 'center',

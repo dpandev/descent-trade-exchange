@@ -5,12 +5,11 @@ import { RootStackParamList } from '../../types';
 import { useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { useAuthContext } from '../../utils/AuthContext';
+import LoadingScreenModal from '../../components/molecules/LoadingScreenModal';
 
 export default function ConfirmCodeScreen({
   navigation
 }: NativeStackScreenProps<RootStackParamList>) {
-
-  const { user } = useAuthContext();
 
   const [username, setUsername] = useState<string>('');
   const [code, setCode] = useState<string>('');
@@ -20,7 +19,8 @@ export default function ConfirmCodeScreen({
       await Auth.confirmSignUp(username, code);
 
       // case: if user completes valid signup, but loses token returned and then confirms account, user needs to sign in manually
-      if (!user) navigation.navigate('SigninScreen');
+      Alert.alert('You have successfully confirmed your account.');
+      navigation.goBack();
     } catch(error: any) {
       console.log('confirmCode:', error);
       if (error.message) {
@@ -51,6 +51,7 @@ export default function ConfirmCodeScreen({
               textContentType={'emailAddress'}
               keyboardAppearance={'dark'}
               componentStyles={styles.inputContainer}
+              inputStyles={{ color: 'white' }}
               selectionColor={styles.label.color}
             />
             <LabelledInputField 
@@ -64,6 +65,7 @@ export default function ConfirmCodeScreen({
               textContentType={'username'}
               keyboardAppearance={'dark'}
               componentStyles={styles.inputContainer}
+              inputStyles={{ color: 'white' }}
               selectionColor={styles.label.color}
             />
             <RoundedButton onPress={onPressConfirm}>

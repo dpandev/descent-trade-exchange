@@ -1,34 +1,42 @@
 import { StyleSheet, Image } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 import { Text, ElementView, ListItemButton } from '../Themed';
 import { AbbreviateNum, DateAndTime, PreciseMoney } from '../FormattedTextElements';
 import { Octicons } from '@expo/vector-icons';
 import { Trade } from '../../../src/API';
-const assetImg = require('../../../assets/images/dgb.png');
+const assetImg = require('../../../assets/images/default-coin.png');
 
 const imgFallback = Image.resolveAssetSource(assetImg).uri;
 
-export default function TradeItem({
+const TradeItem = ({
   props
 }: {
   props: Trade
-}) {
+}) => {
   if (!props) {
     return <Text style={styles.currencyText}>Error displaying trade</Text>;
   }
   return (
-    <ListItemButton
-      buttonStyles={styles.root}
-    >
+    <ListItemButton buttonStyles={styles.root}>
       <ElementView style={styles.left}>
         <Image style={styles.image} source={{ uri: props.image || imgFallback }}></Image>
       </ElementView>
       <ElementView style={styles.middle}>
-        <ElementView style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={styles.currencyText}>USD{' '}</Text>
-          <Octicons name="arrow-switch" size={16} color="white" />
-          <Text style={styles.currencyText}>{' '}{props.coinSymbol.toUpperCase()}</Text>
-        </ElementView>
+        
+        {props.amount > 0
+          ? <ElementView style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.currencyText}>USDC{' '}</Text>
+              <Octicons name="arrow-switch" size={16} color="white" />
+              <Text style={styles.currencyText}>{' '}{props.coinSymbol.toUpperCase()}</Text>
+            </ElementView>
+
+          : <ElementView style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.currencyText}>{props.coinSymbol.toUpperCase()}{' '}</Text>
+              <Octicons name="arrow-switch" size={16} color="white" />
+              <Text style={styles.currencyText}>{' '}USDC</Text>
+            </ElementView>
+        }
+        
         <ElementView style={styles.tradeInfo}>
           <Text>Shares: </Text>
           <AbbreviateNum value={props.amount} />
@@ -45,21 +53,25 @@ export default function TradeItem({
   );
 }
 
+export default memo(TradeItem);
+
 const styles = StyleSheet.create({
   root: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   left: {
-    flex: 1.25,
+    flex: 1,
     alignItems: 'flex-start',
   },
   image: {
     height: 50,
     width: 50,
     marginRight: 10,
-    borderRadius: 6,
+    borderRadius: 50,
+    backgroundColor: 'white',
   },
   middle: {
     flex: 2,
@@ -67,7 +79,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   right: {
-    flex: 1.25,
+    flex: 1,
     alignItems: 'flex-end',
     height: '100%',
   },

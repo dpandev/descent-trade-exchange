@@ -1,23 +1,31 @@
-import { AlternateThemeButtonProps, AlternateThemedButton, ElementView, Text } from '../Themed';
+import { ElementView, Text } from '../Themed';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import Searchbar, { SearchbarProps } from '../atoms/inputs/Searchbar';
-import AlternateButton, { AlternateButtonProps } from '../atoms/buttons/AlternateButton';
+import AlternateButton from '../atoms/buttons/AlternateButton';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../types';
 
 
 export interface PageHeaderProps {
   title: string;
-  iconProps?: AlternateButtonProps;
 }
 
-export default function PageHeader({ title, ...otherProps }: PageHeaderProps) {
+export default function PageHeader({ title }: PageHeaderProps) {
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
+
+  const onIconPress = (): void => {
+    navigation.navigate('Settings');
+  }
+
   return (
     <ElementView style={styles.header}>
       <ElementView style={styles.row}>
         <Text style={styles.title}>{title}</Text>
-        {otherProps?.iconProps?.icon &&
-          <AlternateButton {...otherProps?.iconProps} />
-        }
+        <AlternateButton 
+          icon={{ name: 'gears', size: 36, color: 'white', inactiveColor: '#929292' }}
+          style={{ padding: 4 }}
+          onPress={onIconPress}
+        />
       </ElementView>
     </ElementView>
   );

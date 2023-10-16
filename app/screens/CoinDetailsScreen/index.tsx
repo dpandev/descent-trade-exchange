@@ -11,7 +11,7 @@ import { useAuthContext } from '../../utils/AuthContext';
 import { Coin, GetCoinQuery, GetPortfolioCoinQuery, GetUserQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackScreenProps } from '../../types';
 import { updateUser } from '../../../src/graphql/mutations';
-const assetImg = require('../../../assets/images/dgb.png');
+const assetImg = require('../../../assets/images/default-coin.png');
 const imgFallback = Image.resolveAssetSource(assetImg).uri;
 
 
@@ -181,27 +181,24 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
         </ElementView>
       </ElementView>
 
+      <ElementView style={styles.valueContainer}>
+        <Text style={styles.label}>Current price</Text>
+        <PreciseMoney value={coin.currentPrice} style={styles.value} />
+      </ElementView>
       <ElementView style={styles.row}>
         <ElementView style={styles.valueContainer}>
-          <Text style={styles.label}>Current price</Text>
-          <PreciseMoney value={coin.currentPrice} style={styles.value} />
+          <Text style={styles.label}>1 hour</Text>
+          <PercentageChange value={coin.valueChange1H} />
         </ElementView>
 
-        <ElementView style={{flexDirection: 'row'}}>
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>1 hour</Text>
-            <PercentageChange value={coin.valueChange1H} />
-          </ElementView>
+        <ElementView style={styles.valueContainer}>
+          <Text style={styles.label}>1 day</Text>
+          <PercentageChange value={coin.valueChange24H} />
+        </ElementView>
 
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>1 day</Text>
-            <PercentageChange value={coin.valueChange24H} />
-          </ElementView>
-
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>7 days</Text>
-            <PercentageChange value={coin.valueChange7D} />
-          </ElementView>
+        <ElementView style={styles.valueContainer}>
+          <Text style={styles.label}>7 days</Text>
+          <PercentageChange value={coin.valueChange7D} />
         </ElementView>
       </ElementView>
 
@@ -240,7 +237,7 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
           Sell
         </RoundedButton> 
       </ElementView>
-
+      
     </ElementView>
   );
 };

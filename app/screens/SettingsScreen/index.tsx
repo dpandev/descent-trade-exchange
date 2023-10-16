@@ -1,10 +1,9 @@
 import { View, RoundedButton } from '../../components/Themed';
-import { StyleSheet } from 'react-native';
+import { Alert, StyleSheet } from 'react-native';
 import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types';
-import ChangeDisplayName from './ChangeDisplayName';
 import DeleteAccount from './DeleteAccount';
 
 export default function SettingsScreen() {

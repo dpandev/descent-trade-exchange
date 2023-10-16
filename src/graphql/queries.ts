@@ -22,6 +22,7 @@ export const getUser = /* GraphQL */ `
           expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -35,6 +36,7 @@ export const getUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -43,6 +45,7 @@ export const getUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -70,6 +73,7 @@ export const listUsers = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       nextToken
@@ -100,10 +104,12 @@ export const getPortfolioCoin = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -128,10 +134,12 @@ export const listPortfolioCoins = /* GraphQL */ `
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -167,10 +175,12 @@ export const portfolioCoinsByUserID = /* GraphQL */ `
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -251,11 +261,13 @@ export const getTrade = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       expires_at
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -284,11 +296,13 @@ export const listTrades = /* GraphQL */ `
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
         expires_at
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -328,8 +342,52 @@ export const tradesByUserID = /* GraphQL */ `
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
+        expires_at
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getArticle = /* GraphQL */ `
+  query GetArticle($id: ID!) {
+    getArticle(id: $id) {
+      id
+      coinSymbol
+      title
+      url
+      domain
+      publishedAt
+      image
+      expires_at
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listArticles = /* GraphQL */ `
+  query ListArticles(
+    $filter: ModelArticleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listArticles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        coinSymbol
+        title
+        url
+        domain
+        publishedAt
+        image
         expires_at
         createdAt
         updatedAt

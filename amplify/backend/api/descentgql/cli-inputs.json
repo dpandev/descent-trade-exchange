@@ -11,9 +11,13 @@
       {
         "mode": "API_KEY",
         "expirationTime": 365,
-        "apiKeyExpirationDate": "2024-09-28T15:36:12.786Z",
-        "keyDescription": ""
+        "apiKeyExpirationDate": "2024-10-14T00:32:38.044Z",
+        "keyDescription": "descentGraphqlAPIkey10142023"
+      },
+      {
+        "mode": "AWS_IAM"
       }
-    ]
+    ],
+    "conflictResolution": {}
   }
 }

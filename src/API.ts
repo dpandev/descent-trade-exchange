@@ -2,23 +2,26 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type DeleteCoinInput = {
-  id: string,
+export type CreateUserInput = {
+  id?: string | null,
+  displayName: string,
+  networth: number,
+  image: string,
+  createdAt?: string | null,
+  updatedAt?: string | null,
+  watchlist?: Array< string > | null,
 };
 
-export type ModelCoinConditionInput = {
-  cgId?: ModelStringInput | null,
-  name?: ModelStringInput | null,
-  symbol?: ModelStringInput | null,
+export type ModelUserConditionInput = {
+  displayName?: ModelStringInput | null,
+  networth?: ModelFloatInput | null,
   image?: ModelStringInput | null,
-  currentPrice?: ModelFloatInput | null,
-  valueChange1H?: ModelFloatInput | null,
-  valueChange24H?: ModelFloatInput | null,
-  valueChange7D?: ModelFloatInput | null,
-  priceHistory?: ModelStringInput | null,
-  and?: Array< ModelCoinConditionInput | null > | null,
-  or?: Array< ModelCoinConditionInput | null > | null,
-  not?: ModelCoinConditionInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
+  watchlist?: ModelStringInput | null,
+  and?: Array< ModelUserConditionInput | null > | null,
+  or?: Array< ModelUserConditionInput | null > | null,
+  not?: ModelUserConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -73,44 +76,6 @@ export type ModelFloatInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type Coin = {
-  __typename: "Coin",
-  id: string,
-  cgId: string,
-  name: string,
-  symbol: string,
-  image?: string | null,
-  currentPrice: number,
-  valueChange1H: number,
-  valueChange24H: number,
-  valueChange7D: number,
-  priceHistory?: string | null,
-  createdAt: string,
-  updatedAt: string,
-};
-
-export type CreateUserInput = {
-  id?: string | null,
-  displayName: string,
-  networth: number,
-  image: string,
-  createdAt: number,
-  updatedAt: number,
-  watchlist?: Array< string > | null,
-};
-
-export type ModelUserConditionInput = {
-  displayName?: ModelStringInput | null,
-  networth?: ModelFloatInput | null,
-  image?: ModelStringInput | null,
-  createdAt?: ModelFloatInput | null,
-  updatedAt?: ModelFloatInput | null,
-  watchlist?: ModelStringInput | null,
-  and?: Array< ModelUserConditionInput | null > | null,
-  or?: Array< ModelUserConditionInput | null > | null,
-  not?: ModelUserConditionInput | null,
-};
-
 export type User = {
   __typename: "User",
   id: string,
@@ -119,9 +84,10 @@ export type User = {
   image: string,
   trades?: ModelTradeConnection | null,
   portfolio?: ModelPortfolioCoinConnection | null,
-  createdAt: number,
-  updatedAt: number,
+  createdAt: string,
+  updatedAt: string,
   watchlist?: Array< string > | null,
+  owner?: string | null,
 };
 
 export type ModelTradeConnection = {
@@ -137,13 +103,14 @@ export type Trade = {
   coinSymbol: string,
   amount: number,
   price: number,
-  date: number,
+  date: string,
   image: string,
   userID: string,
   user?: User | null,
   expires_at: number,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type ModelPortfolioCoinConnection = {
@@ -161,6 +128,7 @@ export type PortfolioCoin = {
   user?: User | null,
   createdAt: string,
   updatedAt: string,
+  owner?: string | null,
 };
 
 export type UpdateUserInput = {
@@ -168,8 +136,8 @@ export type UpdateUserInput = {
   displayName?: string | null,
   networth?: number | null,
   image?: string | null,
-  createdAt?: number | null,
-  updatedAt?: number | null,
+  createdAt?: string | null,
+  updatedAt?: string | null,
   watchlist?: Array< string > | null,
 };
 
@@ -233,6 +201,37 @@ export type CreateCoinInput = {
   priceHistory?: string | null,
 };
 
+export type ModelCoinConditionInput = {
+  cgId?: ModelStringInput | null,
+  name?: ModelStringInput | null,
+  symbol?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  currentPrice?: ModelFloatInput | null,
+  valueChange1H?: ModelFloatInput | null,
+  valueChange24H?: ModelFloatInput | null,
+  valueChange7D?: ModelFloatInput | null,
+  priceHistory?: ModelStringInput | null,
+  and?: Array< ModelCoinConditionInput | null > | null,
+  or?: Array< ModelCoinConditionInput | null > | null,
+  not?: ModelCoinConditionInput | null,
+};
+
+export type Coin = {
+  __typename: "Coin",
+  id: string,
+  cgId: string,
+  name: string,
+  symbol: string,
+  image?: string | null,
+  currentPrice: number,
+  valueChange1H: number,
+  valueChange24H: number,
+  valueChange7D: number,
+  priceHistory?: string | null,
+  createdAt: string,
+  updatedAt: string,
+};
+
 export type UpdateCoinInput = {
   id: string,
   cgId?: string | null,
@@ -246,13 +245,17 @@ export type UpdateCoinInput = {
   priceHistory?: string | null,
 };
 
+export type DeleteCoinInput = {
+  id: string,
+};
+
 export type CreateTradeInput = {
   id?: string | null,
   coinId: string,
   coinSymbol: string,
   amount: number,
   price: number,
-  date: number,
+  date: string,
   image: string,
   userID: string,
   expires_at: number,
@@ -263,7 +266,7 @@ export type ModelTradeConditionInput = {
   coinSymbol?: ModelStringInput | null,
   amount?: ModelFloatInput | null,
   price?: ModelFloatInput | null,
-  date?: ModelFloatInput | null,
+  date?: ModelStringInput | null,
   image?: ModelStringInput | null,
   userID?: ModelIDInput | null,
   expires_at?: ModelFloatInput | null,
@@ -278,7 +281,7 @@ export type UpdateTradeInput = {
   coinSymbol?: string | null,
   amount?: number | null,
   price?: number | null,
-  date?: number | null,
+  date?: string | null,
   image?: string | null,
   userID?: string | null,
   expires_at?: number | null,
@@ -288,13 +291,66 @@ export type DeleteTradeInput = {
   id: string,
 };
 
+export type CreateArticleInput = {
+  id?: string | null,
+  coinSymbol: string,
+  title: string,
+  url: string,
+  domain: string,
+  publishedAt: string,
+  image: string,
+  expires_at: number,
+};
+
+export type ModelArticleConditionInput = {
+  coinSymbol?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  url?: ModelStringInput | null,
+  domain?: ModelStringInput | null,
+  publishedAt?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  expires_at?: ModelFloatInput | null,
+  and?: Array< ModelArticleConditionInput | null > | null,
+  or?: Array< ModelArticleConditionInput | null > | null,
+  not?: ModelArticleConditionInput | null,
+};
+
+export type Article = {
+  __typename: "Article",
+  id: string,
+  coinSymbol: string,
+  title: string,
+  url: string,
+  domain: string,
+  publishedAt: string,
+  image: string,
+  expires_at: number,
+  createdAt: string,
+  updatedAt: string,
+};
+
+export type UpdateArticleInput = {
+  id: string,
+  coinSymbol?: string | null,
+  title?: string | null,
+  url?: string | null,
+  domain?: string | null,
+  publishedAt?: string | null,
+  image?: string | null,
+  expires_at?: number | null,
+};
+
+export type DeleteArticleInput = {
+  id: string,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   displayName?: ModelStringInput | null,
   networth?: ModelFloatInput | null,
   image?: ModelStringInput | null,
-  createdAt?: ModelFloatInput | null,
-  updatedAt?: ModelFloatInput | null,
+  createdAt?: ModelStringInput | null,
+  updatedAt?: ModelStringInput | null,
   watchlist?: ModelStringInput | null,
   and?: Array< ModelUserFilterInput | null > | null,
   or?: Array< ModelUserFilterInput | null > | null,
@@ -351,7 +407,7 @@ export type ModelTradeFilterInput = {
   coinSymbol?: ModelStringInput | null,
   amount?: ModelFloatInput | null,
   price?: ModelFloatInput | null,
-  date?: ModelFloatInput | null,
+  date?: ModelStringInput | null,
   image?: ModelStringInput | null,
   userID?: ModelIDInput | null,
   expires_at?: ModelFloatInput | null,
@@ -360,13 +416,33 @@ export type ModelTradeFilterInput = {
   not?: ModelTradeFilterInput | null,
 };
 
+export type ModelArticleFilterInput = {
+  id?: ModelIDInput | null,
+  coinSymbol?: ModelStringInput | null,
+  title?: ModelStringInput | null,
+  url?: ModelStringInput | null,
+  domain?: ModelStringInput | null,
+  publishedAt?: ModelStringInput | null,
+  image?: ModelStringInput | null,
+  expires_at?: ModelFloatInput | null,
+  and?: Array< ModelArticleFilterInput | null > | null,
+  or?: Array< ModelArticleFilterInput | null > | null,
+  not?: ModelArticleFilterInput | null,
+};
+
+export type ModelArticleConnection = {
+  __typename: "ModelArticleConnection",
+  items:  Array<Article | null >,
+  nextToken?: string | null,
+};
+
 export type ModelSubscriptionUserFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   displayName?: ModelSubscriptionStringInput | null,
   networth?: ModelSubscriptionFloatInput | null,
   image?: ModelSubscriptionStringInput | null,
-  createdAt?: ModelSubscriptionFloatInput | null,
-  updatedAt?: ModelSubscriptionFloatInput | null,
+  createdAt?: ModelSubscriptionStringInput | null,
+  updatedAt?: ModelSubscriptionStringInput | null,
   watchlist?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionUserFilterInput | null > | null,
   or?: Array< ModelSubscriptionUserFilterInput | null > | null,
@@ -444,7 +520,7 @@ export type ModelSubscriptionTradeFilterInput = {
   coinSymbol?: ModelSubscriptionStringInput | null,
   amount?: ModelSubscriptionFloatInput | null,
   price?: ModelSubscriptionFloatInput | null,
-  date?: ModelSubscriptionFloatInput | null,
+  date?: ModelSubscriptionStringInput | null,
   image?: ModelSubscriptionStringInput | null,
   userID?: ModelSubscriptionIDInput | null,
   expires_at?: ModelSubscriptionFloatInput | null,
@@ -452,27 +528,17 @@ export type ModelSubscriptionTradeFilterInput = {
   or?: Array< ModelSubscriptionTradeFilterInput | null > | null,
 };
 
-export type DeleteCoinMutationVariables = {
-  input: DeleteCoinInput,
-  condition?: ModelCoinConditionInput | null,
-};
-
-export type DeleteCoinMutation = {
-  deleteCoin?:  {
-    __typename: "Coin",
-    id: string,
-    cgId: string,
-    name: string,
-    symbol: string,
-    image?: string | null,
-    currentPrice: number,
-    valueChange1H: number,
-    valueChange24H: number,
-    valueChange7D: number,
-    priceHistory?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
+export type ModelSubscriptionArticleFilterInput = {
+  id?: ModelSubscriptionIDInput | null,
+  coinSymbol?: ModelSubscriptionStringInput | null,
+  title?: ModelSubscriptionStringInput | null,
+  url?: ModelSubscriptionStringInput | null,
+  domain?: ModelSubscriptionStringInput | null,
+  publishedAt?: ModelSubscriptionStringInput | null,
+  image?: ModelSubscriptionStringInput | null,
+  expires_at?: ModelSubscriptionFloatInput | null,
+  and?: Array< ModelSubscriptionArticleFilterInput | null > | null,
+  or?: Array< ModelSubscriptionArticleFilterInput | null > | null,
 };
 
 export type CreateUserMutationVariables = {
@@ -496,12 +562,13 @@ export type CreateUserMutation = {
         coinSymbol: string,
         amount: number,
         price: number,
-        date: number,
+        date: string,
         image: string,
         userID: string,
         expires_at: number,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
@@ -515,12 +582,14 @@ export type CreateUserMutation = {
         userID: string,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: string,
+    updatedAt: string,
     watchlist?: Array< string > | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -545,12 +614,13 @@ export type UpdateUserMutation = {
         coinSymbol: string,
         amount: number,
         price: number,
-        date: number,
+        date: string,
         image: string,
         userID: string,
         expires_at: number,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
@@ -564,12 +634,14 @@ export type UpdateUserMutation = {
         userID: string,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: string,
+    updatedAt: string,
     watchlist?: Array< string > | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -594,12 +666,13 @@ export type DeleteUserMutation = {
         coinSymbol: string,
         amount: number,
         price: number,
-        date: number,
+        date: string,
         image: string,
         userID: string,
         expires_at: number,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
@@ -613,12 +686,14 @@ export type DeleteUserMutation = {
         userID: string,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: string,
+    updatedAt: string,
     watchlist?: Array< string > | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -648,12 +723,14 @@ export type CreatePortfolioCoinMutation = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -683,12 +760,14 @@ export type UpdatePortfolioCoinMutation = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -718,12 +797,14 @@ export type DeletePortfolioCoinMutation = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -773,6 +854,29 @@ export type UpdateCoinMutation = {
   } | null,
 };
 
+export type DeleteCoinMutationVariables = {
+  input: DeleteCoinInput,
+  condition?: ModelCoinConditionInput | null,
+};
+
+export type DeleteCoinMutation = {
+  deleteCoin?:  {
+    __typename: "Coin",
+    id: string,
+    cgId: string,
+    name: string,
+    symbol: string,
+    image?: string | null,
+    currentPrice: number,
+    valueChange1H: number,
+    valueChange24H: number,
+    valueChange7D: number,
+    priceHistory?: string | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
 export type CreateTradeMutationVariables = {
   input: CreateTradeInput,
   condition?: ModelTradeConditionInput | null,
@@ -786,7 +890,7 @@ export type CreateTradeMutation = {
     coinSymbol: string,
     amount: number,
     price: number,
-    date: number,
+    date: string,
     image: string,
     userID: string,
     user?:  {
@@ -803,13 +907,15 @@ export type CreateTradeMutation = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     expires_at: number,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -826,7 +932,7 @@ export type UpdateTradeMutation = {
     coinSymbol: string,
     amount: number,
     price: number,
-    date: number,
+    date: string,
     image: string,
     userID: string,
     user?:  {
@@ -843,13 +949,15 @@ export type UpdateTradeMutation = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     expires_at: number,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -866,7 +974,7 @@ export type DeleteTradeMutation = {
     coinSymbol: string,
     amount: number,
     price: number,
-    date: number,
+    date: string,
     image: string,
     userID: string,
     user?:  {
@@ -883,10 +991,75 @@ export type DeleteTradeMutation = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
+    expires_at: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type CreateArticleMutationVariables = {
+  input: CreateArticleInput,
+  condition?: ModelArticleConditionInput | null,
+};
+
+export type CreateArticleMutation = {
+  createArticle?:  {
+    __typename: "Article",
+    id: string,
+    coinSymbol: string,
+    title: string,
+    url: string,
+    domain: string,
+    publishedAt: string,
+    image: string,
+    expires_at: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateArticleMutationVariables = {
+  input: UpdateArticleInput,
+  condition?: ModelArticleConditionInput | null,
+};
+
+export type UpdateArticleMutation = {
+  updateArticle?:  {
+    __typename: "Article",
+    id: string,
+    coinSymbol: string,
+    title: string,
+    url: string,
+    domain: string,
+    publishedAt: string,
+    image: string,
+    expires_at: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteArticleMutationVariables = {
+  input: DeleteArticleInput,
+  condition?: ModelArticleConditionInput | null,
+};
+
+export type DeleteArticleMutation = {
+  deleteArticle?:  {
+    __typename: "Article",
+    id: string,
+    coinSymbol: string,
+    title: string,
+    url: string,
+    domain: string,
+    publishedAt: string,
+    image: string,
     expires_at: number,
     createdAt: string,
     updatedAt: string,
@@ -913,12 +1086,13 @@ export type GetUserQuery = {
         coinSymbol: string,
         amount: number,
         price: number,
-        date: number,
+        date: string,
         image: string,
         userID: string,
         expires_at: number,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
@@ -932,12 +1106,14 @@ export type GetUserQuery = {
         userID: string,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: string,
+    updatedAt: string,
     watchlist?: Array< string > | null,
+    owner?: string | null,
   } | null,
 };
 
@@ -964,9 +1140,10 @@ export type ListUsersQuery = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -997,12 +1174,14 @@ export type GetPortfolioCoinQuery = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1027,12 +1206,14 @@ export type ListPortfolioCoinsQuery = {
         displayName: string,
         networth: number,
         image: string,
-        createdAt: number,
-        updatedAt: number,
+        createdAt: string,
+        updatedAt: string,
         watchlist?: Array< string > | null,
+        owner?: string | null,
       } | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1061,12 +1242,14 @@ export type PortfolioCoinsByUserIDQuery = {
         displayName: string,
         networth: number,
         image: string,
-        createdAt: number,
-        updatedAt: number,
+        createdAt: string,
+        updatedAt: string,
         watchlist?: Array< string > | null,
+        owner?: string | null,
       } | null,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1134,7 +1317,7 @@ export type GetTradeQuery = {
     coinSymbol: string,
     amount: number,
     price: number,
-    date: number,
+    date: string,
     image: string,
     userID: string,
     user?:  {
@@ -1151,13 +1334,15 @@ export type GetTradeQuery = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     expires_at: number,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1177,7 +1362,7 @@ export type ListTradesQuery = {
       coinSymbol: string,
       amount: number,
       price: number,
-      date: number,
+      date: string,
       image: string,
       userID: string,
       user?:  {
@@ -1186,13 +1371,15 @@ export type ListTradesQuery = {
         displayName: string,
         networth: number,
         image: string,
-        createdAt: number,
-        updatedAt: number,
+        createdAt: string,
+        updatedAt: string,
         watchlist?: Array< string > | null,
+        owner?: string | null,
       } | null,
       expires_at: number,
       createdAt: string,
       updatedAt: string,
+      owner?: string | null,
     } | null >,
     nextToken?: string | null,
   } | null,
@@ -1216,7 +1403,7 @@ export type TradesByUserIDQuery = {
       coinSymbol: string,
       amount: number,
       price: number,
-      date: number,
+      date: string,
       image: string,
       userID: string,
       user?:  {
@@ -1225,10 +1412,58 @@ export type TradesByUserIDQuery = {
         displayName: string,
         networth: number,
         image: string,
-        createdAt: number,
-        updatedAt: number,
+        createdAt: string,
+        updatedAt: string,
         watchlist?: Array< string > | null,
+        owner?: string | null,
       } | null,
+      expires_at: number,
+      createdAt: string,
+      updatedAt: string,
+      owner?: string | null,
+    } | null >,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetArticleQueryVariables = {
+  id: string,
+};
+
+export type GetArticleQuery = {
+  getArticle?:  {
+    __typename: "Article",
+    id: string,
+    coinSymbol: string,
+    title: string,
+    url: string,
+    domain: string,
+    publishedAt: string,
+    image: string,
+    expires_at: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListArticlesQueryVariables = {
+  filter?: ModelArticleFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListArticlesQuery = {
+  listArticles?:  {
+    __typename: "ModelArticleConnection",
+    items:  Array< {
+      __typename: "Article",
+      id: string,
+      coinSymbol: string,
+      title: string,
+      url: string,
+      domain: string,
+      publishedAt: string,
+      image: string,
       expires_at: number,
       createdAt: string,
       updatedAt: string,
@@ -1239,6 +1474,7 @@ export type TradesByUserIDQuery = {
 
 export type OnCreateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateUserSubscription = {
@@ -1257,12 +1493,13 @@ export type OnCreateUserSubscription = {
         coinSymbol: string,
         amount: number,
         price: number,
-        date: number,
+        date: string,
         image: string,
         userID: string,
         expires_at: number,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
@@ -1276,17 +1513,20 @@ export type OnCreateUserSubscription = {
         userID: string,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: string,
+    updatedAt: string,
     watchlist?: Array< string > | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateUserSubscription = {
@@ -1305,12 +1545,13 @@ export type OnUpdateUserSubscription = {
         coinSymbol: string,
         amount: number,
         price: number,
-        date: number,
+        date: string,
         image: string,
         userID: string,
         expires_at: number,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
@@ -1324,17 +1565,20 @@ export type OnUpdateUserSubscription = {
         userID: string,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: string,
+    updatedAt: string,
     watchlist?: Array< string > | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteUserSubscriptionVariables = {
   filter?: ModelSubscriptionUserFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteUserSubscription = {
@@ -1353,12 +1597,13 @@ export type OnDeleteUserSubscription = {
         coinSymbol: string,
         amount: number,
         price: number,
-        date: number,
+        date: string,
         image: string,
         userID: string,
         expires_at: number,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
@@ -1372,17 +1617,20 @@ export type OnDeleteUserSubscription = {
         userID: string,
         createdAt: string,
         updatedAt: string,
+        owner?: string | null,
       } | null >,
       nextToken?: string | null,
     } | null,
-    createdAt: number,
-    updatedAt: number,
+    createdAt: string,
+    updatedAt: string,
     watchlist?: Array< string > | null,
+    owner?: string | null,
   } | null,
 };
 
 export type OnCreatePortfolioCoinSubscriptionVariables = {
   filter?: ModelSubscriptionPortfolioCoinFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreatePortfolioCoinSubscription = {
@@ -1406,17 +1654,20 @@ export type OnCreatePortfolioCoinSubscription = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdatePortfolioCoinSubscriptionVariables = {
   filter?: ModelSubscriptionPortfolioCoinFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdatePortfolioCoinSubscription = {
@@ -1440,17 +1691,20 @@ export type OnUpdatePortfolioCoinSubscription = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeletePortfolioCoinSubscriptionVariables = {
   filter?: ModelSubscriptionPortfolioCoinFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeletePortfolioCoinSubscription = {
@@ -1474,12 +1728,14 @@ export type OnDeletePortfolioCoinSubscription = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
@@ -1551,6 +1807,7 @@ export type OnDeleteCoinSubscription = {
 
 export type OnCreateTradeSubscriptionVariables = {
   filter?: ModelSubscriptionTradeFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnCreateTradeSubscription = {
@@ -1561,7 +1818,7 @@ export type OnCreateTradeSubscription = {
     coinSymbol: string,
     amount: number,
     price: number,
-    date: number,
+    date: string,
     image: string,
     userID: string,
     user?:  {
@@ -1578,18 +1835,21 @@ export type OnCreateTradeSubscription = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     expires_at: number,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnUpdateTradeSubscriptionVariables = {
   filter?: ModelSubscriptionTradeFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnUpdateTradeSubscription = {
@@ -1600,7 +1860,7 @@ export type OnUpdateTradeSubscription = {
     coinSymbol: string,
     amount: number,
     price: number,
-    date: number,
+    date: string,
     image: string,
     userID: string,
     user?:  {
@@ -1617,18 +1877,21 @@ export type OnUpdateTradeSubscription = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
     expires_at: number,
     createdAt: string,
     updatedAt: string,
+    owner?: string | null,
   } | null,
 };
 
 export type OnDeleteTradeSubscriptionVariables = {
   filter?: ModelSubscriptionTradeFilterInput | null,
+  owner?: string | null,
 };
 
 export type OnDeleteTradeSubscription = {
@@ -1639,7 +1902,7 @@ export type OnDeleteTradeSubscription = {
     coinSymbol: string,
     amount: number,
     price: number,
-    date: number,
+    date: string,
     image: string,
     userID: string,
     user?:  {
@@ -1656,10 +1919,72 @@ export type OnDeleteTradeSubscription = {
         __typename: "ModelPortfolioCoinConnection",
         nextToken?: string | null,
       } | null,
-      createdAt: number,
-      updatedAt: number,
+      createdAt: string,
+      updatedAt: string,
       watchlist?: Array< string > | null,
+      owner?: string | null,
     } | null,
+    expires_at: number,
+    createdAt: string,
+    updatedAt: string,
+    owner?: string | null,
+  } | null,
+};
+
+export type OnCreateArticleSubscriptionVariables = {
+  filter?: ModelSubscriptionArticleFilterInput | null,
+};
+
+export type OnCreateArticleSubscription = {
+  onCreateArticle?:  {
+    __typename: "Article",
+    id: string,
+    coinSymbol: string,
+    title: string,
+    url: string,
+    domain: string,
+    publishedAt: string,
+    image: string,
+    expires_at: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateArticleSubscriptionVariables = {
+  filter?: ModelSubscriptionArticleFilterInput | null,
+};
+
+export type OnUpdateArticleSubscription = {
+  onUpdateArticle?:  {
+    __typename: "Article",
+    id: string,
+    coinSymbol: string,
+    title: string,
+    url: string,
+    domain: string,
+    publishedAt: string,
+    image: string,
+    expires_at: number,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteArticleSubscriptionVariables = {
+  filter?: ModelSubscriptionArticleFilterInput | null,
+};
+
+export type OnDeleteArticleSubscription = {
+  onDeleteArticle?:  {
+    __typename: "Article",
+    id: string,
+    coinSymbol: string,
+    title: string,
+    url: string,
+    domain: string,
+    publishedAt: string,
+    image: string,
     expires_at: number,
     createdAt: string,
     updatedAt: string,

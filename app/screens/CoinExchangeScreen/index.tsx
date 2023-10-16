@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
 } from 'react-native';
 import styles from './styles';
 import { 
@@ -22,6 +23,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { useAuthContext } from '../../utils/AuthContext';
 import { GetPortfolioCoinQuery, PortfolioCoin } from '../../../src/API';
 import { exchangeCoins, exchangeCoinsNew } from './mutations';
+import { Octicons } from '@expo/vector-icons';
 
 const CoinExchangeScreen = () => {
 
@@ -56,12 +58,12 @@ const CoinExchangeScreen = () => {
 
   const onSellAll = (): void => {
     if (!portfolioCoin) return;
-    setCoinAmount((portfolioCoin.amount).toString());
+    setCoinAmount(Math.floor(portfolioCoin.amount).toString());
   }
 
   const onBuyAll = (): void => {
     if (!usdPortfolioCoin) return;
-    setCoinUSDValue((usdPortfolioCoin.amount || 0).toString());
+    setCoinUSDValue(Math.floor(usdPortfolioCoin.amount || 0).toString());
   }
 
   const placeOrder = async (): Promise<void> => {
@@ -69,7 +71,8 @@ const CoinExchangeScreen = () => {
       return;
     }
     setIsLoading(true);
-    let date = Date.now() / 1000;
+    const date = new Date();
+    const expiryDate = Date.now() / 1000;
     let variables = {
       inputOne: {//update existing coin portfolioCoin
         id: `${user.id}-${coin.id}`,
@@ -78,14 +81,14 @@ const CoinExchangeScreen = () => {
         userID: user.id,
       },
       inputTwo: {//create a trade item
-        amount: parseFloat(coinAmount),
+        amount: isBuy ? parseFloat(coinAmount) : -Math.abs(parseFloat(coinAmount)),
         coinId: coin.id,
         coinSymbol: coin.symbol,
-        date: date,
+        date: date.toISOString(),
         image: coin.image,
         price: coin.currentPrice,
         userID: user.id,
-        expires_at: date + (7 * 24 * 60 * 60),
+        expires_at: expiryDate + (7 * 24 * 60 * 60),
       },
       inputThree: {//update existing usd portfolioCoin
         id: `${user.id}-usd-coin`,
@@ -174,34 +177,40 @@ const CoinExchangeScreen = () => {
           {coin.name}
         </Text>
         <Text style={styles.subtitle}>
-          1 {coin?.symbol}
+          1 {coin?.symbol.toUpperCase()}
           {' = '}
           <PreciseMoney value={coin?.currentPrice} />
         </Text>
 
-        <ElementView style={styles.inputsContainer}>
-          <Text style={{fontWeight: 'bold'}}>{coin.symbol}</Text>
+        <ElementView style={styles.col}>
+          <Text style={{fontWeight: 'bold'}}>{coin.symbol.toUpperCase()}</Text>
           <ElementView style={styles.inputContainer}>
             <TextInput
               style={styles.input}
               keyboardType="decimal-pad"
-              placeholder={`0 ${coin.symbol}`}
+              placeholder={`0 ${coin.symbol.toUpperCase()}`}
               placeholderTextColor={'#b1b1b1'}
               value={coinAmount}
               onChangeText={setCoinAmount}
             />
+            <Pressable style={{ padding: 5 }} onPress={isBuy ? onBuyAll : onSellAll}>
+              <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#8F43EE' }}>MAX</Text>
+            </Pressable>
           </ElementView>
-          <Text style={{fontSize: 30}}>=</Text>
+          <Octicons name="arrow-switch" size={36} color="white" />
 
           <ElementView style={styles.inputContainer}>
             <TextInput
               style={styles.input}
               keyboardType="decimal-pad"
-              placeholder={`0 usd`}
+              placeholder={`0 USDC`}
               placeholderTextColor={'#b1b1b1'}
               value={coinUSDValue}
               onChangeText={setCoinUSDValue}
             />
+            <Pressable style={{ padding: 5 }} onPress={isBuy ? onBuyAll : onSellAll}>
+              <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#8F43EE' }}>MAX</Text>
+            </Pressable>
           </ElementView>
           <Text style={{fontWeight: 'bold'}}>USD</Text>
         </ElementView>

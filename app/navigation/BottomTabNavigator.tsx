@@ -10,7 +10,7 @@ import TabFourScreen from '../screens/tabs/TabFourScreen';
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-export default function BottomTabNavigator() {
+export default function BottomTabNavigator(): React.JSX.Element {
   const colorScheme = useColorScheme();
 
   return (
@@ -33,7 +33,7 @@ export default function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Dashboard',
+          title: 'News',
           tabBarIcon: ({ color }) => <TabBarIcon name="newspaper" color={color} />,
         })}
       />

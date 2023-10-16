@@ -136,8 +136,8 @@ export function ThemedButton(props: ThemeableButtonProps) {
     ...buttonStyles,
   }
   const btnStylePressed = {
-    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
-    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
+    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'tint' : 'secondary'),
+    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'tint' : 'secondary'),
     ...buttonStyles,
   }
   return (
@@ -169,16 +169,10 @@ export function AlternateThemedButton(props: AlternateThemeButtonProps): ReactEl
     ...{activeStyle},
     ...{style},
   }
-  const activeIconStyleThemed: AlternateButtonProps['icon'] = {
-    color: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
-    inactiveColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
-    ...icon,
-  }
   return (
     <DefaultAlternateButton 
       activeStyle={activeStylesThemed}
       inactiveStyle={inactiveStylesThemed}
-      icon={activeIconStyleThemed}
       {...otherProps}
     />
   );

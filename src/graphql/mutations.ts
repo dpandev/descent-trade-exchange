@@ -2,28 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const deleteCoin = /* GraphQL */ `
-  mutation DeleteCoin(
-    $input: DeleteCoinInput!
-    $condition: ModelCoinConditionInput
-  ) {
-    deleteCoin(input: $input, condition: $condition) {
-      id
-      cgId
-      name
-      symbol
-      image
-      currentPrice
-      valueChange1H
-      valueChange24H
-      valueChange7D
-      priceHistory
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -47,6 +25,7 @@ export const createUser = /* GraphQL */ `
           expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -60,6 +39,7 @@ export const createUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -68,6 +48,7 @@ export const createUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -95,6 +76,7 @@ export const updateUser = /* GraphQL */ `
           expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -108,6 +90,7 @@ export const updateUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -116,6 +99,7 @@ export const updateUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -143,6 +127,7 @@ export const deleteUser = /* GraphQL */ `
           expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -156,6 +141,7 @@ export const deleteUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -164,6 +150,7 @@ export const deleteUser = /* GraphQL */ `
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -194,10 +181,12 @@ export const createPortfolioCoin = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -228,10 +217,12 @@ export const updatePortfolioCoin = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -262,10 +253,12 @@ export const deletePortfolioCoin = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -314,6 +307,28 @@ export const updateCoin = /* GraphQL */ `
     }
   }
 `;
+export const deleteCoin = /* GraphQL */ `
+  mutation DeleteCoin(
+    $input: DeleteCoinInput!
+    $condition: ModelCoinConditionInput
+  ) {
+    deleteCoin(input: $input, condition: $condition) {
+      id
+      cgId
+      name
+      symbol
+      image
+      currentPrice
+      valueChange1H
+      valueChange24H
+      valueChange7D
+      priceHistory
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createTrade = /* GraphQL */ `
   mutation CreateTrade(
     $input: CreateTradeInput!
@@ -344,11 +359,13 @@ export const createTrade = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       expires_at
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -383,11 +400,13 @@ export const updateTrade = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       expires_at
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -422,8 +441,70 @@ export const deleteTrade = /* GraphQL */ `
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
+      expires_at
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createArticle = /* GraphQL */ `
+  mutation CreateArticle(
+    $input: CreateArticleInput!
+    $condition: ModelArticleConditionInput
+  ) {
+    createArticle(input: $input, condition: $condition) {
+      id
+      coinSymbol
+      title
+      url
+      domain
+      publishedAt
+      image
+      expires_at
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateArticle = /* GraphQL */ `
+  mutation UpdateArticle(
+    $input: UpdateArticleInput!
+    $condition: ModelArticleConditionInput
+  ) {
+    updateArticle(input: $input, condition: $condition) {
+      id
+      coinSymbol
+      title
+      url
+      domain
+      publishedAt
+      image
+      expires_at
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteArticle = /* GraphQL */ `
+  mutation DeleteArticle(
+    $input: DeleteArticleInput!
+    $condition: ModelArticleConditionInput
+  ) {
+    deleteArticle(input: $input, condition: $condition) {
+      id
+      coinSymbol
+      title
+      url
+      domain
+      publishedAt
+      image
       expires_at
       createdAt
       updatedAt

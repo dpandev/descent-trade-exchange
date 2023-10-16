@@ -18,6 +18,7 @@ import {
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
 import { Auth } from 'aws-amplify';
+import LoadingScreenModal from '../../components/molecules/LoadingScreenModal';
 
 type SignupParams = {
   username: string;
@@ -32,6 +33,7 @@ export default function SignupScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
   const onPressSignin = (): void => {
@@ -48,6 +50,7 @@ export default function SignupScreen() {
   }
 
   const onPressSignup = async (): Promise<void> => {
+    setIsLoading(true);
     const userData: SignupParams = {
       username: email,
       password: password,
@@ -62,24 +65,22 @@ export default function SignupScreen() {
 
     try {
       simplePasswordValidation(password, confirmPassword);
-      const { user } = await Auth.signUp(userData);
-      console.log('signupUser:',user);
+      await Auth.signUp(userData);
       navigation.navigate('ConfirmCode');
     } catch(error: any) {
-      console.log('signupError:', error);
       if (error.message) {
         Alert.alert(error.message);
       } else {
         Alert.alert(error.toString());
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{marginTop: 50}}>
           <ElementView style={styles.root}>
             <Text style={[styles.title, styles.lightColor]}>Create an account</Text>
@@ -170,6 +171,9 @@ export default function SignupScreen() {
             </ElementView>
           </ElementView>
         </ScrollView>
+        {isLoading &&
+          <LoadingScreenModal visible={isLoading} title={'Logging you in...'} />
+        }
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

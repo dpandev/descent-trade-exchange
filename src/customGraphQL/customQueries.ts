@@ -189,6 +189,7 @@ export const tradesByUserID = /* GraphQL */ `
         date
         image
         userID
+        expires_at
         createdAt
         updatedAt
         __typename

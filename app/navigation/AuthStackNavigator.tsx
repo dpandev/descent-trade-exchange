@@ -6,6 +6,7 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import ConfirmCode from '../screens/modals/ConfirmCodeScreen';
 import useColorScheme from '../hooks/useColorScheme';
 import Colors from '../constants/Colors';
+import ForgotPassword from '../screens/modals/ForgotPasswordModal';
 
 const AStack = createNativeStackNavigator();
 
@@ -39,6 +40,19 @@ export default function AuthStackNavigator() {
           presentation: 'modal', 
           headerTitle: 'Confirm your account',
           title: 'Confirm your account',
+          headerShown: true,
+        }}
+      />
+      <AStack.Screen 
+        name="ForgotPassword" 
+        component={ForgotPassword} 
+        options={{ 
+          headerStyle: { backgroundColor: Colors[colorScheme].secondary },
+          headerTintColor: 'white', 
+          headerTitleStyle: { fontWeight: 'bold' },   
+          presentation: 'modal', 
+          headerTitle: 'Account Recovery',
+          title: 'Forgot Password',
           headerShown: true,
         }}
       />

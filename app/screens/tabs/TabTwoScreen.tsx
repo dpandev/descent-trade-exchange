@@ -1,5 +1,5 @@
-import { StyleSheet, FlatList, ActivityIndicator } from 'react-native';
-import { ElementView } from '../../components/Themed';
+import { StyleSheet, FlatList, ActivityIndicator, Pressable, Platform } from 'react-native';
+import { ElementView, Text } from '../../components/Themed';
 import PortfolioCoinComponent, { PortfolioCoinProps } from '../../components/molecules/PortfolioCoin';
 import PageHeader from '../../components/molecules/PageHeader';
 import { PreciseMoney } from '../../components/FormattedTextElements';
@@ -10,7 +10,7 @@ import { useAuthContext } from '../../utils/AuthContext';
 import { getUser, listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../../types';
 
-export default function TabTwoScreen() {
+export default function TabTwoScreen(): React.JSX.Element {
 
   const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoinProps[]>([]);
   const [userData, setUserData] = useState<User>();
@@ -18,7 +18,6 @@ export default function TabTwoScreen() {
   const { user } = useAuthContext();
 
   const fetchProfile = async (): Promise<void> => {
-    setIsLoading(true);
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>(
         graphqlOperation(
@@ -26,15 +25,13 @@ export default function TabTwoScreen() {
           { id: user?.id }
         ),
       ) as { data: GetUserQuery };
-
+      
       if (response.data.getUser) {
         const fetchedUser: User = response.data.getUser;
         setUserData(fetchedUser);
       }
     } catch(error) {
       console.log(error);
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -74,7 +71,9 @@ export default function TabTwoScreen() {
                   amount: portfolioCoinsResponse[i].amount,
                 }
               }
-              pCoins.push(obj);
+              if (obj.portfolioCoin.amount > 0) {
+                pCoins.push(obj);
+              }
             }
           }
           setPortfolioCoins(pCoins);
@@ -96,7 +95,7 @@ export default function TabTwoScreen() {
     return (
       <ElementView style={styles.root}>
         <PageHeader title={"Assets"} />
-        <ActivityIndicator />
+        <ActivityIndicator size={'large'} color={'white'} />
       </ElementView>
     );
   }
@@ -108,17 +107,32 @@ export default function TabTwoScreen() {
         <PreciseMoney value={userData.networth || 0} style={styles.balance} />
       </ElementView>
       <FlatList
+        initialNumToRender={7}
+        removeClippedSubviews
         style={{width: '100%'}}
-        data={portfolioCoins}
+        data={portfolioCoins.sort((a, b) => (
+          (a.portfolioCoin.coin.currentPrice * a.portfolioCoin.amount) 
+          < (b.portfolioCoin.coin.currentPrice * b.portfolioCoin.amount) 
+          ? 1 : -1
+        ))}
         onRefresh={fetchAssets}
         refreshing={isLoading}
-        renderItem={({item}) => <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} key={item.portfolioCoin.coin.id} />}
+        renderItem={_renderitem}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponentStyle={{alignItems: 'center'}}
+        ListEmptyComponent={<Text style={{ textAlign: 'center', color: '#FE4A76' }}>no data to display</Text>}
+        ListFooterComponent={<Text style={{ textAlign: 'center', color: '#929292' }}>pull to refresh</Text>}
       />
     </ElementView>
   );
 }
+
+const _renderitem = ({
+  item}: {item: PortfolioCoinProps}): React.JSX.Element => (
+  <PortfolioCoinComponent 
+    portfolioCoin={item.portfolioCoin} 
+    key={item.portfolioCoin.coin.id} 
+  />
+  );
 
 const styles = StyleSheet.create({
   root: {

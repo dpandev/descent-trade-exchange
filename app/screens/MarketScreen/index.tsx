@@ -8,13 +8,13 @@ import { useAuthContext } from '../../utils/AuthContext';
 import CoinListing from '../../components/organisms/CoinListing';
 import { AmplifyGraphQLResult } from '../../types';
 
-const enum ComponentTabItem {
+export const enum ComponentTabItem {
   byHour = '% Hour',
   byDay = '% Day',
   watchlist = 'Watchlist',
 }
 
-type TabEnum = `${ComponentTabItem}`;
+export type TabEnum = `${ComponentTabItem}`;
 
 export default function MarketListScreen() {
   const { user } = useAuthContext();
@@ -64,11 +64,11 @@ export default function MarketListScreen() {
   }
 
   const sortByTrendingDay = (): Coin[] => {
-    return [...allCoins].sort((a, b) => (a!.valueChange24H < b!.valueChange24H ? 1 : -1));
+    return [...allCoins].sort((a, b) => (a.valueChange24H < b.valueChange24H ? 1 : -1));
   }
 
   const sortByTrendingHour = (): Coin[] => {
-    return [...allCoins].sort((a, b) => (a!.valueChange1H < b!.valueChange1H ? 1 : -1));
+    return [...allCoins].sort((a, b) => (a.valueChange1H < b.valueChange1H ? 1 : -1));
   }
 
   const onButtonPress = (tabName: TabEnum): void => {
@@ -107,13 +107,34 @@ export default function MarketListScreen() {
         </ElementView>
         <ElementView style={styles.tabComponent}>
           {componentTab === ComponentTabItem.byHour &&
-            <CoinListing props={{ data: sortByTrendingHour(), refreshFunction: fetchData, isLoading: isLoading }} />
+            <CoinListing 
+              props={{ 
+                data: sortByTrendingHour(), 
+                refreshFunction: fetchData, 
+                isLoading: isLoading,
+                sortType: ComponentTabItem.byHour, 
+              }} 
+            />
           }
           {componentTab === ComponentTabItem.byDay &&
-            <CoinListing props={{ data: sortByTrendingDay(), refreshFunction: fetchData, isLoading: isLoading }} />
+            <CoinListing 
+              props={{ 
+                data: sortByTrendingDay(), 
+                refreshFunction: fetchData, 
+                isLoading: isLoading,
+                sortType: ComponentTabItem.byDay, 
+              }} 
+            />
           }
           {componentTab === ComponentTabItem.watchlist &&
-            <CoinListing props={{ data: getWatchlist(), refreshFunction: fetchData, isLoading: isLoading }} />
+            <CoinListing 
+              props={{ 
+                data: getWatchlist(), 
+                refreshFunction: fetchData, 
+                isLoading: isLoading,
+                sortType: ComponentTabItem.watchlist, 
+              }} 
+            />
           }
         </ElementView>
       </ElementView>
@@ -122,12 +143,10 @@ export default function MarketListScreen() {
 
 const styles = StyleSheet.create({
   root: {
-    width: '100%',
     flex: 1,
     alignItems: 'center',
   },
   header: {
-    width: '90%',
     marginTop: 5,
   },
   buttonsContainer: {
@@ -136,7 +155,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 15,
     borderRadius: 12,
-    width: '100%',
   },
   button: {
     paddingVertical: 10,
@@ -156,6 +174,6 @@ const styles = StyleSheet.create({
   },
   tabComponent: {
     flex: 1,
-    width: '100%',
+    paddingHorizontal: 10,
   },
 });

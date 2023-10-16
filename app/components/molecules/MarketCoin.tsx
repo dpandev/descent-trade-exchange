@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { ElementView, Text, ListItemButton } from '../Themed';
 import { PercentageChange, TruncatedDecimal } from '../FormattedTextElements';
 import { Coin } from '../../../src/API';
-const assetImg = require('../../../assets/images/dgb.png');
+import { RootStackParamList } from '../../types';
+import { TabEnum } from '../../screens/MarketScreen';
+const assetImg = require('../../../assets/images/default-coin.png');
 
 const imgFallback = Image.resolveAssetSource(assetImg).uri;
 
-export default function MarketCoin ({props}: {props: Coin}) {
-  const navigation = useNavigation();
+const MarketCoin = ({props, sorting}: {props: Coin, sorting: TabEnum}) => {
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   const {
     id,
@@ -17,49 +19,57 @@ export default function MarketCoin ({props}: {props: Coin}) {
     name,
     symbol,
     currentPrice,
+    valueChange1H,
     valueChange24H,
   } = props;
 
-  const onPressed = () => {
+  const onPressed = (): void => {
     navigation.navigate('CoinDetails', { id });
   }
 
   return (
-    <ListItemButton 
-      buttonStyles={styles.root} 
-      onPress={onPressed}
-    >
+    <ListItemButton buttonStyles={styles.root} onPress={onPressed}>
       <ElementView style={styles.left}>
         <Image style={styles.image} source={{ uri: image || imgFallback }} />
-        <ElementView>
-          <Text style={styles.name}>{name}</Text>
+        <ElementView style={{ flexDirection: 'column', width: '100%' }}>
+          <Text style={styles.name} numberOfLines={1} ellipsizeMode={'tail'}>{name}</Text>
           <Text style={styles.symbol}>{symbol.toUpperCase()}</Text>
         </ElementView>
       </ElementView>
-      <ElementView style={{alignItems: 'flex-end'}}>
+      <ElementView style={{flex: 1, alignItems: 'flex-end'}}>
         <TruncatedDecimal value={currentPrice} style={styles.value} isMoney={true} />
-        <PercentageChange value={valueChange24H} />
+        <PercentageChange 
+          value={
+            sorting === '% Day'
+              ? valueChange24H
+              : valueChange1H
+          } 
+        />
       </ElementView>
     </ListItemButton>
   );
 }
 
+export default memo(MarketCoin);
+
 const styles = StyleSheet.create({
   root: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '90%',
   },
   image: {
     height: 40,
     width: 40,
     marginRight: 10,
-    borderRadius: 8,
+    borderRadius: 50,
+    backgroundColor: 'white',
   },
   left: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   name: {
     fontWeight: 'bold',

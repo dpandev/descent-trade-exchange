@@ -43,12 +43,10 @@ export default function DeleteAccount({ visible, setVisible }: ModalProps) {
 
   const deleteAccount = async (): Promise<void> => {
     if (!user) return;
-    setIsLoading(true);
     try{
       validateUserEntry();
       deleteUserData();
-      const deleteUserFromCognito = await Auth.deleteUser();
-      console.log(deleteUserFromCognito);
+      await Auth.deleteUser();
       Alert.alert('Your account has been deleted.');
     } catch(error: any) {
       if (error.message) {
@@ -56,8 +54,6 @@ export default function DeleteAccount({ visible, setVisible }: ModalProps) {
       } else {
         Alert.alert(error.toString());
       }
-    } finally {
-      setIsLoading(false);
     }
   }
 
