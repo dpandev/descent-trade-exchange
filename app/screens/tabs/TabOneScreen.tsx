@@ -19,6 +19,7 @@ export default function TabOneScreen(): React.JSX.Element {
       const response = await API.graphql<AmplifyGraphQLResult<typeof listArticles>>(
         graphqlOperation(
           listArticles,
+          { limit: 30 }
         ),
       ) as { data: ListArticlesQuery };
 
@@ -51,7 +52,6 @@ export default function TabOneScreen(): React.JSX.Element {
         refreshing={isLoading}
         renderItem={_renderitem}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponentStyle={{alignItems: 'center'}}
         ListEmptyComponent={<Text style={styles.textComponent}>no articles to display</Text>}
         ListFooterComponent={<Text style={styles.textComponent}>pull to refresh</Text>}
       />

@@ -26,7 +26,7 @@ const NEWS_API_URL = 'https://cryptopanic.com/api/v1/posts/?auth_token=' + NEWS_
   const newsDataResponse = await fetch(NEWS_API_URL);
   const newsData = await newsDataResponse.json();
 
-  const expirydate = Math.round(Date.now() / 1000);
+  const expirydate = Math.round(Date.now() / 1000) + (7 * 24 * 60 * 60);
 
   let DEFAULT_IMG = process.env.DEFAULT_IMG;
   const Items = newsData.results.map(entry => ({
