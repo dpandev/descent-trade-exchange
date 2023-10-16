@@ -27,9 +27,12 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
 
   const fetchUser = async (): Promise<void> => {
     try {
-      const currentUser = await Auth.currentAuthenticatedUser();
-      console.log('current:', currentUser)
-      setUser({ id: currentUser.attributes.sub });
+      const currentUser = await Auth.currentAuthenticatedUser({ bypassCache: true });
+      if (currentUser) {
+        setUser({ id: currentUser.attributes.sub });
+      } else {
+        setUser(null);
+      }
     } catch(error) {
       console.log(error);
     } finally {
@@ -38,31 +41,33 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   }
 
   useEffect(() => {
+    let signedOut: boolean = false;
+    setIsLoading(true);
     const unsubscribe = Hub.listen("auth", ({ payload: { event, data } }) => {
-      console.log('hub:', data)
-      setIsLoading(true);
       switch (event) {
         case 'signIn':
           setUser({ id: data.signInUserSession.accessToken.payload.sub });
           break;
         case 'autoSign':
-          console.log('autosignin', data);
           setUser({ id: data.signInUserSession.accessToken.payload.sub });
           break;
         case 'signOut':
           setUser(null);
+          signedOut = true;
           break;
         case 'userDeleted':
           setUser(null);
+          signedOut = true;
           break;
         default:
-          console.log('event:', event)
+          console.log('event:', event);
           break;
       }
     });
 
-    fetchUser();
-    console.log('auth:', user)
+    if (!signedOut) {
+      fetchUser();
+    }
     
     return unsubscribe; //  stops listening 
   }, []);
@@ -70,7 +75,7 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
   return (
     <AuthContext.Provider value={{user, setUser}}>
       {isLoading && 
-        <LoadingScreenModal visible={isLoading} />
+        <LoadingScreenModal visible={isLoading} title={'Logging you in...'} />
       }
       {children}
     </AuthContext.Provider>

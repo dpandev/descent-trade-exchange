@@ -4,10 +4,12 @@ import { ElementView, Text } from '../../components/Themed';
 
 interface LoadingScreenModalProps {
   visible: boolean;
+  title?: string;
 }
 
 export default function LoadingScreenModal({ 
   visible, 
+  title='',
 }: LoadingScreenModalProps) {
   return (
     <Modal
@@ -16,7 +18,7 @@ export default function LoadingScreenModal({
       visible={visible}
     >
       <ElementView style={styles.centeredView}>
-        <Text style={styles.text}>Logging you in...</Text>
+        <Text style={styles.text}>{title}</Text>
         <ActivityIndicator size={'large'} color={'white'} />
       </ElementView>
     </Modal>

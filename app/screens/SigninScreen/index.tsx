@@ -15,7 +15,6 @@ export default function SigninScreen() {
     try {
       await Auth.signIn(email, password);
     } catch(error: any) {
-      console.log(error);
       if (error.message) {
         Alert.alert(error.message);
       } else {
@@ -32,6 +31,10 @@ export default function SigninScreen() {
     navigation.navigate('ConfirmCode');
   }
 
+  const onPressForgotPass = async (): Promise<void> => {
+    navigation.navigate('ForgotPassword');
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <ElementView style={styles.root}>
@@ -45,6 +48,7 @@ export default function SigninScreen() {
             placeholder={'yourname@example.com'}
             textContentType={'emailAddress'}
             inputStyles={{ color: 'white', fontSize: 18 }}
+            selectionColor={'white'}
           />
           <LabelledInputField 
             value={password}
@@ -55,6 +59,7 @@ export default function SigninScreen() {
             placeholder={'yourpassword'}
             textContentType={'password'}
             inputStyles={{ color: 'white', fontSize: 18 }}
+            selectionColor={'white'}
           />
           <RoundedButton 
             onPress={onPressSignin}
@@ -63,6 +68,15 @@ export default function SigninScreen() {
             Sign in
           </RoundedButton>
           <SocialLoginButtons />
+
+          <TextButton
+            onPress={onPressForgotPass}
+            buttonStyles={{...styles.signupBtn, marginBottom: 15 }}
+            textStyles={styles.signupBtnText}
+          >
+            Forgot Password?
+          </TextButton>
+
           <Text style={styles.signupLabel}>Don't have an account?</Text>
           <TextButton
             onPress={onPressSignup}
@@ -74,7 +88,7 @@ export default function SigninScreen() {
             Sign up
           </TextButton>
 
-          <Text style={{ ...styles.signupLabel, marginTop: 25 }}>Have a confirm code?</Text>
+          <Text style={styles.signupLabel}>Have a confirm code?</Text>
           <TextButton
             onPress={onPressConfirmCode}
             buttonStyles={styles.signupBtn}
@@ -96,7 +110,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '100%',
     padding: 25,
   },
   title: {
@@ -123,9 +136,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 0,
-    marginHorizontal: 0,
-    marginVertical: 0,
   },
   signupBtnText: {
     fontSize: 16,
