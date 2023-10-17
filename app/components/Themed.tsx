@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView as DefaultKeyboardAvoidingView,
 } from 'react-native';
 import CustomButton from './atoms/buttons/CustomButton';
-import LabelledTextInput from './atoms/inputs/LabelledTextInput';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
@@ -40,7 +39,6 @@ export type ViewProps = ThemeProps & DefaultView['props'];
 export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
 export type ButtonProps = ThemeProps & DefaultButton['props'];
 export type ThemeableButtonProps = ThemeProps & CustomButton['props'];
-export type LabelledInputFieldProps = ThemeProps & LabelledTextInput['props'];
 export type KeyboardAvoidingViewProps = ThemeProps & DefaultKeyboardAvoidingView['props'];
 export type AlternateThemeButtonProps = ThemeProps & AlternateButtonProps;
 
@@ -125,7 +123,7 @@ export function ActivatedButton(props: ThemeableButtonProps) {
  * @returns A themed button
  */
 export function ThemedButton(props: ThemeableButtonProps) {
-  const { inverted=false, icon, iconColor, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
+  const { inverted=false, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const txtStyle = { 
     color: useThemeColor({ light: lightColor, dark: darkColor }, 'buttonText'),
     ...textStyles,
@@ -148,8 +146,6 @@ export function ThemedButton(props: ThemeableButtonProps) {
         ({pressed}: {pressed: PressableStateCallbackType}) => {
           return [pressed ? btnStylePressed : btnStyle]}
       }
-      iconColor={txtStyle.color} 
-      icon={icon} 
       {...otherProps} 
     />
   );
@@ -195,11 +191,11 @@ export function RoundedButton(props: ThemeableButtonProps) {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 15,
+    paddingVertical: 18,
     paddingHorizontal: 25,
-    marginVertical: 25,
-    marginHorizontal: 10,
-    borderRadius: 50,
+    marginVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 14,
     borderWidth: 1,
     ...buttonStyles,
   }
@@ -273,39 +269,6 @@ export function ListItemButton(props: ThemeableButtonProps) {
     <ThemedButton 
       textStyles={textStyle}
       buttonStyles={btnStyle} 
-      {...otherProps} 
-    />
-  );
-}
-
-/**
- * Custom themed button that is just text with transparent background.
- * @param props 
- * @returns a text button
- */
-export function TextButton(props: ThemeableButtonProps) {
-  const { textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
-
-  const textColor = useThemeColor({ light: lightColor, dark: darkColor }, 'secondary');
-
-  return (
-    <ThemedButton
-      textStyles={{ color: textColor, ...textStyles }}
-      buttonStyles={{ backgroundColor: 'transparent', ...buttonStyles }}
-      {...otherProps}
-    />
-  )
-}
-
-export function LabelledInputField(props: LabelledInputFieldProps) {
-  const { lightColor, darkColor, ...otherProps } = props;
-
-  return (
-    <LabelledTextInput 
-      selectionColor={ useThemeColor({ light: lightColor, dark: darkColor }, 'primary') }
-      labelStyles={{ color: useThemeColor({ light: lightColor, dark: darkColor }, 'secondary') }}
-      placeholderTextColor={ useThemeColor({ light: lightColor, dark: darkColor }, 'tabIconDefault') }
-      componentStyles={{ borderColor: useThemeColor({ light: lightColor, dark: darkColor }, 'primary') }}
       {...otherProps} 
     />
   );

@@ -21,17 +21,20 @@ const CoinListing = ({props}: {props: ListProps}) => {
       data={props.data}
       onRefresh={props.refreshFunction}
       refreshing={props.isLoading}
+      keyExtractor={_keyExtractor}
       renderItem={props.sortType === '% Day' ? _renderitem_byday : _renderitem_byhour}
       showsVerticalScrollIndicator={false}
       ListEmptyComponent={<Text style={{ textAlign: 'center', color: '#FE4A76' }}>no coins to display</Text>}
       ListFooterComponent={
         <Text style={{ textAlign: 'center', color: '#929292' }}>pull to refresh</Text>
       }
+      maxToRenderPerBatch={15}
     />
   );
 }
 
-const _renderitem_byhour = ({item}: {item: Coin}) => <MarketCoin props={item} sorting={'% Hour'} key={item.id} />;
-const _renderitem_byday = ({item}: {item: Coin}) => <MarketCoin props={item} sorting={'% Day'} key={item.id} />;
+const _keyExtractor = (item: Coin) => item.id;
+const _renderitem_byhour = ({item}: {item: Coin}) => <MarketCoin props={item} sorting={'% Hour'} />;
+const _renderitem_byday = ({item}: {item: Coin}) => <MarketCoin props={item} sorting={'% Day'} />;
 
 export default CoinListing;

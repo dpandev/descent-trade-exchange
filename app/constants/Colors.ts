@@ -18,7 +18,7 @@ export default {
     buttonText: '#fff',
     background: '#030303',
     primary: '#1A1C2A',
-    secondary: '#772ceb',
+    secondary: '#71459B',
     tint: '#8F43EE',
     tabIconDefault: '#929292',
     tabIconSelected: '#fff',

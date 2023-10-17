@@ -1,28 +1,30 @@
 import { Alert, Keyboard } from 'react-native';
 import React, { useState } from 'react';
-import { LabelledInputFieldProps } from '../../components/Themed';
 import DialogInputModal from '../../components/molecules/DialogInputModal';
 import { useAuthContext } from '../../utils/AuthContext';
 import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { AmplifyGraphQLResult } from '../../types';
 import { deleteUser } from '../../../src/graphql/mutations';
 import { DeleteUserMutation } from '../../../src/API';
+import { LabeledInputProps } from '../../components/atoms/inputs/LabeledInput';
+import LoadingScreenModal from '../../components/molecules/LoadingScreenModal';
 
 interface ModalProps {
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function DeleteAccount({ visible, setVisible }: ModalProps) {
+const DeleteAccount = ({ visible, setVisible }: ModalProps) => {
   const [confirm, setConfirm] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useAuthContext();
 
-  const labelProps: LabelledInputFieldProps = {
+  const labelProps: LabeledInputProps = {
     value: confirm,
-    setValue: setConfirm,
+    onChangeText: setConfirm,
     onSubmitEditing: Keyboard.dismiss,
     placeholder: 'confirm',
+    style: { color: 'black' },
   }
 
   const validateUserEntry = (): void => {
@@ -44,16 +46,19 @@ export default function DeleteAccount({ visible, setVisible }: ModalProps) {
   const deleteAccount = async (): Promise<void> => {
     if (!user) return;
     try{
+      setIsLoading(true);
       validateUserEntry();
       deleteUserData();
       await Auth.deleteUser();
-      Alert.alert('Your account has been deleted.');
     } catch(error: any) {
       if (error.message) {
         Alert.alert(error.message);
       } else {
         Alert.alert(error.toString());
       }
+    } finally {
+      setIsLoading(false);
+      Alert.alert('Your account has been deleted.');
     }
   }
 
@@ -62,12 +67,19 @@ export default function DeleteAccount({ visible, setVisible }: ModalProps) {
       <DialogInputModal 
         visible={visible}
         setVisible={setVisible}
-        isLoading={isLoading}
         action={deleteAccount}
         title={'Delete your account?'}
         label={labelProps}
         statement={"Careful! This action cannot be undone! Type 'confirm' in the box below to proceed with account termination."}
       />
+      {isLoading &&
+        <LoadingScreenModal
+          visible={isLoading}
+        />
+      }
     </>
+    
   );
 }
+
+export default DeleteAccount;

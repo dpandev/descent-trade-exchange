@@ -1,12 +1,12 @@
 import { Text, Pressable, PressableProps } from 'react-native';
 import React, { Component, ReactNode } from 'react';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export interface CustomButtonProps extends PressableProps {
   children?: string | ReactNode;
   textStyles?: {};
   buttonStyles?: {};
-  icon?: React.ComponentProps<typeof FontAwesome>['name'];
+  icon?: React.ComponentProps<typeof FontAwesome5>['name'];
   iconSize?: number;
   iconColor?: string;
 }
@@ -45,7 +45,7 @@ class CustomButton extends Component<CustomButtonProps, TheState>{
           : this.props.children
         }
         {this.props.icon &&
-          <FontAwesome 
+          <FontAwesome5 
             name={this.props.icon} 
             size={this.props.iconSize} 
             color={this.props.iconColor}

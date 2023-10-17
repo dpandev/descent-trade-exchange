@@ -47,19 +47,22 @@ export default function TabOneScreen(): React.JSX.Element {
         initialNumToRender={7}
         removeClippedSubviews
         style={{width: '100%', marginTop: 25}}
-        data={newsList.map(item => ({...item})).sort((a, b) => (a.publishedAt > b.publishedAt) ? 1 : -1)}
+        data={newsList.map(item => ({...item})).sort((a, b) => (a.publishedAt < b.publishedAt) ? 1 : -1)}
         onRefresh={fetchNews}
         refreshing={isLoading}
+        keyExtractor={_keyExtractor}
         renderItem={_renderitem}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={<Text style={styles.textComponent}>no articles to display</Text>}
         ListFooterComponent={<Text style={styles.textComponent}>pull to refresh</Text>}
+        maxToRenderPerBatch={15}
       />
     </ElementView>
   );
 }
 
-const _renderitem = ({item}: {item: Article}) => <NewsItem article={item} key={item.id} />;
+const _keyExtractor = (item: Article) => item.id;
+const _renderitem = ({item}: {item: Article}) => <NewsItem article={item} />;
 
 const styles = StyleSheet.create({
   root: {

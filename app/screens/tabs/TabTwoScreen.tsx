@@ -117,22 +117,23 @@ export default function TabTwoScreen(): React.JSX.Element {
         ))}
         onRefresh={fetchAssets}
         refreshing={isLoading}
+        keyExtractor={_keyExtractor}
         renderItem={_renderitem}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={<Text style={{ textAlign: 'center', color: '#FE4A76' }}>no data to display</Text>}
         ListFooterComponent={<Text style={{ textAlign: 'center', color: '#929292' }}>pull to refresh</Text>}
+        maxToRenderPerBatch={15}
       />
     </ElementView>
   );
 }
 
+const _keyExtractor = (item: PortfolioCoinProps) => item.portfolioCoin.coin.id;
 const _renderitem = ({
-  item}: {item: PortfolioCoinProps}): React.JSX.Element => (
-  <PortfolioCoinComponent 
-    portfolioCoin={item.portfolioCoin} 
-    key={item.portfolioCoin.coin.id} 
-  />
-  );
+  item
+}: {item: PortfolioCoinProps}): React.JSX.Element => (
+  <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} />
+);
 
 const styles = StyleSheet.create({
   root: {
@@ -142,7 +143,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   balanceContainer: {
-    width: '100%',
     alignItems: 'center',
     marginVertical: 10,
   },
@@ -151,6 +151,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    color: '#772ceb',
+    color: '#2ceb77',
   },
 });

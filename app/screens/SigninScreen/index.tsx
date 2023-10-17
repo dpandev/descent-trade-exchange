@@ -1,9 +1,11 @@
 import { StyleSheet, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import React, { useState } from 'react';
-import { ElementView, Text, RoundedButton, LabelledInputField, TextButton } from '../../components/Themed';
+import { ElementView, Text, RoundedButton } from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
 import { Auth } from 'aws-amplify';
+import LabeledInput from '../../components/atoms/inputs/LabeledInput';
+import CustomButton from '../../components/atoms/buttons/CustomButton';
 
 export default function SigninScreen() {
 
@@ -11,8 +13,23 @@ export default function SigninScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  function hasWhitespace(value: string): boolean {
+    return /\s/.test(value);
+  }
+
+  function simpleValidation(email: string, password: string): boolean {
+    if (password.length < 8) {
+      throw new Error('Password is at least 8 characters in length.');
+    }
+    if (email.length < 12 || hasWhitespace(email)) {
+      throw new Error('Invalid email!');
+    }
+    return true;
+  }
+
   const onPressSignin = async (): Promise<void> => {
     try {
+      simpleValidation(email, password);
       await Auth.signIn(email, password);
     } catch(error: any) {
       if (error.message) {
@@ -40,64 +57,64 @@ export default function SigninScreen() {
       <ElementView style={styles.root}>
         <Text style={styles.title} darkColor=''>Sign in to an existing account</Text>
         <ElementView style={styles.form}>
-          <LabelledInputField 
+          <LabeledInput 
             value={email}
-            setValue={setEmail}
+            onChangeText={setEmail}
             onSubmitEditing={Keyboard.dismiss}
             label={'E-Mail'}
             placeholder={'yourname@example.com'}
             textContentType={'emailAddress'}
-            inputStyles={{ color: 'white', fontSize: 18 }}
-            selectionColor={'white'}
           />
-          <LabelledInputField 
+          <LabeledInput
             value={password}
-            setValue={setPassword}
+            onChangeText={setPassword}
             onSubmitEditing={Keyboard.dismiss}
             label={'Password'}
             secureTextEntry={true}
             placeholder={'yourpassword'}
             textContentType={'password'}
-            inputStyles={{ color: 'white', fontSize: 18 }}
-            selectionColor={'white'}
           />
-          <RoundedButton 
-            onPress={onPressSignin}
-            buttonStyles={styles.signinBtn}
-          >
+          <RoundedButton onPress={onPressSignin}>
             Sign in
           </RoundedButton>
           <SocialLoginButtons />
 
-          <TextButton
+          <CustomButton
             onPress={onPressForgotPass}
-            buttonStyles={{...styles.signupBtn, marginBottom: 15 }}
-            textStyles={styles.signupBtnText}
+            buttonStyles={[styles.button, { alignSelf: 'center' }]}
+            textStyles={styles.buttonText}
           >
             Forgot Password?
-          </TextButton>
+          </CustomButton>
 
-          <Text style={styles.signupLabel}>Don't have an account?</Text>
-          <TextButton
-            onPress={onPressSignup}
-            buttonStyles={styles.signupBtn}
-            textStyles={styles.signupBtnText}
-            icon={'angle-right'}
-            iconSize={25}
-          >
-            Sign up
-          </TextButton>
+          <ElementView style={styles.row}>
+            <Text style={styles.label}>Don't have an account?</Text>
+            <CustomButton
+              onPress={onPressSignup}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              icon='angle-right'
+              iconSize={25}
+              iconColor={styles.buttonText.color}
+            >
+              Sign up
+            </CustomButton>
+          </ElementView>
 
-          <Text style={styles.signupLabel}>Have a confirm code?</Text>
-          <TextButton
-            onPress={onPressConfirmCode}
-            buttonStyles={styles.signupBtn}
-            textStyles={styles.signupBtnText}
-            icon={'angle-right'}
-            iconSize={25}
-          >
-            Enter confirm code
-          </TextButton>
+          <ElementView style={styles.row}>
+            <Text style={styles.label}>Need to confirm code?</Text>
+            <CustomButton
+              onPress={onPressConfirmCode}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              icon='angle-right'
+              iconSize={25}
+              iconColor={styles.buttonText.color}
+            >
+              Enter code
+            </CustomButton>
+          </ElementView>
+
         </ElementView>
       </ElementView>
     </TouchableWithoutFeedback>
@@ -109,37 +126,34 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     padding: 25,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
   form: {
+    marginTop: 25,
     width: '100%',
-    maxWidth: 325,
-    justifyContent: 'center',
+    maxWidth: 400,
   },
-  signinBtn: {
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 200,
-  },
-  signupLabel: {
-    fontSize: 16,
-    marginTop: 'auto',
-  },
-  signupBtn: {
+  row: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: 10,
+    alignContent: 'center',
+    justifyContent: 'space-around',
   },
-  signupBtnText: {
+  label: {
     fontSize: 16,
-    fontWeight: 'normal',
+  },
+  button: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#71459B',
     marginRight: 10,
     marginTop: 2,
   },

@@ -50,16 +50,19 @@ export default function TradesDisplay() {
         data={tradesList.map(item => ({...item})).sort((a, b) => (a.date < b.date) ? 1 : -1)}
         onRefresh={fetchTrades}
         refreshing={isLoading}
+        keyExtractor={_keyExtractor}
         renderItem={_renderitem}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={<Text style={styles.noDataMsg}>This user has no recent trades</Text>}
+        ListEmptyComponent={<Text style={styles.noDataMsg}>no trades to display</Text>}
         ListFooterComponent={<Text style={{ textAlign: 'center', color: '#929292' }}>pull to refresh</Text>}
+        maxToRenderPerBatch={15}
       />
     </ElementView>
   );
 }
 
-const _renderitem = ({item}: {item: Trade}) => <TradeItem props={item} key={item.id} />;
+const _keyExtractor = (item: Trade) => item.id;
+const _renderitem = ({item}: {item: Trade}) => <TradeItem props={item} />;
 
 const styles = StyleSheet.create({
   root: {

@@ -175,7 +175,7 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
           <Pressable onPress={onStarPressed} disabled={isUpdatingUser}>
             {isUpdatingUser 
             ? <ActivityIndicator />
-            : <Octicons name={starActive ? 'star-fill' : 'star'} size={36} color={'#6338F1'} />
+            : <Octicons name={starActive ? 'star-fill' : 'star'} size={36} color={'#FDFD96'} />
             }
           </Pressable>
         </ElementView>

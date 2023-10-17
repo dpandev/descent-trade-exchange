@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
-import { View, Text, ElementView, ThemedButton } from '../../components/Themed';
+import { View, ElementView, ThemedButton } from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { RootStackParamList } from '../../types';
 
 export default function WelcomeScreen() {
@@ -24,8 +23,9 @@ export default function WelcomeScreen() {
             onPress={onGetStarted}
             textStyles={styles.buttonText}
             buttonStyles={styles.button}
-            icon={'angle-right'}
+            icon={'hand-point-right'}
             iconSize={25}
+            iconColor='white'
           >
             Get Started
           </ThemedButton>
@@ -76,5 +76,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
     marginRight: 15,
     fontWeight: 'bold',
+    fontSize: 22,
   },
 });

@@ -11,14 +11,14 @@ import {
   Text, 
   RoundedButton, 
   ScrollView, 
-  LabelledInputField, 
-  ThemedButton,
   KeyboardAvoidingView 
 } from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
 import { Auth } from 'aws-amplify';
 import LoadingScreenModal from '../../components/molecules/LoadingScreenModal';
+import LabeledInput from '../../components/atoms/inputs/LabeledInput';
+import CustomButton from '../../components/atoms/buttons/CustomButton';
 
 type SignupParams = {
   username: string;
@@ -40,13 +40,31 @@ export default function SignupScreen() {
     navigation.navigate('SigninScreen');
   }
 
-  function simplePasswordValidation(pass: string, confirmPass: string) {
+  function hasWhitespace(value: string): boolean {
+    return /\s/.test(value);
+  }
+
+  function validateUserEmail(email: string, username: string): boolean {
+    if (username.length > 12 || hasWhitespace(username)) {
+      throw new Error('Username must be less than 13 characters and cannot contain spaces!');
+    }
+    if (username.length < 4) {
+      throw new Error('Username must at least 4 characters and cannot contain spaces!');
+    }
+    if (hasWhitespace(email)) {
+      throw new Error('Email must not contain any spaces!');
+    }
+    return true;
+  }
+
+  function simplePasswordValidation(pass: string, confirmPass: string): boolean {
     if (pass !== confirmPass) {
       throw new Error('Passwords do no match! Please try again.');
     }
     if (pass.length < 8) {
       throw new Error('Password must be at least 8 characters in length.');
     }
+    return true;
   }
 
   const onPressSignup = async (): Promise<void> => {
@@ -64,6 +82,7 @@ export default function SignupScreen() {
     };
 
     try {
+      validateUserEmail(email, username);
       simplePasswordValidation(password, confirmPassword);
       await Auth.signUp(userData);
       navigation.navigate('ConfirmCode');
@@ -83,91 +102,68 @@ export default function SignupScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{marginTop: 50}}>
           <ElementView style={styles.root}>
-            <Text style={[styles.title, styles.lightColor]}>Create an account</Text>
+            <Text style={styles.title}>Create an account</Text>
             <ElementView style={styles.form}>
 
-              <LabelledInputField 
+              <LabeledInput 
                 value={username}
-                setValue={setUsername}
+                onChangeText={setUsername}
                 onSubmitEditing={Keyboard.dismiss}
                 label={'Username'}
-                labelStyles={styles.purpleColor}
                 placeholder={'your-username'}
-                placeholderTextColor={styles.lightColor.color}
                 textContentType={'username'}
-                keyboardAppearance={'dark'}
-                componentStyles={styles.inputContainer}
-                selectionColor={styles.purpleColor.color}
-                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
-              <LabelledInputField 
+              <LabeledInput 
                 value={email}
-                setValue={setEmail}
+                onChangeText={setEmail}
                 onSubmitEditing={Keyboard.dismiss}
                 label={'E-Mail'}
-                labelStyles={styles.purpleColor}
                 placeholder={'yourname@example.com'}
-                placeholderTextColor={styles.lightColor.color}
                 textContentType={'emailAddress'}
-                keyboardAppearance={'dark'}
-                componentStyles={styles.inputContainer}
-                selectionColor={styles.purpleColor.color}
-                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
-              <LabelledInputField 
+              <LabeledInput 
                 value={password}
-                setValue={setPassword}
+                onChangeText={setPassword}
                 onSubmitEditing={Keyboard.dismiss}
                 label={'Password'}
-                labelStyles={styles.purpleColor}
                 secureTextEntry={true}
                 placeholder={'yourpassword'}
-                placeholderTextColor={styles.lightColor.color}
                 textContentType={'password'}
-                keyboardAppearance={'dark'}
-                componentStyles={styles.inputContainer}
-                selectionColor={styles.purpleColor.color}
-                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
-              <LabelledInputField 
+              <LabeledInput 
                 value={confirmPassword}
-                setValue={setConfirmPassword}
+                onChangeText={setConfirmPassword}
                 onSubmitEditing={Keyboard.dismiss}
                 label='Confirm Password'
-                labelStyles={styles.purpleColor}
                 secureTextEntry={true}
                 placeholder={'confirmpassword'}
-                placeholderTextColor={styles.lightColor.color}
                 textContentType={'password'}
                 keyboardAppearance={'dark'}
-                componentStyles={styles.inputContainer}
-                selectionColor={styles.purpleColor.color}
-                inputStyles={{ color: 'white', fontSize: 18 }}
               />
 
-              <RoundedButton
-                onPress={onPressSignup}
-                buttonStyles={styles.signupBtn}
-              >
+              <RoundedButton onPress={onPressSignup}>
                 Sign up
               </RoundedButton>
 
               <SocialLoginButtons />
 
-              <Text style={[styles.signinLabel, styles.lightColor]}>Already have an account?</Text>
-
-              <ThemedButton
-                onPress={onPressSignin}
-                buttonStyles={styles.signinBtn}
-                textStyles={styles.signinBtnText}
-                icon='angle-right'
-                iconSize={25}
-              >
-                Sign in
-              </ThemedButton>
+              <ElementView style={styles.row}>
+                <Text style={styles.label}>Already have an account?</Text>
+                <CustomButton
+                  onPress={onPressSignin}
+                  buttonStyles={styles.button}
+                  textStyles={styles.buttonText}
+                  icon='angle-right'
+                  iconSize={25}
+                  iconColor={styles.buttonText.color}
+                >
+                  Sign in
+                </CustomButton>
+              </ElementView>
+              
             </ElementView>
           </ElementView>
         </ScrollView>
@@ -184,8 +180,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
-    height: '100%',
     padding: 25,
   },
   title: {
@@ -193,42 +187,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   form: {
+    marginTop: 15,
     width: '100%',
+    maxWidth: 400,
   },
-  inputContainer: {
-    borderBottomColor: '#D1D1D1',
-  },
-  purpleColor: {
-    color: '#772ceb',
-  },
-  lightColor: {
-    color: '#D1D1D1',
-  },
-  signupBtn: {
-    // alignSelf: 'center',
-    // padding: 30,
-    // maxWidth: 275,
-    marginBottom: 'auto',
-  },
-  signinLabel: {
-    fontSize: 16,
-    marginTop: 'auto',
-  },
-  signinBtn: {
+  row: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-    borderWidth: 0,
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 0,
-    marginHorizontal: 0,
-    marginVertical: 0,
+    alignContent: 'center',
+    justifyContent: 'space-around',
   },
-  signinBtnText: {
+  label: {
     fontSize: 16,
-    fontWeight: 'normal',
-    color: '#6338F1',
+  },
+  button: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#71459B',
     marginRight: 10,
     marginTop: 2,
   },

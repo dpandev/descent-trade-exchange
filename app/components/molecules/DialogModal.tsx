@@ -2,26 +2,20 @@ import { StyleSheet, Modal, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { FontAwesome } from '@expo/vector-icons';
 import { ElementView, Text, ThemedButton } from '../../components/Themed';
-import LoadingScreenModal from './LoadingScreenModal';
-import LabeledInput, { LabeledInputProps } from '../atoms/inputs/LabeledInput';
 
-interface DialogInputModalProps {
-  visible: boolean;
+export interface DialogModalProps {
+  visible: boolean,
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  action: () => void;
-  label: LabeledInputProps ;
   title?: string;
   statement?: string;
 }
 
-const DialogInputModal = ({ 
-  visible, 
-  setVisible, 
-  action,
-  label, 
+const DialogModal = ({ 
+  visible,
+  setVisible,
   title, 
-  statement
-}: DialogInputModalProps) => {
+  statement,
+}: DialogModalProps) => {
   return (
     <Modal
       animationType='none'
@@ -40,16 +34,9 @@ const DialogInputModal = ({
           {statement && 
             <Text style={styles.statement}>{statement}</Text>
           }
-          <ElementView style={styles.input}>
-            <LabeledInput
-              placeholderTextColor={styles.inputContainer.color}
-              viewStyle={styles.inputContainer}
-              {...label}
-            />
-          </ElementView>
           <ElementView style={styles.bottomBar}>
-            <ThemedButton onPress={action} buttonStyles={styles.submitBtn}>
-              <Text style={styles.submitBtnText}>Enter</Text>
+            <ThemedButton buttonStyles={styles.submitBtn} onPress={() => setVisible(!visible)}>
+              <Text style={styles.submitBtnText}>Email Us</Text>
             </ThemedButton>
           </ElementView>
         </ElementView>
@@ -58,7 +45,7 @@ const DialogInputModal = ({
   );
 }
 
-export default DialogInputModal;
+export default DialogModal;
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -74,10 +61,11 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   title: {
-    flex: 9,
+    flex: 8,
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginLeft: 30,
   },
   closeBtn: {
     flex: 1,
@@ -98,17 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 5,
     fontSize: 15,
-  },
-  input: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    marginHorizontal: 10,
-    marginVertical: 4,
-  },
-  inputContainer: {
-    borderBottomWidth: 0,
-    marginVertical: 5,
-    color: 'gray',
+    textAlign: 'center',
   },
   submitBtn: {
     marginTop: 8,
