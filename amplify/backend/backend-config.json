@@ -110,6 +110,22 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "descentAPIupdateUserNetworths": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "descentgql"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "descentauth1PostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -154,6 +170,22 @@
         {
           "category": "function",
           "resourceName": "descentAPIupdateCoins"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIupdateUserNetworths_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIupdateUserNetworths"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIupdateUserNetworths_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIupdateUserNetworths"
         }
       ]
     },

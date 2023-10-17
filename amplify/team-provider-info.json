@@ -30,6 +30,10 @@
         "descentAPIcreateArticles": {
           "deploymentBucketName": "amplify-amplify02141e02e8b84-staging-151844-deployment",
           "s3Key": "amplify-builds/descentAPIcreateArticles-4a37784d563062614661-build.zip"
+        },
+        "descentAPIupdateUserNetworths": {
+          "deploymentBucketName": "amplify-amplify02141e02e8b84-staging-151844-deployment",
+          "s3Key": "amplify-builds/descentAPIupdateUserNetworths-3664744644654f327959-build.zip"
         }
       },
       "api": {

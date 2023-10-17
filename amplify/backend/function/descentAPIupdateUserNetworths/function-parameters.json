@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "api": {
+      "descentgql": [
+        "Query",
+        "Mutation"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
