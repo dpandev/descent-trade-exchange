@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "descent-trade-exchange",
-    "slug": "descent-trade-exchange",
+    "name": "descent-exchange",
+    "slug": "descent-exchange",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "descent",
@@ -14,6 +14,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "io.corewebstudios.descentexchange",
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
@@ -23,16 +25,26 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#000000"
-      }
+      },
+      "package": "io.corewebstudios.descentexchange",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "486f42dd-973e-4293-9dc6-c7dc943f9a6b"
+        "projectId": "2daa7929-0acd-4130-af8c-c81f4f887936"
       }
     },
-    "owner": "dpandev"
+    "owner": "dpandev",
+    "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "dpandev"
+        }
+      ]
+    ]
   }
 }
