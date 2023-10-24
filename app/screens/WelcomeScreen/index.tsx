@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
-import { View, ElementView, ThemedButton } from '../../components/Themed';
+import { View, ElementView } from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types';
+import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
 
 export default function WelcomeScreen() {
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
@@ -14,23 +15,23 @@ export default function WelcomeScreen() {
   return (
     <View style={styles.root}>
       <ImageBackground 
-        source={require('../../../assets/images/splash.png')}
-        resizeMode='cover'
+        source={require('../../../assets/images/title-icon.png')}
+        resizeMode='contain'
         style={styles.bgImage}
-      >
-        <ElementView style={styles.inner}>
-          <ThemedButton
-            onPress={onGetStarted}
-            textStyles={styles.buttonText}
-            buttonStyles={styles.button}
-            icon={'hand-point-right'}
-            iconSize={25}
-            iconColor='white'
-          >
-            Get Started
-          </ThemedButton>
-        </ElementView>
-      </ImageBackground>
+      />
+      <ElementView style={styles.inner}>
+        {/* <ThemedButton
+          onPress={onGetStarted}
+          textStyles={styles.buttonText}
+          buttonStyles={styles.button}
+          icon={'hand-point-right'}
+          iconSize={25}
+          iconColor='white'
+        >
+          Get Started
+        </ThemedButton> */}
+        <SocialLoginButtons email apple google />
+      </ElementView>
     </View>
   );
 }
@@ -45,23 +46,12 @@ const styles = StyleSheet.create({
   bgImage: {
     flex: 1,
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    maxHeight: 400,
   },
   inner: {
-    padding: 25,
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  title: {
-    fontFamily: 'Bradley Hand',
-    fontSize: 22,
-    color: 'white',
-    textAlign: 'center',
-  },
-  row: {
-    flexDirection: 'row',
+    marginTop: 40,
+    width: '100%',
+    maxWidth: 300,
   },
   button: {
     marginTop: 100,

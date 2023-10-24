@@ -148,7 +148,7 @@ export default function SignupScreen() {
                 Sign up
               </RoundedButton>
 
-              <SocialLoginButtons />
+              <SocialLoginButtons apple google />
 
               <ElementView style={styles.row}>
                 <Text style={styles.label}>Already have an account?</Text>

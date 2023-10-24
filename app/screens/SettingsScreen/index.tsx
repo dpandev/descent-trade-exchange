@@ -6,6 +6,7 @@ import DeleteAccount from './DeleteAccount';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import DialogModal from '../../components/molecules/DialogModal';
 import { openBrowserAsync } from 'expo-web-browser';
+import { useAuthContext } from '../../utils/AuthContext';
 
 export default function SettingsScreen() {
   type Dialog = {
@@ -16,6 +17,7 @@ export default function SettingsScreen() {
   const [accountDel, setAccountDel] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [dialogContent, setDialogContent] = useState<Dialog>({ title: '', message: '' });
+  const { user } = useAuthContext();
 
   const openLink = (url: string): void => {
     openBrowserAsync(url);
@@ -33,7 +35,7 @@ export default function SettingsScreen() {
     setVisible(true);
     setDialogContent({
       title: 'Help & Support',
-      message: 'For any inquiries, send our team an email at team@corewebstudios.io',
+      message: `For any inquiries, send our team an email at team@corewebstudios.io\n\nUUID: ${user?.id}`,
     });
   }
 
@@ -46,7 +48,7 @@ export default function SettingsScreen() {
   }
 
   const onPrivacy = (): void => {
-    openLink('https://corewebstudios.io/privacy-policy/');
+    openLink('https://corewebstudios.io/privacy');
   }
 
   return (

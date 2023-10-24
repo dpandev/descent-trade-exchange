@@ -22,7 +22,7 @@ export default function PageHeader({ title }: PageHeaderProps) {
       <ElementView style={styles.row}>
         <Text style={styles.title}>{title}</Text>
         <AlternateButton 
-          icon={{ name: 'gears', size: 36, color: 'white', inactiveColor: '#929292' }}
+          icon={{ name: 'cogs', size: 32, color: 'white', inactiveColor: '#929292' }}
           style={{ padding: 4 }}
           onPress={onIconPress}
         />

@@ -1,9 +1,9 @@
-import { ColorValue, Pressable, PressableProps, StyleProp, ViewStyle } from 'react-native';
-import React, { useState } from 'react';
-import { FontAwesome } from '@expo/vector-icons';
+import { Text, ColorValue, Pressable, PressableProps, StyleProp, ViewStyle, TextProps } from 'react-native';
+import React, { ReactNode, useState } from 'react';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export interface AlternateButtonIconProps {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof FontAwesome5>['name'];
   size?: number;
   color?: ColorValue;
   inactiveColor?: ColorValue;
@@ -13,6 +13,8 @@ export interface AlternateButtonProps extends PressableProps {
   icon?: AlternateButtonIconProps;
   activeStyle?: StyleProp<ViewStyle>;
   inactiveStyle?: StyleProp<ViewStyle>;
+  children?: ReactNode | string;
+  textStyle?: TextProps['style'];
 }
 
 export const AlternateButton = (props: AlternateButtonProps): React.JSX.Element => {
@@ -34,16 +36,17 @@ export const AlternateButton = (props: AlternateButtonProps): React.JSX.Element 
       }
       {...props}
     >
-      <>
-        {props.children}
+        {typeof props.children === 'string'
+          ? <Text style={props.textStyle}>{props.children}</Text>
+          : props.children
+        }
         {props.icon?.name &&
-          <FontAwesome 
+          <FontAwesome5 
             name={props.icon.name} 
             size={props.icon.size} 
             color={(activeTouch ? props.icon.color : props.icon.inactiveColor || props.icon.color) || 'white'}
           />
         }
-      </>
     </Pressable>
   );
 }

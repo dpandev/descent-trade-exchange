@@ -1,4 +1,4 @@
-import { Text, Pressable, PressableProps } from 'react-native';
+import { Text, Pressable, PressableProps, ColorValue } from 'react-native';
 import React, { Component, ReactNode } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -8,7 +8,7 @@ export interface CustomButtonProps extends PressableProps {
   buttonStyles?: {};
   icon?: React.ComponentProps<typeof FontAwesome5>['name'];
   iconSize?: number;
-  iconColor?: string;
+  iconColor?: ColorValue;
 }
 
 export interface TheState {

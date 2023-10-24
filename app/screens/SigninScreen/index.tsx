@@ -77,7 +77,7 @@ export default function SigninScreen() {
           <RoundedButton onPress={onPressSignin}>
             Sign in
           </RoundedButton>
-          <SocialLoginButtons />
+          <SocialLoginButtons apple google />
 
           <CustomButton
             onPress={onPressForgotPass}

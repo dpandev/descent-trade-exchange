@@ -138,30 +138,56 @@ export function ThemedButton(props: ThemeableButtonProps) {
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'tint' : 'secondary'),
     ...buttonStyles,
   }
+
   return (
-    <CustomButton 
-      textStyles={txtStyle} 
-      buttonStyles={
-        //changes style if button is being pressed
-        ({pressed}: {pressed: PressableStateCallbackType}) => {
-          return [pressed ? btnStylePressed : btnStyle]}
-      }
-      {...otherProps} 
+    // <CustomButton 
+    //   textStyles={txtStyle} 
+    //   buttonStyles={
+    //     //changes style if button is being pressed
+    //     ({pressed}: {pressed: PressableStateCallbackType}) => {
+    //       return [pressed ? btnStylePressed : btnStyle]}
+    //   }
+    //   {...otherProps} 
+    // />
+    <DefaultAlternateButton 
+      activeStyle={btnStylePressed}
+      inactiveStyle={btnStyle}
+      textStyle={txtStyle}
+      {...otherProps}
     />
   );
 }
 
 export function AlternateThemedButton(props: AlternateThemeButtonProps): ReactElement {
-  const { inverted=false, icon, style, activeStyle, inactiveStyle, lightColor, darkColor, ...otherProps } = props;
+  const { inverted=false, icon, textStyle, style, activeStyle, inactiveStyle, lightColor, darkColor, ...otherProps } = props;
+  const defaultTxtStyles: AlternateButtonProps['textStyle'] = { 
+    fontWeight: 'bold',
+    letterSpacing: 0.45,
+    marginRight: icon ? 15 : 0,
+    // color: 'white',
+    ...{textStyle},
+  }
+  const defaultBtnStyles: AlternateButtonProps['style'] = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: icon ? 'space-evenly' : 'center',
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 14,
+  }
   const inactiveStylesThemed: AlternateThemeButtonProps['inactiveStyle'] = {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
+    ...defaultBtnStyles,
     ...{inactiveStyle},
     ...{style},
   }
   const activeStylesThemed: AlternateButtonProps['activeStyle'] = {
     backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
     borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'secondary'),
+    ...defaultBtnStyles,
     ...{activeStyle},
     ...{style},
   }
@@ -169,6 +195,8 @@ export function AlternateThemedButton(props: AlternateThemeButtonProps): ReactEl
     <DefaultAlternateButton 
       activeStyle={activeStylesThemed}
       inactiveStyle={inactiveStylesThemed}
+      textStyle={defaultTxtStyles}
+      icon={icon}
       {...otherProps}
     />
   );
@@ -180,7 +208,7 @@ export function AlternateThemedButton(props: AlternateThemeButtonProps): ReactEl
  * @returns a themed rounded button
  */
 export function RoundedButton(props: ThemeableButtonProps) {
-  const { inverted, icon, iconColor, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
+  const { inverted, icon, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
   const defaultTxtStyles = { 
     fontWeight: 'bold',
     letterSpacing: 0.45,
@@ -204,43 +232,10 @@ export function RoundedButton(props: ThemeableButtonProps) {
       textStyles={defaultTxtStyles}
       buttonStyles={defaultBtnStyles} 
       inverted={inverted}
+      icon={icon}
       {...otherProps} 
     />
   );
-}
-
-/**
- * Themed button with styling specific for a small follow button.
- * @param props 
- * @returns a themed small squared button
- */
-export function FollowButton(props: ThemeableButtonProps) {
-  const { inverted, activeState, textStyles, buttonStyles, lightColor, darkColor, ...otherProps } = props;
-  const txtStyle = { 
-    color: useThemeColor({ light: lightColor, dark: darkColor }, 'text'),
-    ...textStyles,
-  }
-  const btnStyle = {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 6,
-    borderWidth: 2,
-    width: 80,
-    height: 35,
-  }
-  const colored = {
-    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
-    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'secondary' : 'primary'),
-    ...btnStyle,
-    ...buttonStyles,
-  }
-  const transparent = {
-    backgroundColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'transparent'),
-    borderColor: useThemeColor({ light: lightColor, dark: darkColor }, inverted ? 'primary' : 'transparent'),
-    ...btnStyle,
-    ...buttonStyles,
-  }
-  return <ActivatedButton buttonStyles={activeState ? transparent : colored} textStyles={txtStyle} inverted={inverted} {...otherProps} />;
 }
 
 /**
