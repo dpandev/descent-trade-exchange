@@ -3,7 +3,7 @@ import * as Linking from 'expo-linking';
 import { RootStackParamList } from '../types';
 
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [Linking.createURL('descent-exchange://')],
+  prefixes: [Linking.createURL('descentexchange://')],
   // config: {
   //   screens: {
   //     Root: {

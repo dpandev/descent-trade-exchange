@@ -4,7 +4,7 @@
     "slug": "descent-exchange",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "descent-exchange",
+    "scheme": "descentexchange",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
