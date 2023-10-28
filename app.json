@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "descent-exchange",
+    "name": "Descent Trade",
     "slug": "descent-exchange",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "descent",
+    "scheme": "descent-exchange",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
