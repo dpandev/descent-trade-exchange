@@ -40,12 +40,12 @@
         "projectId": "2daa7929-0acd-4130-af8c-c81f4f887936"
       }
     },
-    "owner": "dpandev",
+    "owner": "corewebstudios",
     "plugins": [
       [
         "expo-updates",
         {
-          "username": "dpandev"
+          "username": "corewebstudios"
         }
       ]
     ],
@@ -53,7 +53,7 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/2daa7929-0acd-4130-af8c-c81f4f887936"
+      "url": "https://u.expo.dev/2daa7929-0acd-4130-af8c-c81f4f887936?runtime-version=1.0.0&channel-name=production&platform=ios"
     }
   }
 }
