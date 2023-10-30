@@ -1,7 +1,7 @@
 import { Alert, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import DialogInputModal from '../../components/molecules/DialogInputModal';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { AmplifyGraphQLResult } from '../../types';
 import { deleteUser } from '../../../src/graphql/mutations';

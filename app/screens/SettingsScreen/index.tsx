@@ -6,7 +6,7 @@ import DeleteAccount from './DeleteAccount';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import DialogModal from '../../components/molecules/DialogModal';
 import { openBrowserAsync } from 'expo-web-browser';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 
 export default function SettingsScreen() {
   type Dialog = {

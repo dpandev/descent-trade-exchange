@@ -19,6 +19,7 @@ import { Auth } from 'aws-amplify';
 import LoadingScreenModal from '../../components/molecules/LoadingScreenModal';
 import LabeledInput from '../../components/atoms/inputs/LabeledInput';
 import CustomButton from '../../components/atoms/buttons/CustomButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type SignupParams = {
   username: string;
@@ -98,80 +99,82 @@ export default function SignupScreen() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{marginTop: 50}}>
-          <ElementView style={styles.root}>
-            <Text style={styles.title}>Create an account</Text>
-            <ElementView style={styles.form}>
+    <SafeAreaView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <ElementView style={styles.root}>
+              <Text style={styles.title}>Create an account</Text>
+              <ElementView style={styles.form}>
 
-              <LabeledInput 
-                value={username}
-                onChangeText={setUsername}
-                onSubmitEditing={Keyboard.dismiss}
-                label={'Username'}
-                placeholder={'your-username'}
-                textContentType={'username'}
-              />
+                <LabeledInput 
+                  value={username}
+                  onChangeText={setUsername}
+                  onSubmitEditing={Keyboard.dismiss}
+                  label={'Username'}
+                  placeholder={'your-username'}
+                  textContentType={'username'}
+                />
 
-              <LabeledInput 
-                value={email}
-                onChangeText={setEmail}
-                onSubmitEditing={Keyboard.dismiss}
-                label={'E-Mail'}
-                placeholder={'yourname@example.com'}
-                textContentType={'emailAddress'}
-              />
+                <LabeledInput 
+                  value={email}
+                  onChangeText={setEmail}
+                  onSubmitEditing={Keyboard.dismiss}
+                  label={'E-Mail'}
+                  placeholder={'yourname@example.com'}
+                  textContentType={'emailAddress'}
+                />
 
-              <LabeledInput 
-                value={password}
-                onChangeText={setPassword}
-                onSubmitEditing={Keyboard.dismiss}
-                label={'Password'}
-                secureTextEntry={true}
-                placeholder={'yourpassword'}
-                textContentType={'password'}
-              />
+                <LabeledInput 
+                  value={password}
+                  onChangeText={setPassword}
+                  onSubmitEditing={Keyboard.dismiss}
+                  label={'Password'}
+                  secureTextEntry={true}
+                  placeholder={'yourpassword'}
+                  textContentType={'password'}
+                />
 
-              <LabeledInput 
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                onSubmitEditing={Keyboard.dismiss}
-                label='Confirm Password'
-                secureTextEntry={true}
-                placeholder={'confirmpassword'}
-                textContentType={'password'}
-                keyboardAppearance={'dark'}
-              />
+                <LabeledInput 
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  onSubmitEditing={Keyboard.dismiss}
+                  label='Confirm Password'
+                  secureTextEntry={true}
+                  placeholder={'confirmpassword'}
+                  textContentType={'password'}
+                  keyboardAppearance={'dark'}
+                />
 
-              <RoundedButton onPress={onPressSignup}>
-                Sign up
-              </RoundedButton>
+                <RoundedButton onPress={onPressSignup}>
+                  Sign up
+                </RoundedButton>
 
-              <SocialLoginButtons apple google />
+                <SocialLoginButtons apple google />
 
-              <ElementView style={styles.row}>
-                <Text style={styles.label}>Already have an account?</Text>
-                <CustomButton
-                  onPress={onPressSignin}
-                  buttonStyles={styles.button}
-                  textStyles={styles.buttonText}
-                  icon='angle-right'
-                  iconSize={25}
-                  iconColor={styles.buttonText.color}
-                >
-                  Sign in
-                </CustomButton>
+                <ElementView style={styles.row}>
+                  <Text style={styles.label}>Already have an account?</Text>
+                  <CustomButton
+                    onPress={onPressSignin}
+                    buttonStyles={styles.button}
+                    textStyles={styles.buttonText}
+                    icon='angle-right'
+                    iconSize={25}
+                    iconColor={styles.buttonText.color}
+                  >
+                    Sign in
+                  </CustomButton>
+                </ElementView>
+                
               </ElementView>
-              
             </ElementView>
-          </ElementView>
-        </ScrollView>
-        {isLoading &&
-          <LoadingScreenModal visible={isLoading} title={'Logging you in...'} />
-        }
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+          </ScrollView>
+          {isLoading &&
+            <LoadingScreenModal visible={isLoading} title={'Logging you in...'} />
+          }
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 }
 
@@ -183,7 +186,7 @@ const styles = StyleSheet.create({
     padding: 25,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   form: {

@@ -6,6 +6,7 @@ import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButton
 import { Auth } from 'aws-amplify';
 import LabeledInput from '../../components/atoms/inputs/LabeledInput';
 import CustomButton from '../../components/atoms/buttons/CustomButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SigninScreen() {
 
@@ -54,7 +55,7 @@ export default function SigninScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <ElementView style={styles.root}>
+      <SafeAreaView style={styles.root}>
         <Text style={styles.title} darkColor=''>Sign in to an existing account</Text>
         <ElementView style={styles.form}>
           <LabeledInput 
@@ -116,7 +117,7 @@ export default function SigninScreen() {
           </ElementView>
 
         </ElementView>
-      </ElementView>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 }
@@ -129,7 +130,8 @@ const styles = StyleSheet.create({
     padding: 25,
   },
   title: {
-    fontSize: 24,
+    marginTop: 25,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   form: {
@@ -141,7 +143,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignContent: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   label: {
     fontSize: 16,

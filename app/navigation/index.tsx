@@ -3,7 +3,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/
 import LinkingConfig from './LinkingConfig';
 import { ColorSchemeName } from 'react-native';
 import RootStackNavigator from './RootStackNavigator';
-import { AuthProvider } from '../utils/AuthContext';
+import { AuthProvider } from '../hooks/AuthContext';
 
 export default function index({ colorScheme }: { colorScheme: ColorSchemeName }) {
 

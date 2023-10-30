@@ -20,7 +20,7 @@ export default function BottomTabNavigator(): React.JSX.Element {
         tabBarActiveTintColor: Colors[colorScheme].tabIconSelected,
         tabBarStyle: {
           backgroundColor: Colors[colorScheme].primary,
-          height: 105,
+          height: '12%',
           borderTopWidth: 0,
         },
         tabBarShowLabel: false,

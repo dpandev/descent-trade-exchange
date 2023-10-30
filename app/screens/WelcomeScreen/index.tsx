@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, ImageBackground } from 'react-native';
-import { View, ElementView } from '../../components/Themed';
+import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
+import { ElementView } from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../types';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
@@ -13,26 +13,16 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <ImageBackground 
         source={require('../../../assets/images/title-icon.png')}
         resizeMode='contain'
         style={styles.bgImage}
       />
       <ElementView style={styles.inner}>
-        {/* <ThemedButton
-          onPress={onGetStarted}
-          textStyles={styles.buttonText}
-          buttonStyles={styles.button}
-          icon={'hand-point-right'}
-          iconSize={25}
-          iconColor='white'
-        >
-          Get Started
-        </ThemedButton> */}
         <SocialLoginButtons email apple google />
       </ElementView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -45,6 +35,7 @@ const styles = StyleSheet.create({
   },
   bgImage: {
     flex: 1,
+    marginTop: 10,
     width: '100%',
     maxHeight: 400,
   },

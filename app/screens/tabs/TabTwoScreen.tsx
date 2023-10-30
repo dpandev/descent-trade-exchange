@@ -6,7 +6,7 @@ import { PreciseMoney } from '../../components/FormattedTextElements';
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { Coin, GetUserQuery, ListCoinsQuery, PortfolioCoin, PortfolioCoinsByUserIDQuery, User } from '../../../src/API';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 import { getUser, listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../../types';
 

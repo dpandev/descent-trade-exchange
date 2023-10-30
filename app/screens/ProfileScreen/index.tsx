@@ -8,7 +8,7 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { getUser } from '../../../src/graphql/queries';
 import { GetUserQuery, User } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
-import { AuthUserType } from '../../utils/AuthContext';
+import { AuthUserType } from '../../hooks/AuthContext';
 
 export default function ProfileScreen({user}: {user: AuthUserType}) {
   const [userData, setUserData] = useState<User | null>(null);

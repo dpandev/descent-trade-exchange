@@ -60,7 +60,6 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
           signedOut = true;
           break;
         default:
-          console.log('event:', event);
           break;
       }
     });

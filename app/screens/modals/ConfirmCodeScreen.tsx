@@ -1,11 +1,10 @@
 import { Alert, Keyboard, Platform, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RoundedButton, ElementView, LabelledInputField, KeyboardAvoidingView, Text } from '../../components/Themed';
+import { RoundedButton, ElementView, KeyboardAvoidingView, Text } from '../../components/Themed';
 import { RootStackParamList } from '../../types';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import { useAuthContext } from '../../utils/AuthContext';
-import LoadingScreenModal from '../../components/molecules/LoadingScreenModal';
+import LabeledInput from '../../components/atoms/inputs/LabeledInput';
 
 export default function ConfirmCodeScreen({
   navigation
@@ -40,36 +39,24 @@ export default function ConfirmCodeScreen({
         <ElementView style={styles.root}>
           <Text>Check your email for the confirm code</Text>
           <ElementView style={styles.form}>
-            <LabelledInputField 
+            <LabeledInput
               value={username}
-              setValue={setUsername}
+              onChangeText={setUsername}
               onSubmitEditing={Keyboard.dismiss}
               label={'Email'}
-              labelStyles={styles.label}
               placeholder={'yourname@example.com'}
-              placeholderTextColor={styles.inputContainer.borderBottomColor}
               textContentType={'emailAddress'}
-              keyboardAppearance={'dark'}
-              componentStyles={styles.inputContainer}
-              inputStyles={{ color: 'white' }}
-              selectionColor={styles.label.color}
             />
-            <LabelledInputField 
+            <LabeledInput
               value={code}
-              setValue={setCode}
+              onChangeText={setCode}
               onSubmitEditing={Keyboard.dismiss}
               label={'Confirmation Code'}
-              labelStyles={styles.label}
               placeholder={'type code here...'}
-              placeholderTextColor={styles.inputContainer.borderBottomColor}
               textContentType={'username'}
-              keyboardAppearance={'dark'}
-              componentStyles={styles.inputContainer}
-              inputStyles={{ color: 'white' }}
-              selectionColor={styles.label.color}
             />
             <RoundedButton onPress={onPressConfirm}>
-              Confirm Code
+              Confirm Account
             </RoundedButton>
           </ElementView>
         </ElementView>
@@ -85,21 +72,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
   form: {
     width: '100%',
     maxWidth: 300,
-  },
-  inputContainer: {
-    borderBottomColor: '#D1D1D1',
-  },
-  label: {
-    color: '#772ceb',
-    fontSize: 28,
-    marginBottom: 25,
-    letterSpacing: 0.50,
   },
 });

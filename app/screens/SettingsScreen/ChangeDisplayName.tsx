@@ -2,7 +2,7 @@ import { Alert, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import { LabelledInputFieldProps } from '../../components/Themed';
 import DialogInputModal from '../../components/molecules/DialogInputModal';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 import { API, graphqlOperation } from 'aws-amplify';
 import { AmplifyGraphQLResult } from '../../types';
 import { updateUser } from '../../../src/graphql/mutations';

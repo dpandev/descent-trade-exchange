@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getUser, listCoins } from '../../../src/graphql/queries';
 import { Coin, GetUserQuery, ListCoinsQuery } from '../../../src/API';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 import CoinListing from '../../components/organisms/CoinListing';
 import { AmplifyGraphQLResult } from '../../types';
 
@@ -76,68 +76,68 @@ export default function MarketListScreen() {
   }
 
   return (
-      <ElementView style={styles.root}>
-        <ElementView style={styles.header}>
-          <ElementView inverted style={styles.buttonsContainer}>
-            <ActivatedButton
-              activeState={componentTab === ComponentTabItem.byHour}
-              buttonStyles={styles.button}
-              textStyles={styles.buttonText}
-              onPress={() => onButtonPress(ComponentTabItem.byHour)}
-            >
-              {ComponentTabItem.byHour}
-            </ActivatedButton>
-            <ActivatedButton
-              activeState={componentTab === ComponentTabItem.byDay}
-              buttonStyles={styles.button}
-              textStyles={styles.buttonText}
-              onPress={() => onButtonPress(ComponentTabItem.byDay)}
-            >
-              {ComponentTabItem.byDay}
-            </ActivatedButton>
-            <ActivatedButton
-              activeState={componentTab === ComponentTabItem.watchlist}
-              buttonStyles={styles.button}
-              textStyles={styles.buttonText}
-              onPress={() => onButtonPress(ComponentTabItem.watchlist)}
-            >
-              {ComponentTabItem.watchlist}
-            </ActivatedButton>
-          </ElementView>
-        </ElementView>
-        <ElementView style={styles.tabComponent}>
-          {componentTab === ComponentTabItem.byHour &&
-            <CoinListing 
-              props={{ 
-                data: sortByTrendingHour(), 
-                refreshFunction: fetchData, 
-                isLoading: isLoading,
-                sortType: ComponentTabItem.byHour, 
-              }} 
-            />
-          }
-          {componentTab === ComponentTabItem.byDay &&
-            <CoinListing 
-              props={{ 
-                data: sortByTrendingDay(), 
-                refreshFunction: fetchData, 
-                isLoading: isLoading,
-                sortType: ComponentTabItem.byDay, 
-              }} 
-            />
-          }
-          {componentTab === ComponentTabItem.watchlist &&
-            <CoinListing 
-              props={{ 
-                data: getWatchlist(), 
-                refreshFunction: fetchData, 
-                isLoading: isLoading,
-                sortType: ComponentTabItem.watchlist, 
-              }} 
-            />
-          }
+    <ElementView style={styles.root}>
+      <ElementView style={styles.header}>
+        <ElementView inverted style={styles.buttonsContainer}>
+          <ActivatedButton
+            activeState={componentTab === ComponentTabItem.byHour}
+            buttonStyles={styles.button}
+            textStyles={styles.buttonText}
+            onPress={() => onButtonPress(ComponentTabItem.byHour)}
+          >
+            {ComponentTabItem.byHour}
+          </ActivatedButton>
+          <ActivatedButton
+            activeState={componentTab === ComponentTabItem.byDay}
+            buttonStyles={styles.button}
+            textStyles={styles.buttonText}
+            onPress={() => onButtonPress(ComponentTabItem.byDay)}
+          >
+            {ComponentTabItem.byDay}
+          </ActivatedButton>
+          <ActivatedButton
+            activeState={componentTab === ComponentTabItem.watchlist}
+            buttonStyles={styles.button}
+            textStyles={styles.buttonText}
+            onPress={() => onButtonPress(ComponentTabItem.watchlist)}
+          >
+            {ComponentTabItem.watchlist}
+          </ActivatedButton>
         </ElementView>
       </ElementView>
+      <ElementView style={styles.tabComponent}>
+        {componentTab === ComponentTabItem.byHour &&
+          <CoinListing 
+            props={{ 
+              data: sortByTrendingHour(), 
+              refreshFunction: fetchData, 
+              isLoading: isLoading,
+              sortType: ComponentTabItem.byHour, 
+            }} 
+          />
+        }
+        {componentTab === ComponentTabItem.byDay &&
+          <CoinListing 
+            props={{ 
+              data: sortByTrendingDay(), 
+              refreshFunction: fetchData, 
+              isLoading: isLoading,
+              sortType: ComponentTabItem.byDay, 
+            }} 
+          />
+        }
+        {componentTab === ComponentTabItem.watchlist &&
+          <CoinListing 
+            props={{ 
+              data: getWatchlist(), 
+              refreshFunction: fetchData, 
+              isLoading: isLoading,
+              sortType: ComponentTabItem.watchlist, 
+            }} 
+          />
+        }
+      </ElementView>
+    </ElementView>
   );
 }
 

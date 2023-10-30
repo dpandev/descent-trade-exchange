@@ -20,7 +20,7 @@ import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navig
 import { AmplifyGraphQLResult, RootStackParamList, RootTabParamList } from '../../types';
 import { getPortfolioCoin } from '../../../src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 import { GetPortfolioCoinQuery, PortfolioCoin } from '../../../src/API';
 import { exchangeCoins, exchangeCoinsNew } from './mutations';
 import { Octicons } from '@expo/vector-icons';

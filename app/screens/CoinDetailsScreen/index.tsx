@@ -7,7 +7,7 @@ import { PercentageChange, PreciseMoney } from "../../components/FormattedTextEl
 import CoinPriceGraph from "../../components/organisms/PriceGraph";
 import { API, graphqlOperation } from 'aws-amplify';
 import { getCoin, getPortfolioCoin, getUser } from '../../../src/graphql/queries';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 import { Coin, GetCoinQuery, GetPortfolioCoinQuery, GetUserQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackScreenProps } from '../../types';
 import { updateUser } from '../../../src/graphql/mutations';

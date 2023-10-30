@@ -9,7 +9,7 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import CoinDetailsScreen from '../screens/CoinDetailsScreen';
 import CoinExchangeScreen from '../screens/CoinExchangeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import { useAuthContext } from "../utils/AuthContext";
+import { useAuthContext } from "../hooks/AuthContext";
 import AuthStackNavigator from "./AuthStackNavigator";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

@@ -6,7 +6,7 @@ import { Trade, TradesByUserIDQuery } from '../../../src/API';
 import { API, graphqlOperation } from 'aws-amplify';
 import { tradesByUserID } from '../../../src/customGraphQL/customQueries';
 import { AmplifyGraphQLResult } from '../../types';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 
 export default function TradesDisplay() {
 
