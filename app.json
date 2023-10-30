@@ -17,9 +17,6 @@
       "bundleIdentifier": "io.corewebstudios.descentexchange",
       "buildNumber": "1.0.0",
       "supportsTablet": true,
-      "config": {
-        "usesNonExemptEncryption": false
-      },
       "entitlements": {
         "com.apple.developer.applesignin": ["Default"]
       }
