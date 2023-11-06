@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { ElementView, Text, ListItemButton } from '../../components/Themed';
-import { TruncatedDecimal, PreciseMoney } from '../FormattedTextElements';
+import { TruncatedDecimal, PreciseMoney, abbreviateDecimal } from '../FormattedTextElements';
 import { Coin } from '../../../src/API';
+import { RootStackParamList } from '../../types';
+const assetImg = require('../../../assets/images/default-coin.png');
+
+const imgFallback = Image.resolveAssetSource(assetImg).uri;
 
 export interface PortfolioCoinProps {
   portfolioCoin: {
@@ -12,7 +16,7 @@ export interface PortfolioCoinProps {
   }
 }
 
-export default function PortfolioCoin (props: PortfolioCoinProps) {
+const PortfolioCoin = (props: PortfolioCoinProps): React.JSX.Element => {
   const {
     portfolioCoin: {
       amount,
@@ -22,12 +26,11 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
         name,
         symbol,
         currentPrice,
-        priceHistory,
       }
     },
   } = props;
 
-  const navigation = useNavigation();
+  const navigation: NavigationProp<RootStackParamList> = useNavigation();
 
   return (
     <ListItemButton 
@@ -35,7 +38,7 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
       onPress={() => navigation.navigate('CoinDetails', { id })}
     >
       <ElementView style={styles.left}>
-        <Image style={styles.image} source={{ uri: image! }} />
+        <Image style={styles.image} source={{ uri: image || imgFallback }} />
         <ElementView>
           <Text style={styles.currency}>{name}</Text>
           <Text style={styles.symbol}>{symbol.toUpperCase()}</Text>
@@ -43,13 +46,13 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
       </ElementView>
       <ElementView style={styles.right}>
         <PreciseMoney 
-          value={currentPrice * amount} 
+          value={abbreviateDecimal(currentPrice * amount)} 
           style={styles.value} 
           isColored
         />
         <Text style={styles.symbol}>
-          {symbol != 'USD'
-            ? <TruncatedDecimal value={amount} />
+          {symbol !== 'USDC'
+            ? <TruncatedDecimal value={amount} fixed={5} />
             : <TruncatedDecimal value={amount} fixed={2} />
           }
           {' '}
@@ -59,6 +62,8 @@ export default function PortfolioCoin (props: PortfolioCoinProps) {
     </ListItemButton>
   );
 };
+
+export default memo(PortfolioCoin);
 
 const styles = StyleSheet.create({
   root: {
@@ -70,7 +75,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     marginRight: 10,
-    borderRadius: 6,
+    borderRadius: 50,
+    backgroundColor: 'white',
   },
   left: {
     flexDirection: 'row',

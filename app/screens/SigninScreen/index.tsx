@@ -1,8 +1,12 @@
-import { StyleSheet, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import React, { useState } from 'react';
-import { ScrollView, ElementView, Text, RoundedButton, LabelledInputField, TextButton } from '../../components/Themed';
+import { ElementView, Text, RoundedButton } from '../../components/Themed';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import SocialLoginButtons from '../../components/atoms/buttons/SocialLoginButtons';
+import { Auth } from 'aws-amplify';
+import LabeledInput from '../../components/atoms/inputs/LabeledInput';
+import CustomButton from '../../components/atoms/buttons/CustomButton';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SigninScreen() {
 
@@ -10,105 +14,148 @@ export default function SigninScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const onPressSignin = () => {
-    console.warn("signin pressed");
+  function hasWhitespace(value: string): boolean {
+    return /\s/.test(value);
   }
 
-  const onPressSignup = () => {
+  function simpleValidation(email: string, password: string): boolean {
+    if (password.length < 8) {
+      throw new Error('Password is at least 8 characters in length.');
+    }
+    if (email.length < 12 || hasWhitespace(email)) {
+      throw new Error('Invalid email!');
+    }
+    return true;
+  }
+
+  const onPressSignin = async (): Promise<void> => {
+    try {
+      simpleValidation(email, password);
+      await Auth.signIn(email, password);
+    } catch(error: any) {
+      if (error.message) {
+        Alert.alert(error.message);
+      } else {
+        Alert.alert(error.toString());
+      }
+    }
+  }
+
+  const onPressSignup = (): void => {
     navigation.navigate('SignupScreen');
+  }
+
+  const onPressConfirmCode = (): void => {
+    navigation.navigate('ConfirmCode');
+  }
+
+  const onPressForgotPass = async (): Promise<void> => {
+    navigation.navigate('ForgotPassword');
   }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <ScrollView style={styles.root}>
-          <Text style={styles.title} darkColor=''>Sign in to an existing account</Text>
-          <ElementView style={styles.form}>
-            <LabelledInputField 
-              value={email}
-              setValue={setEmail}
-              onSubmitEditing={Keyboard.dismiss}
-              label={'E-Mail'}
-              placeholder={'yourname@example.com'}
-              textContentType={'emailAddress'}
-            />
-            <LabelledInputField 
-              value={password}
-              setValue={setPassword}
-              onSubmitEditing={Keyboard.dismiss}
-              label={'Password'}
-              secureTextEntry={true}
-              placeholder={'yourpassword'}
-              textContentType={'password'}
-            />
-            <RoundedButton 
-              onPress={onPressSignin}
-              buttonStyles={styles.signinBtn}
-            >
-              Sign in
-            </RoundedButton>
-            <SocialLoginButtons />
-            <Text style={styles.signupLabel}>Don't have an account?</Text>
-            <TextButton
+      <SafeAreaView style={styles.root}>
+        <Text style={styles.title} darkColor=''>Sign in to an existing account</Text>
+        <ElementView style={styles.form}>
+          <LabeledInput 
+            value={email}
+            onChangeText={setEmail}
+            onSubmitEditing={Keyboard.dismiss}
+            label={'E-Mail'}
+            placeholder={'yourname@example.com'}
+            textContentType={'emailAddress'}
+          />
+          <LabeledInput
+            value={password}
+            onChangeText={setPassword}
+            onSubmitEditing={Keyboard.dismiss}
+            label={'Password'}
+            secureTextEntry={true}
+            placeholder={'yourpassword'}
+            textContentType={'password'}
+          />
+          <RoundedButton onPress={onPressSignin}>
+            Sign in
+          </RoundedButton>
+          <SocialLoginButtons apple google />
+
+          <CustomButton
+            onPress={onPressForgotPass}
+            buttonStyles={[styles.button, { alignSelf: 'center' }]}
+            textStyles={styles.buttonText}
+          >
+            Forgot Password?
+          </CustomButton>
+
+          <ElementView style={styles.row}>
+            <Text style={styles.label}>Don't have an account?</Text>
+            <CustomButton
               onPress={onPressSignup}
-              buttonStyles={styles.signupBtn}
-              textStyles={styles.signupBtnText}
-              icon={'angle-right'}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              icon='angle-right'
               iconSize={25}
+              iconColor={styles.buttonText.color}
             >
               Sign up
-            </TextButton>
+            </CustomButton>
           </ElementView>
-        </ScrollView>
-      </KeyboardAvoidingView>
+
+          <ElementView style={styles.row}>
+            <Text style={styles.label}>Need to confirm code?</Text>
+            <CustomButton
+              onPress={onPressConfirmCode}
+              buttonStyles={styles.button}
+              textStyles={styles.buttonText}
+              icon='angle-right'
+              iconSize={25}
+              iconColor={styles.buttonText.color}
+            >
+              Enter code
+            </CustomButton>
+          </ElementView>
+
+        </ElementView>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   root: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
     padding: 25,
   },
   title: {
-    fontSize: 24,
+    marginTop: 25,
+    fontSize: 22,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
   form: {
+    marginTop: 25,
     width: '100%',
+    maxWidth: 400,
   },
-  signinBtn: {
-    alignSelf: 'center',
-    width: '50%',
-  },
-  signupLabel: {
-    fontSize: 16,
-    marginTop: 50,
-  },
-  signupBtn: {
+  row: {
     flexDirection: 'row',
-    // backgroundColor: 'transparent',
-    // borderWidth: 0,
-    justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 0,
-    marginHorizontal: 0,
-    marginVertical: 0,
+    alignContent: 'center',
+    justifyContent: 'space-between',
   },
-  signupBtnText: {
+  label: {
     fontSize: 16,
-    fontWeight: 'normal',
+  },
+  button: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#71459B',
     marginRight: 10,
     marginTop: 2,
   },

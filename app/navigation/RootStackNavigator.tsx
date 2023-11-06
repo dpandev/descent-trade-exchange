@@ -9,9 +9,8 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import CoinDetailsScreen from '../screens/CoinDetailsScreen';
 import CoinExchangeScreen from '../screens/CoinExchangeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import { useAuthContext } from "../utils/AuthContext";
+import { useAuthContext } from "../hooks/AuthContext";
 import AuthStackNavigator from "./AuthStackNavigator";
-import PlayerDetailsScreen from "../screens/PlayerDetailsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,7 +30,7 @@ export default function RootStackNavigator() {
             options={{ 
               headerStyle: { backgroundColor: Colors[colorScheme].secondary },
               headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'},   
+              headerTitleStyle: { fontWeight: 'bold' },   
               presentation: 'modal', 
             }}
           />
@@ -41,30 +40,20 @@ export default function RootStackNavigator() {
             name="CoinDetails" 
             component={CoinDetailsScreen} 
             options={{ 
-              title: 'Details', 
+              title: 'Coin Details', 
               headerStyle: { backgroundColor: Colors[colorScheme].secondary },
               headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'},  
+              headerTitleStyle: { fontWeight: 'bold' },  
             }} 
           />
           <Stack.Screen 
             name="CoinExchange" 
             component={CoinExchangeScreen} 
             options={{ 
-              title: 'Exchange', 
+              title: 'Coin Exchange', 
               headerStyle: { backgroundColor: Colors[colorScheme].secondary }, 
               headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'}, 
-            }} 
-          />
-          <Stack.Screen 
-            name="PlayerDetails" 
-            component={PlayerDetailsScreen} 
-            options={{ 
-              title: 'Player Details', 
-              headerStyle: { backgroundColor: Colors[colorScheme].secondary },
-              headerTintColor: 'white', 
-              headerTitleStyle: { fontWeight: 'bold'},  
+              headerTitleStyle: { fontWeight: 'bold' }, 
             }} 
           />
         </Stack.Group>

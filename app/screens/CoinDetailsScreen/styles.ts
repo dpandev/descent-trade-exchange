@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-
   topContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -19,7 +18,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     marginRight: 10,
-    borderRadius: 25,
+    borderRadius: 50,
+    backgroundColor: 'white',
   },
   left: {
     flexDirection: 'row',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 15,
   },

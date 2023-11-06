@@ -1,36 +1,91 @@
-import { View, RoundedButton } from '../../components/Themed';
+import { Text, ElementView, ListItemButton } from '../../components/Themed';
 import { StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
+import DeleteAccount from './DeleteAccount';
+import { FontAwesome5 } from '@expo/vector-icons'; 
+import DialogModal from '../../components/molecules/DialogModal';
+import { openBrowserAsync } from 'expo-web-browser';
+import { useAuthContext } from '../../hooks/AuthContext';
 
 export default function SettingsScreen() {
+  type Dialog = {
+    title: string;
+    message: string;
+  }
 
-  const onSignOut = async () => {
-    console.warn('signout')
+  const [accountDel, setAccountDel] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [dialogContent, setDialogContent] = useState<Dialog>({ title: '', message: '' });
+  const { user } = useAuthContext();
+
+  const openLink = (url: string): void => {
+    openBrowserAsync(url);
+  }
+
+  const onSignOut = async (): Promise<void> => {
     await Auth.signOut();
   }
 
-  const changeTheme = () => {
-    console.warn('changing theme')
+  const onDeleteAccount = (): void => {
+    setAccountDel(true);
+  }
+
+  const onSupport = (): void => {
+    setVisible(true);
+    setDialogContent({
+      title: 'Help & Support',
+      message: `For any inquiries, send our team an email at team@corewebstudios.io\n\nUUID: ${user?.id}`,
+    });
+  }
+
+  const onAbout = (): void => {
+    setVisible(true);
+    setDialogContent({
+      title: 'About',
+      message: 'Descent Exchange is a trading platform for virtual cryptocurrencies where users can trades virtual money in exchange for virtual crypto assets. All coin values are provided by CoinGecko and all news data is provided by CryptoPanic.'
+    });
+  }
+
+  const onPrivacy = (): void => {
+    openLink('https://corewebstudios.io/privacy');
   }
 
   return (
-    <View style={styles.root}>
-      <RoundedButton
-        onPress={onSignOut}
-        textStyles={styles.lightColor}
-        buttonStyles={styles.signOutBtn}
-      >
-        Sign Out
-      </RoundedButton>
-      <RoundedButton
-        onPress={changeTheme}
-        textStyles={styles.lightColor}
-        buttonStyles={styles.signOutBtn}
-      >
-        Change Theme
-      </RoundedButton>
-    </View>
+    <ElementView style={styles.root}>
+      <ListItemButton buttonStyles={styles.row} onPress={onSignOut}>
+        <FontAwesome5 name="sign-out-alt" size={32} color="white" />
+        <Text style={styles.options}>Sign out</Text>
+        <FontAwesome5 name="angle-right" size={32} color="white" />
+      </ListItemButton>
+      <ListItemButton buttonStyles={styles.row} onPress={onDeleteAccount}>
+        <FontAwesome5 name="user-times" size={32} color="white" />
+        <Text style={styles.options}>Delete Account</Text>
+        <FontAwesome5 name="angle-right" size={32} color="white" />
+      </ListItemButton>
+      <ListItemButton buttonStyles={styles.row} onPress={onSupport}>
+        <FontAwesome5 name="headphones-alt" size={32} color="white" />
+        <Text style={styles.options}>Help & Support</Text>
+        <FontAwesome5 name="angle-right" size={32} color="white" />
+      </ListItemButton>
+      <ListItemButton buttonStyles={styles.row} onPress={onAbout}>
+        <FontAwesome5 name="question-circle" size={32} color="white" />
+        <Text style={styles.options}>About</Text>
+        <FontAwesome5 name="angle-right" size={32} color="white" />
+      </ListItemButton>
+      <ListItemButton buttonStyles={styles.row} onPress={onPrivacy}>
+        <FontAwesome5 name="lock" size={32} color="white" />
+        <Text style={styles.options}>Privacy Policy</Text>
+        <FontAwesome5 name="angle-right" size={32} color="white" />
+      </ListItemButton>
+      <DeleteAccount visible={accountDel} setVisible={setAccountDel} />
+      <DialogModal 
+        visible={visible}
+        setVisible={setVisible}
+        title={dialogContent.title}
+        statement={dialogContent.message}
+      />
+    </ElementView>
   );
 }
 
@@ -38,11 +93,16 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 25,
+    paddingVertical: 25,
   },
-  title: {
-    fontSize: 32,
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
   },
-  lightColor: {},
-  signOutBtn: {},
+  options: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });

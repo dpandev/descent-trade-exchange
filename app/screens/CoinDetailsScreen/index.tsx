@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Pressable, ActivityIndicator } from 'react-native';
+import { Image, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { ElementView, Text, RoundedButton } from '../../components/Themed';
 import { Octicons } from "@expo/vector-icons";
 import styles from "./styles";
 import { PercentageChange, PreciseMoney } from "../../components/FormattedTextElements";
 import CoinPriceGraph from "../../components/organisms/PriceGraph";
 import { API, graphqlOperation } from 'aws-amplify';
-import { getCoin, getPortfolioCoin } from '../../../src/graphql/queries';
-import { useAuthContext } from '../../utils/AuthContext';
-import { Coin, GetCoinQuery, GetPortfolioCoinQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
+import { getCoin, getPortfolioCoin, getUser } from '../../../src/graphql/queries';
+import { useAuthContext } from '../../hooks/AuthContext';
+import { Coin, GetCoinQuery, GetPortfolioCoinQuery, GetUserQuery, PortfolioCoin, UpdateUserMutation } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackScreenProps } from '../../types';
 import { updateUser } from '../../../src/graphql/mutations';
+const assetImg = require('../../../assets/images/default-coin.png');
+const imgFallback = Image.resolveAssetSource(assetImg).uri;
+
 
 const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDetails'>) => {
-  const { user, setUser } = useAuthContext();
+  const { user } = useAuthContext();
   const [coin, setCoin] = useState<Coin>();
   const [portfolioCoin, setPortfolioCoin] = useState<PortfolioCoin>();
-  const [starActive, setStarActive] = useState<boolean>();
+  const [starActive, setStarActive] = useState<boolean>(false);
+  const [watchlist, setWatchlist] = useState<string[]>([]);
+  const [isUpdatingUser, setIsUpdatingUser] = useState<boolean>(false);
 
-  const fetchCoinData = async () => {
-    if (!route.params?.id) {
-      return;
-    }
+  const fetchCoinData = async (): Promise<void> => {
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getCoin>>({
         ...graphqlOperation(
@@ -33,99 +35,121 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
         setCoin({...response.data.getCoin});
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
     }
   }
 
-  const fetchPortfolioCoinData = async () => {
-    if (!user) return;
-    if (!route.params?.id) {
-      return;
+  const fetchWatchlistData = async (): Promise<void> => {
+    try {
+      const watchlistResponse = await API.graphql<AmplifyGraphQLResult<typeof getUser>>({
+        ...graphqlOperation(
+          getUser,
+          { id: user?.id }
+        ),
+      }) as { data: GetUserQuery };
+      if (watchlistResponse.data.getUser?.watchlist) {
+        const watchlistData: string[] = watchlistResponse.data.getUser.watchlist;
+        const isInWatchlist: boolean = watchlistData.includes(route.params.id);
+        if (isInWatchlist) {
+          setStarActive(true);
+        }
+        setWatchlist(watchlistData);
+      }
+    } catch(error) {
+      console.log(error);
     }
+  }
+
+  const fetchPortfolioCoinData = async (): Promise<void> => {
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getPortfolioCoin>>(
         graphqlOperation(
           getPortfolioCoin, 
-          { id: `${user.id}-${route.params.id}` },
+          { id: `${user?.id}-${route.params.id}` },
         ),
       ) as { data: GetPortfolioCoinQuery };
       if (response.data.getPortfolioCoin) {
-        const fetchedCoin: PortfolioCoin[] = [response.data.getPortfolioCoin].filter(
-          (item): item is PortfolioCoin => item != null
-        );
-        setPortfolioCoin(fetchedCoin[0]);
-      }
-      if (coin) {
-        if (user?.watchlist?.includes(coin.id)) {
-          setStarActive(true);
-        }
+        const fetchedPortfolioCoin: PortfolioCoin = response.data.getPortfolioCoin as PortfolioCoin;
+        setPortfolioCoin(fetchedPortfolioCoin);
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
     }
   }
 
-  const addToWatchlist = async () => {
-    if (!user) return;
+  const addToWatchlist = async (): Promise<void> => {
+    if (!user || !coin) return;
+    setIsUpdatingUser(true);
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof updateUser>>({
         ...graphqlOperation(
           updateUser, 
           { input: {
             id: user.id,
-            watchlist: user.watchlist + coin!.id
+            watchlist: [...watchlist, coin.id]
           }}
         ),
       }) as { data: UpdateUserMutation };
-      if (response.data.updateUser) {
+      if (response.data.updateUser?.watchlist) {
         setStarActive(true);
-        setUser(response.data.updateUser);
+        setWatchlist(response.data.updateUser.watchlist);
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
+    } finally {
+      setIsUpdatingUser(false);
     }
   }
 
-  const removeFromWatchlist = async () => {
-    if (!user) return;
+  const removeFromWatchlist = async (): Promise<void> => {
+    if (!user || !coin) return;
+    setIsUpdatingUser(true);
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof updateUser>>({
         ...graphqlOperation(
           updateUser, 
           { input: {
             id: user.id,
-            watchlist: user.watchlist!.filter(x => x !== coin!.id)
+            watchlist: [...watchlist.filter(x => x !== coin.id)]
           }}
         ),
       }) as { data: UpdateUserMutation };
-      if (response.data.updateUser) {
+      if (response.data.updateUser?.watchlist) {
         setStarActive(false);
-        setUser(response.data.updateUser);
+        setWatchlist(response.data.updateUser.watchlist);
       }
     } catch(error) {
-      console.error(error); 
+      console.log(error); 
+    } finally {
+      setIsUpdatingUser(false);
     }
   }
 
   useEffect(() => {
     fetchCoinData();
+    fetchWatchlistData();
+    fetchPortfolioCoinData();
   }, []);
 
-  useEffect(() => {
-    fetchPortfolioCoinData();
-  }, [coin]);
-
-  const onBuy = () => {
-    if (!coin || !portfolioCoin) throw new Error;
-    navigation.navigate('CoinExchange', { isBuy: true, coin, portfolioCoin });
+  const onBuy = (): void => {
+    if (!coin) return;
+    if (coin.id === 'usd-coin') {
+      Alert.alert("Unable to buy USDC. Sell a different coin to get more USDC.")
+    } else {
+      navigation.navigate('CoinExchange', { isBuy: true, coin, portfolioCoin });
+    }
   }
 
-  const onSell = () => {
-    if (!coin || !portfolioCoin) throw new Error;
-    navigation.navigate('CoinExchange', { isBuy: false, coin, portfolioCoin });
+  const onSell = (): void => {
+    if (!coin) return;
+    if (coin.id === 'usd-coin') {
+      Alert.alert("Unable to sell USDC. Buy a different coin instead.")
+    } else {
+      navigation.navigate('CoinExchange', { isBuy: false, coin, portfolioCoin });
+    }
   }
 
-  const onStarPressed = () => {
+  const onStarPressed = (): void => {
     if (starActive) {
       removeFromWatchlist();
     } else {
@@ -134,62 +158,63 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
   }
 
   if (!coin) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator color={'white'} size={'large'} />;
   }
 
   return (
     <ElementView inverted style={styles.root}>
       <ElementView style={styles.topContainer}>
         <ElementView style={styles.left}>
-          <Image style={styles.image} source={{ uri: coin.image! }} />
+          <Image style={styles.image} source={{ uri: coin.image || imgFallback }} />
           <ElementView>
             <Text style={styles.name}>{coin.name}</Text>
             <Text style={styles.symbol}>{coin.symbol}</Text>
           </ElementView>
         </ElementView>
-        <ElementView style={{alignItems: 'flex-end'}}>
-          <Pressable onPress={onStarPressed}>
-            <Octicons name={starActive ? 'star-fill' : 'star'} size={30} color={'#6338F1'} />
+        <ElementView style={{alignItems: 'flex-end', padding: 6}}>
+          <Pressable onPress={onStarPressed} disabled={isUpdatingUser}>
+            {isUpdatingUser 
+            ? <ActivityIndicator />
+            : <Octicons name={starActive ? 'star-fill' : 'star'} size={36} color={'#FDFD96'} />
+            }
           </Pressable>
         </ElementView>
       </ElementView>
 
+      <ElementView style={styles.valueContainer}>
+        <Text style={styles.label}>Current price</Text>
+        <PreciseMoney value={coin.currentPrice} style={styles.value} />
+      </ElementView>
       <ElementView style={styles.row}>
         <ElementView style={styles.valueContainer}>
-          <Text style={styles.label}>Current price</Text>
-          <PreciseMoney value={coin.currentPrice} style={styles.value} />
+          <Text style={styles.label}>1 hour</Text>
+          <PercentageChange value={coin.valueChange1H} />
         </ElementView>
 
-        <ElementView style={{flexDirection: 'row'}}>
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>1 hour</Text>
-            <PercentageChange value={coin.valueChange1H} />
-          </ElementView>
+        <ElementView style={styles.valueContainer}>
+          <Text style={styles.label}>1 day</Text>
+          <PercentageChange value={coin.valueChange24H} />
+        </ElementView>
 
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>1 day</Text>
-            <PercentageChange value={coin.valueChange24H} />
-          </ElementView>
-
-          <ElementView style={styles.valueContainer}>
-            <Text style={styles.label}>7 days</Text>
-            <PercentageChange value={coin.valueChange7D} />
-          </ElementView>
+        <ElementView style={styles.valueContainer}>
+          <Text style={styles.label}>7 days</Text>
+          <PercentageChange value={coin.valueChange7D} />
         </ElementView>
       </ElementView>
 
-      {coin?.priceHistory
+      {coin.priceHistory
         && <CoinPriceGraph dataString={coin.priceHistory} />}
 
       <ElementView style={[styles.row, {justifyContent: 'space-evenly'}]}>
         <Text style={styles.positionLabel}>Position</Text>
         <ElementView>
           <Text>
-            {portfolioCoin?.amount?.toLocaleString('en-US') || 0} {coin.symbol.toUpperCase()}
+          {'Shares: '}{portfolioCoin?.amount.toLocaleString('en-US') || 0} {coin.symbol.toUpperCase()}
           </Text>
           <ElementView style={styles.rowText}>
+            <Text>{'Value: '}</Text>
             <PreciseMoney value={coin.currentPrice * (portfolioCoin?.amount || 0)} />
-            <Text> USD</Text>
+            <Text>{' USD'}</Text>
           </ElementView>
         </ElementView>
       </ElementView>
@@ -212,7 +237,7 @@ const CoinDetailsScreen = ({ navigation, route }: RootStackScreenProps<'CoinDeta
           Sell
         </RoundedButton> 
       </ElementView>
-
+      
     </ElementView>
   );
 };

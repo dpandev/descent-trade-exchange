@@ -10,17 +10,17 @@ import TabFourScreen from '../screens/tabs/TabFourScreen';
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-export default function BottomTabNavigator() {
+export default function BottomTabNavigator(): React.JSX.Element {
   const colorScheme = useColorScheme();
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="TabThree"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tabIconSelected,
         tabBarStyle: {
           backgroundColor: Colors[colorScheme].primary,
-          height: 105,
+          height: '12%',
           borderTopWidth: 0,
         },
         tabBarShowLabel: false,
@@ -33,8 +33,8 @@ export default function BottomTabNavigator() {
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Dashboard',
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          title: 'News',
+          tabBarIcon: ({ color }) => <TabBarIcon name="newspaper" color={color} />,
         })}
       />
       <BottomTab.Screen
@@ -57,8 +57,8 @@ export default function BottomTabNavigator() {
         name="TabFour"
         component={TabFourScreen}
         options={{
-          title: 'Social',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
+          title: 'Trades',
+          tabBarIcon: ({ color }) => <TabBarIcon name="file-tray-full" color={color} />,
         }}
       />
     </BottomTab.Navigator>

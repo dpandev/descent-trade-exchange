@@ -7,7 +7,6 @@ export const getUser = /* GraphQL */ `
     getUser(id: $id) {
       id
       displayName
-      email
       networth
       image
       trades {
@@ -20,8 +19,10 @@ export const getUser = /* GraphQL */ `
           date
           image
           userID
+          expires_at
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
@@ -35,16 +36,16 @@ export const getUser = /* GraphQL */ `
           userID
           createdAt
           updatedAt
+          owner
           __typename
         }
         nextToken
         __typename
       }
-      followers
-      following
       createdAt
       updatedAt
       watchlist
+      owner
       __typename
     }
   }
@@ -59,7 +60,6 @@ export const listUsers = /* GraphQL */ `
       items {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -70,11 +70,10 @@ export const listUsers = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       nextToken
@@ -92,7 +91,6 @@ export const getPortfolioCoin = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -103,15 +101,15 @@ export const getPortfolioCoin = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -131,18 +129,17 @@ export const listPortfolioCoins = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -173,18 +170,17 @@ export const portfolioCoinsByUserID = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -252,7 +248,6 @@ export const getTrade = /* GraphQL */ `
       user {
         id
         displayName
-        email
         networth
         image
         trades {
@@ -263,15 +258,16 @@ export const getTrade = /* GraphQL */ `
           nextToken
           __typename
         }
-        followers
-        following
         createdAt
         updatedAt
         watchlist
+        owner
         __typename
       }
+      expires_at
       createdAt
       updatedAt
+      owner
       __typename
     }
   }
@@ -295,18 +291,18 @@ export const listTrades = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
+        expires_at
         createdAt
         updatedAt
+        owner
         __typename
       }
       nextToken
@@ -341,16 +337,58 @@ export const tradesByUserID = /* GraphQL */ `
         user {
           id
           displayName
-          email
           networth
           image
-          followers
-          following
           createdAt
           updatedAt
           watchlist
+          owner
           __typename
         }
+        expires_at
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getArticle = /* GraphQL */ `
+  query GetArticle($id: ID!) {
+    getArticle(id: $id) {
+      id
+      coinSymbol
+      title
+      url
+      domain
+      publishedAt
+      image
+      expires_at
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listArticles = /* GraphQL */ `
+  query ListArticles(
+    $filter: ModelArticleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listArticles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        coinSymbol
+        title
+        url
+        domain
+        publishedAt
+        image
+        expires_at
         createdAt
         updatedAt
         __typename

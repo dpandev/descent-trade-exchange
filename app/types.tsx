@@ -16,11 +16,13 @@ export type RootStackParamList = {
   SignupScreen: undefined;
   SigninScreen: undefined;
   CoinDetails: { id: string };
-  CoinExchange: { isBuy: boolean, coin: Coin, portfolioCoin: PortfolioCoin };
-  PlayerDetails: { id: string };
+  CoinExchange: { isBuy: boolean, coin: Coin, portfolioCoin: PortfolioCoin | undefined };
   Settings: undefined;
   Store: undefined;
   Modal: undefined;
+  ConfirmCode: undefined;
+  ForgotPassword: undefined;
+  WelcomeScreen: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -39,12 +41,6 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> = Composit
   BottomTabScreenProps<RootTabParamList, Screen>,
   NativeStackScreenProps<RootStackParamList>
 >;
-
-export type ComponentTabItem = {
-  id: number;
-  name: string;
-  component: React.ReactElement;
-};
 
 export type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;

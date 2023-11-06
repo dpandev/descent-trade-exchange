@@ -1,23 +1,41 @@
-import { StyleSheet, FlatList } from 'react-native';
-import { ElementView } from '../../components/Themed';
+import { StyleSheet, FlatList, ActivityIndicator, Pressable, Platform } from 'react-native';
+import { ElementView, Text } from '../../components/Themed';
 import PortfolioCoinComponent, { PortfolioCoinProps } from '../../components/molecules/PortfolioCoin';
 import PageHeader from '../../components/molecules/PageHeader';
 import { PreciseMoney } from '../../components/FormattedTextElements';
 import { useState, useEffect } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
-import { Coin, ListCoinsQuery, PortfolioCoin, PortfolioCoinsByUserIDQuery } from '../../../src/API';
-import { useAuthContext } from '../../utils/AuthContext';
-import { listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
+import { Coin, GetUserQuery, ListCoinsQuery, PortfolioCoin, PortfolioCoinsByUserIDQuery, User } from '../../../src/API';
+import { useAuthContext } from '../../hooks/AuthContext';
+import { getUser, listCoins, portfolioCoinsByUserID } from '../../../src/graphql/queries';
 import { AmplifyGraphQLResult } from '../../types';
 
-export default function TabTwoScreen() {
+export default function TabTwoScreen(): React.JSX.Element {
 
   const [portfolioCoins, setPortfolioCoins] = useState<PortfolioCoinProps[]>([]);
+  const [userData, setUserData] = useState<User>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useAuthContext();
 
+  const fetchProfile = async (): Promise<void> => {
+    try {
+      const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>(
+        graphqlOperation(
+          getUser,
+          { id: user?.id }
+        ),
+      ) as { data: GetUserQuery };
+      
+      if (response.data.getUser) {
+        const fetchedUser: User = response.data.getUser;
+        setUserData(fetchedUser);
+      }
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
   const fetchAssets = async (): Promise<void> => {
-    if (!user) return;
     setIsLoading(true);
     try {
       const coinsResponse = await API.graphql<AmplifyGraphQLResult<typeof listCoins>>(
@@ -31,15 +49,15 @@ export default function TabTwoScreen() {
           (item): item is Coin => item != null
         );
 
-        const response = await API.graphql<AmplifyGraphQLResult<typeof portfolioCoinsByUserID>>(
+        const portfolioResponse = await API.graphql<AmplifyGraphQLResult<typeof portfolioCoinsByUserID>>(
           graphqlOperation(
             portfolioCoinsByUserID,
-            { userID: user.id },
+            { userID: user?.id },
           ),
         ) as { data: PortfolioCoinsByUserIDQuery };
   
-        if (response.data.portfolioCoinsByUserID) {
-          let portfolioCoinsResponse: PortfolioCoin[] = response.data.portfolioCoinsByUserID.items.filter(
+        if (portfolioResponse.data.portfolioCoinsByUserID) {
+          let portfolioCoinsResponse: PortfolioCoin[] = portfolioResponse.data.portfolioCoinsByUserID.items.filter(
             (item): item is PortfolioCoin => item != null
           );
           let pCoins: PortfolioCoinProps[] = [];
@@ -53,41 +71,69 @@ export default function TabTwoScreen() {
                   amount: portfolioCoinsResponse[i].amount,
                 }
               }
-              pCoins.push(obj);
+              if (obj.portfolioCoin.amount > 0) {
+                pCoins.push(obj);
+              }
             }
           }
           setPortfolioCoins(pCoins);
         }
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
   }
 
   useEffect(() => {
+    fetchProfile();
     fetchAssets();
   }, []);
+
+  if (!userData) {
+    return (
+      <ElementView style={styles.root}>
+        <PageHeader title={"Assets"} />
+        <ActivityIndicator size={'large'} color={'white'} />
+      </ElementView>
+    );
+  }
 
   return (
     <ElementView style={styles.root}>
       <PageHeader title={"Assets"} />
       <ElementView style={styles.balanceContainer}>
-        <PreciseMoney value={user?.networth || 0} style={styles.balance} />
+        <PreciseMoney value={userData.networth || 0} style={styles.balance} />
       </ElementView>
       <FlatList
+        initialNumToRender={7}
+        removeClippedSubviews
         style={{width: '100%'}}
-        data={portfolioCoins}
+        data={portfolioCoins.sort((a, b) => (
+          (a.portfolioCoin.coin.currentPrice * a.portfolioCoin.amount) 
+          < (b.portfolioCoin.coin.currentPrice * b.portfolioCoin.amount) 
+          ? 1 : -1
+        ))}
         onRefresh={fetchAssets}
         refreshing={isLoading}
-        renderItem={({item}) => <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} />}
+        keyExtractor={_keyExtractor}
+        renderItem={_renderitem}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponentStyle={{alignItems: 'center'}}
+        ListEmptyComponent={<Text style={{ textAlign: 'center', color: '#FE4A76' }}>no data to display</Text>}
+        ListFooterComponent={<Text style={{ textAlign: 'center', color: '#929292' }}>pull to refresh</Text>}
+        maxToRenderPerBatch={15}
       />
     </ElementView>
   );
 }
+
+const _keyExtractor = (item: PortfolioCoinProps) => item.portfolioCoin.coin.id;
+const _renderitem = ({
+  item
+}: {item: PortfolioCoinProps}): React.JSX.Element => (
+  <PortfolioCoinComponent portfolioCoin={item.portfolioCoin} />
+);
 
 const styles = StyleSheet.create({
   root: {
@@ -97,7 +143,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   balanceContainer: {
-    width: '100%',
     alignItems: 'center',
     marginVertical: 10,
   },
@@ -105,8 +150,7 @@ const styles = StyleSheet.create({
   balance: {
     fontSize: 28,
     fontWeight: 'bold',
-    width: '85%',
     textAlign: 'center',
-    color: '#6338F1',
+    color: '#2ceb77',
   },
 });

@@ -8,7 +8,7 @@ export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   // Load any resources or data that we need prior to rendering the app
-  useEffect(() => {
+  useEffect(() => { 
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHideAsync();

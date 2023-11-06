@@ -12,80 +12,67 @@ exports.handler = async (event, context) => {
     return;
   }
 
+  console.log('event', event);
+  console.log('context', context);
+
+  const expirydate = Math.round(Date.now() / 1000);
   const date = new Date();
 
   const GRAPHQL_ENDPOINT = process.env.API_DESCENT_GRAPHQLENDPOINTOUTPUT;
   const GRAPHQL_API_KEY = process.env.API_DECENT_GRAPHQLKEYOUTPUT;
   
   const createNewUserQuery = /* GraphQL */ `
-    mutation CreateUser(
-      $input: CreateUserInput!
-      $condition: ModelUserConditionInput
+    mutation CreateNewUser(
+      $inputOne: CreateUserInput!
+      $inputTwo: CreatePortfolioCoinInput!
+      $inputThree: CreateTradeInput!
     ) {
-      createUser(input: $input, condition: $condition) {
+      createUser(input: $inputOne) {
         id
       }
-    }
-  `;
-  const createNewPortfolioQuery = /* GraphQL */ `
-    mutation CreatePortfolioCoin(
-      $input: CreatePortfolioCoinInput!
-      $condition: ModelPortfolioCoinConditionInput
-    ) {
-      createPortfolioCoin(input: $input, condition: $condition) {
+      createPortfolioCoin(input: $inputTwo) {
         id
       }
-    }
-  `;
-  const createNewTradeQuery = /* GraphQL */ `
-    mutation CreateTrade(
-      $input: CreateTradeInput!
-      $condition: ModelTradeConditionInput
-    ) {
-      createTrade(input: $input, condition: $condition) {
+      createTrade(input: $inputThree) {
         id
       }
     }
   `;
 
   let variables = {
-    userInput: {
-      input: {
-        id: event.request.userAttributes.sub,
-        createdAt: date.toISOString(),
-        updatedAt: date.toISOString(),
-        displayName: event.request.userAttributes.sub.substring(0,6),
-        email: event.request.userAttributes.email,
-        image: process.env.DEFAULT_PROFILE_IMG,
-        networth: 250000,
-        watchlist: process.env.USD_COIN_ID,
-        followers: "",
-        following: "",
-      }
+    inputOne: {
+      id: event.request.userAttributes.sub,
+      createdAt: date.toISOString(),
+      updatedAt: date.toISOString(),
+      displayName: `User_${event.request.userAttributes.sub.substring(0,7)}`,
+      image: process.env.DEFAULT_PROFILE_IMG,
+      networth: 250000,
+      watchlist: process.env.USD_COIN_ID,
     },
-    portfolioInput: {
-      input: {
-        id: `${event.request.userAttributes.sub}-${process.env.USD_COIN_SYMBOL}`,
-        coinId: process.env.USD_COIN_ID, 
-        amount: 250000,
-        userID: event.request.userAttributes.sub,
-      }
+    inputTwo: {
+      id: `${event.request.userAttributes.sub}-${process.env.USD_COIN_ID}`,
+      coinId: process.env.USD_COIN_ID, 
+      amount: 250000,
+      userID: event.request.userAttributes.sub,
     },
-    tradeInput: {
-      input: {
-        amount: 250000,
-        coinSymbol: process.env.USD_COIN_SYMBOL,
-        coinId: process.env.USD_COIN_ID,
-        date: date.toISOString(),
-        price: 1,
-        userID: event.request.userAttributes.sub,
-        image: process.env.USD_COIN_IMAGE,
-      }
+    inputThree: {
+      amount: 250000,
+      coinSymbol: process.env.USD_COIN_SYMBOL,
+      coinId: process.env.USD_COIN_ID,
+      date: date.toISOString(),
+      price: 1,
+      userID: event.request.userAttributes.sub,
+      image: process.env.USD_COIN_IMAGE,
+      expires_at: expirydate + (7 * 24 * 60 * 60),
     }
   }
 
   if (event.request.userAttributes.picture) {
-    variables.userInput.input.image = event.request.userAttributes.picture;
+    variables.inputOne.image = event.request.userAttributes.picture;
+  }
+
+  if (event.request.userAttributes['custom:displayName']) {
+    variables.inputOne.displayName = event.request.userAttributes['custom:displayName'];
   }
 
   const setOptions = (query, variables) => {
@@ -99,14 +86,28 @@ exports.handler = async (event, context) => {
     }
   }
 
-  const request = new Request(GRAPHQL_ENDPOINT, setOptions(createNewUserQuery, variables.userInput));
-  const request2 = new Request(GRAPHQL_ENDPOINT, setOptions(createNewPortfolioQuery, variables.portfolioInput));
-  const request3 = new Request(GRAPHQL_ENDPOINT, setOptions(createNewTradeQuery, variables.tradeInput));
+  const request = new Request(GRAPHQL_ENDPOINT, setOptions(createNewUserQuery, variables));
 
-  response = await fetch(request)
-    .then(await fetch(request2))
-    .then(await fetch(request3))
-    .catch(error => console.log(error))
+  let statusCode = 200;
+  let body;
+  let response;
+
+  try {
+    response = await fetch(request);
+    body = await response.json();
+    if (body.errors) statusCode = 400;
+    console.log(response)
+  } catch (error) {
+    console.log(error);
+    statusCode = 500;
+    body = {
+      errors: [
+        {
+          message: error.message
+        }
+      ]
+    };
+  }
 
   context.done(null, event);
 };

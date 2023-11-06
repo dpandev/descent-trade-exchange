@@ -6,10 +6,11 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import TradesDisplay from '../../components/organisms/TradesDisplay';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getUser } from '../../../src/graphql/queries';
-import { GetUserQuery, Trade, User } from '../../../src/API';
+import { GetUserQuery, User } from '../../../src/API';
 import { AmplifyGraphQLResult, RootStackParamList } from '../../types';
+import { AuthUserType } from '../../hooks/AuthContext';
 
-export default function ProfileScreen({user}: {user: User}) {
+export default function ProfileScreen({user}: {user: AuthUserType}) {
   const [userData, setUserData] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigation: NavigationProp<RootStackParamList> = useNavigation();
@@ -19,7 +20,7 @@ export default function ProfileScreen({user}: {user: User}) {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getUser>>(
         graphqlOperation(
           getUser,
-          { id: user.id }
+          { id: user.id },
         ),
       ) as { data: GetUserQuery };
 
@@ -28,13 +29,13 @@ export default function ProfileScreen({user}: {user: User}) {
         setUserData(fetchedUser);
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
   }
 
-  const onSettingsPressed = () => {
+  const onSettingsPressed = (): void => {
     navigation.navigate('Settings');
   }
 
@@ -42,60 +43,59 @@ export default function ProfileScreen({user}: {user: User}) {
     fetchProfile();
   }, []);
 
-  if (isLoading) {
-    return <ActivityIndicator />
+  if (isLoading || !userData) {
+    return (
+      <>
+        <ActivityIndicator />
+        <RoundedButton
+          inverted
+          onPress={onSettingsPressed} 
+          buttonStyles={styles.settings}
+          textStyles={{ fontSize: 16 }}
+        >
+          Settings
+        </RoundedButton>
+      </>
+    );
   }
 
   return (
     <ElementView style={styles.root}>
+      <Text style={styles.profileName} numberOfLines={1}>{userData.displayName}</Text>
       <ElementView style={styles.profileContainer}>
         <Image 
-          source={{ uri: user?.image! }} 
+          source={{ uri: userData.image }} 
           width={50}
           height={50}
           style={styles.profileImage}
         />
         <ElementView style={styles.profileInfo}>
-          <Text style={styles.profileName}>{user?.displayName}</Text>
           <Text style={styles.profileText}>
             Net Worth: {''}
-            <Networth value={user?.networth!} />
+            <Networth value={userData.networth} />
           </Text>
           <Text style={styles.profileText}>
             Total Trades: {''}
-            <AbbreviateNum value={userData?.trades?.items.length || 0} style={styles.profileTextData}/>
-          </Text>
-          <Text style={styles.profileText}>
-            Followers: {''}
-            <AbbreviateNum value={user?.followers?.length || 0} style={styles.profileTextData}/>
-            {/* <Text style={styles.profileTextData}>{user?.followers?.length.toLocaleString('en-US')}</Text> */}
+            <AbbreviateNum value={userData.trades?.items.length || 0} style={styles.profileTextData}/>
           </Text>
           <Text style={styles.profileText}>Member Since:</Text>
-          <ShortDate value={user?.createdAt!} />
+          <ShortDate value={userData.createdAt} />
         </ElementView>
       </ElementView>
       <ElementView style={styles.tradesDisplay}>
-        <TradesDisplay listOfTrades={userData?.trades?.items || []}></TradesDisplay>
+        <TradesDisplay></TradesDisplay>
       </ElementView>
-      <RoundedButton
-        inverted
-        onPress={onSettingsPressed} 
-        buttonStyles={styles.settings}
-        textStyles={{ fontSize: 16 }}
-      >
-        Settings
-      </RoundedButton>
     </ElementView>
   );
 }
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     marginTop: 25,
     width: '100%',
+    height: '100%',
   },
   profileContainer: {
     flexDirection: 'row',
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   profileName: {
     fontWeight: 'bold',
     fontSize: 20,
-    marginBottom: 6,
+    marginBottom: 12,
   },
   profileText: {
     marginVertical: 2,
@@ -123,12 +123,16 @@ const styles = StyleSheet.create({
   settings: {
     marginTop: 'auto',
     paddingHorizontal: 45,
-    width: 'auto',
+    alignSelf: 'center',
   },
   tradesDisplay: {
     width: '100%',
-    maxWidth: 325,
-    marginTop: 25,
-    height: '60%',
+    maxWidth: 320,
+    marginTop: 10,
+  },
+  squareBtn: {
+    borderRadius: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
   },
 });

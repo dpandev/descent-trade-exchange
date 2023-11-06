@@ -4,7 +4,7 @@ import useColorScheme from './app/hooks/useColorScheme';
 import Navigation from './app/navigation';
 import * as WebBrowser from 'expo-web-browser';
 import { Amplify } from 'aws-amplify';
-import awsExports from './src/aws-exports';
+import awsExports from './src/aws-exports.js';
 import { Linking, Platform } from 'react-native';
 import useCachedResources from './app/hooks/useCachedResources';
 

@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
 } from 'react-native';
 import styles from './styles';
 import { 
@@ -19,46 +20,124 @@ import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navig
 import { AmplifyGraphQLResult, RootStackParamList, RootTabParamList } from '../../types';
 import { getPortfolioCoin } from '../../../src/graphql/queries';
 import { API, graphqlOperation } from 'aws-amplify';
-import { useAuthContext } from '../../utils/AuthContext';
+import { useAuthContext } from '../../hooks/AuthContext';
 import { GetPortfolioCoinQuery, PortfolioCoin } from '../../../src/API';
-import { exchangeCoins } from './mutations';
+import { exchangeCoins, exchangeCoinsNew } from './mutations';
+import { Octicons } from '@expo/vector-icons';
 
 const CoinExchangeScreen = () => {
 
   const [coinAmount, setCoinAmount] = useState<string>('');
   const [coinUSDValue, setCoinUSDValue] = useState<string>('');
-  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState<PortfolioCoin | null>(null);
+  const [usdPortfolioCoin, setUsdPortfolioCoin] = useState<PortfolioCoin>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const { user } = useAuthContext();
-
   const navigation: NavigationProp<RootTabParamList> = useNavigation();
   const route: RouteProp<RootStackParamList, 'CoinExchange'> = useRoute();
 
-  const isBuy = route.params?.isBuy;
-  const coin = route.params?.coin;
-  const portfolioCoin = route.params?.portfolioCoin;
+  const isBuy = route.params.isBuy;
+  const coin = route.params.coin;
+  const portfolioCoin = route.params.portfolioCoin;
 
   const getUSDPortfolioCoin = async (): Promise<void> => {
-    if (!user) return;
     try {
       const response = await API.graphql<AmplifyGraphQLResult<typeof getPortfolioCoin>>(
         graphqlOperation(
           getPortfolioCoin,
-          { id: `${user.id}-usdc` }
+          { id: `${user?.id}-usd-coin` }
         ),
       ) as { data: GetPortfolioCoinQuery };
-      const fetchedCoin: PortfolioCoin[] = [response.data.getPortfolioCoin].filter(
-        (item): item is PortfolioCoin => item != null
-      );
-      // let usdCoin: PortfolioCoin = response.data.getPortfolioCoin;
-      let usdCoin: PortfolioCoin = fetchedCoin[0];
-      if (usdCoin) {
-        setUsdPortfolioCoin(usdCoin);
+      if (response.data.getPortfolioCoin) {
+        const usdPortfolioCoin: PortfolioCoin = response.data.getPortfolioCoin as PortfolioCoin;
+        setUsdPortfolioCoin(usdPortfolioCoin);
       }
     } catch(error) {
-      console.error(error);
+      console.log(error);
     }
+  }
+
+  const onSellAll = (): void => {
+    if (!portfolioCoin) return;
+    setCoinAmount(Math.floor(portfolioCoin.amount).toString());
+  }
+
+  const onBuyAll = (): void => {
+    if (!usdPortfolioCoin) return;
+    setCoinUSDValue(Math.floor(usdPortfolioCoin.amount || 0).toString());
+  }
+
+  const placeOrder = async (): Promise<void> => {
+    if (isLoading || !user || !usdPortfolioCoin) {
+      return;
+    }
+    setIsLoading(true);
+    const date = new Date();
+    const expiryDate = Date.now() / 1000;
+    let variables = {
+      inputOne: {//update existing coin portfolioCoin
+        id: `${user.id}-${coin.id}`,
+        amount: 0,
+        coinId: coin.id,
+        userID: user.id,
+      },
+      inputTwo: {//create a trade item
+        amount: isBuy ? parseFloat(coinAmount) : -Math.abs(parseFloat(coinAmount)),
+        coinId: coin.id,
+        coinSymbol: coin.symbol,
+        date: date.toISOString(),
+        image: coin.image,
+        price: coin.currentPrice,
+        userID: user.id,
+        expires_at: expiryDate + (7 * 24 * 60 * 60),
+      },
+      inputThree: {//update existing usd portfolioCoin
+        id: `${user.id}-usd-coin`,
+        amount: (usdPortfolioCoin.amount - parseFloat(coinUSDValue)),
+        coinId: 'usd-coin',
+      },
+    }
+    try {
+      if (portfolioCoin) {
+        variables.inputOne.amount = ( isBuy ? portfolioCoin?.amount + parseFloat(coinAmount) : portfolioCoin?.amount - parseFloat(coinAmount) );
+        if (isBuy) {
+          await API.graphql<AmplifyGraphQLResult<typeof exchangeCoins>>(
+            graphqlOperation(exchangeCoins, variables)
+          ) as { data: any };
+        } else {
+          //  sell calculations - adjust vars here
+          variables.inputOne.amount = (portfolioCoin.amount - parseFloat(coinAmount));
+          variables.inputThree.amount = (usdPortfolioCoin.amount + parseFloat(coinUSDValue));
+          await API.graphql<AmplifyGraphQLResult<typeof exchangeCoins>>(
+            graphqlOperation(exchangeCoins, variables)
+          ) as { data: any };
+        }
+      } else {  //if user does not have this portfolioCoin (first time trading this)
+        variables.inputOne.amount = parseFloat(coinAmount);
+        await API.graphql<AmplifyGraphQLResult<typeof exchangeCoinsNew>>(
+          graphqlOperation(exchangeCoinsNew, variables)
+        ) as { data: any };
+      }
+    } catch(error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      navigation.navigate('TabTwo');
+    }
+  }
+
+  const onPlaceOrder = async (): Promise<void> => {
+    if (!coinAmount || !coinUSDValue) return;
+    const maxUsd = usdPortfolioCoin?.amount || 0;
+    if (isBuy && parseFloat(coinUSDValue) > maxUsd) {
+      Alert.alert('Oops!', `Not enough USD coins. Max: ${maxUsd}`);
+      return;
+    }
+    if (!isBuy && (!portfolioCoin || parseFloat(coinAmount) > portfolioCoin.amount)) {
+      Alert.alert('Oops!', `Not enough ${coin.symbol} coins. Max: ${portfolioCoin?.amount || 0}`);
+      return;
+    }
+
+    await placeOrder();
   }
 
   useEffect(() => {
@@ -72,7 +151,7 @@ const CoinExchangeScreen = () => {
       setCoinUSDValue('');
       return;
     }
-    setCoinUSDValue((amount * coin?.currentPrice).toString());
+    setCoinUSDValue((amount * coin.currentPrice).toString());
   }, [coinAmount]);
 
   useEffect(() => {
@@ -82,64 +161,9 @@ const CoinExchangeScreen = () => {
       setCoinUSDValue('');
       return;
     }
-    setCoinAmount((amount / coin?.currentPrice).toString());
+    setCoinAmount((amount / coin.currentPrice).toString());
   }, [coinUSDValue]);
 
-  const onSellAll = (): void => {
-    setCoinAmount((portfolioCoin.amount).toString());
-  }
-
-  const onBuyAll = (): void => {
-    setCoinUSDValue((usdPortfolioCoin?.amount || 0).toString());
-  }
-
-  const placeOrder = async (): Promise<void> => {
-    if (!user) return;
-    if (isLoading) {
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const variables = {
-        coinId: coin.id,
-        isBuy,
-        amount: coinAmount,
-        usdPortfolioCoinId: usdPortfolioCoin?.id,
-        coinPortfolioCoinId: portfolioCoin?.id,
-        userId: user.id
-      }
-
-      // const response = await API.graphql<AmplifyGraphQLResult<typeof exchangeCoins>>(
-      //   graphqlOperation(exchangeCoins, variables)
-      // ) as { data: any};
-      // if (response.data.exchangeCoins) {
-      //   navigation.navigate('TabTwo');
-      // } else {
-      //   Alert.alert('Error', 'There was an error exchanging coins');
-      // }
-      throw new Error;
-    } catch (e) {
-      Alert.alert('Error', 'There was an error exchanging coins');
-      console.error(e);
-    }
-    navigation.navigate('TabTwo');
-    setIsLoading(false);
-  }
-
-  const onPlaceOrder = async (): Promise<void> => {
-    if (!coinAmount || !coinUSDValue) return;
-    const maxUsd = usdPortfolioCoin?.amount || 0;
-    if (isBuy && parseFloat(coinUSDValue) > maxUsd) {
-      Alert.alert('Oops!', `Not enough USD coins. Max: ${maxUsd}`);
-      return;
-    }
-    if (!isBuy && (!portfolioCoin || parseFloat(coinAmount) > portfolioCoin.amount)) {
-      Alert.alert('Oops!', `Not enough ${coin.symbol} coins. Max: ${portfolioCoin.amount || 0}`);
-      return;
-    }
-
-    await placeOrder();
-  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -150,37 +174,43 @@ const CoinExchangeScreen = () => {
       >
         <Text style={styles.title}>
           {isBuy ? 'Buy ' : "Sell "}
-          {coin?.name}
+          {coin.name}
         </Text>
         <Text style={styles.subtitle}>
-          1 {coin?.symbol}
+          1 {coin?.symbol.toUpperCase()}
           {' = '}
           <PreciseMoney value={coin?.currentPrice} />
         </Text>
 
-        <ElementView style={styles.inputsContainer}>
-          <Text style={{fontWeight: 'bold'}}>{coin?.symbol}</Text>
+        <ElementView style={styles.col}>
+          <Text style={{fontWeight: 'bold'}}>{coin.symbol.toUpperCase()}</Text>
           <ElementView style={styles.inputContainer}>
             <TextInput
               style={styles.input}
               keyboardType="decimal-pad"
-              placeholder="0"
+              placeholder={`0 ${coin.symbol.toUpperCase()}`}
               placeholderTextColor={'#b1b1b1'}
               value={coinAmount}
               onChangeText={setCoinAmount}
             />
+            <Pressable style={{ padding: 5 }} onPress={isBuy ? onBuyAll : onSellAll}>
+              <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#8F43EE' }}>MAX</Text>
+            </Pressable>
           </ElementView>
-          <Text style={{fontSize: 30}}>=</Text>
+          <Octicons name="arrow-switch" size={36} color="white" />
 
           <ElementView style={styles.inputContainer}>
             <TextInput
               style={styles.input}
               keyboardType="decimal-pad"
-              placeholder="0"
+              placeholder={`0 USDC`}
               placeholderTextColor={'#b1b1b1'}
               value={coinUSDValue}
               onChangeText={setCoinUSDValue}
             />
+            <Pressable style={{ padding: 5 }} onPress={isBuy ? onBuyAll : onSellAll}>
+              <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#8F43EE' }}>MAX</Text>
+            </Pressable>
           </ElementView>
           <Text style={{fontWeight: 'bold'}}>USD</Text>
         </ElementView>

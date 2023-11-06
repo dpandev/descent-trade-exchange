@@ -38,6 +38,9 @@ yarn-error.*
 
 TODO
 .env*
+.yarn/
+.vscode
+.yarnrc.yml
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
@@ -60,3 +63,5 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+
+eas.json

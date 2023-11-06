@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "api": {
+      "descentgql": [
+        "Query",
+        "Mutation"
+      ]
+    },
+    "storage": {
+      "Coin:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

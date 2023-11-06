@@ -21,6 +21,29 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "descentAPIcreateArticles": {
+      "Arn": "string",
+      "CloudWatchEventRule": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "descentAPIupdateCoins": {
+      "Arn": "string",
+      "CloudWatchEventRule": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "descentAPIupdateUserNetworths": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "descentauth1PostConfirmation": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

@@ -15,11 +15,14 @@
           "additionalAuthenticationProviders": [
             {
               "apiKeyConfig": {
-                "apiKeyExpirationDate": "2024-09-28T15:36:12.786Z",
+                "apiKeyExpirationDate": "2024-10-14T00:32:38.044Z",
                 "apiKeyExpirationDays": 365,
-                "description": ""
+                "description": "descentGraphqlAPIkey10142023"
               },
               "authenticationType": "API_KEY"
+            },
+            {
+              "authenticationType": "AWS_IAM"
             }
           ],
           "defaultAuthentication": {
@@ -61,7 +64,8 @@
           "EMAIL"
         ],
         "socialProviders": [
-          "GOOGLE"
+          "GOOGLE",
+          "APPLE"
         ],
         "usernameAttributes": [
           "EMAIL"
@@ -75,6 +79,54 @@
     }
   },
   "function": {
+    "descentAPIcreateArticles": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "descentgql"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "descentAPIupdateCoins": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "descentgql"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "descentAPIupdateUserNetworths": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "descentgql"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "descentauth1PostConfirmation": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -87,6 +139,54 @@
         {
           "category": "auth",
           "resourceName": "descentauth1"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIcreateArticles_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIcreateArticles"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIcreateArticles_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIcreateArticles"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIupdateCoins_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIupdateCoins"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIupdateCoins_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIupdateCoins"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIupdateUserNetworths_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIupdateUserNetworths"
+        }
+      ]
+    },
+    "AMPLIFY_function_descentAPIupdateUserNetworths_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "descentAPIupdateUserNetworths"
         }
       ]
     },
